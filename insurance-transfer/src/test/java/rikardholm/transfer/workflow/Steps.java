@@ -7,7 +7,10 @@ import cucumber.api.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
-import rikardholm.insurance.service.insurance.InsuranceRepository;
+import rikardholm.insurance.service.PersonalIdentifier;
+import rikardholm.insurance.service.insurance.*;
+
+import static rikardholm.insurance.service.insurance.Builders.aCustomer;
 
 @Component
 @ContextConfiguration("classpath*:cucumber.xml")
@@ -17,8 +20,13 @@ public class Steps {
 
     @Given("^insurance (\\d+) belongs to customer (\\d{6}-\\d{4})$")
     public void insurance_belongs_to_customer(int insuranceNumber, String personIdentifier) throws Throwable {
-        insuranceRepository.create(insuranceNumber, personIdentifier);
-        throw new PendingException();
+        Customer customer = aCustomer().withPersonalIdentifier(PersonalIdentifier.of(personIdentifier)).build();
+        Insurance insurance = Builders.anInsurance()
+                .withInsuranceNumber(InsuranceNumber.of(Long.valueOf(insuranceNumber)))
+                .belongsTo(customer)
+                .build();
+
+        insuranceRepository.create(insurance);
     }
 
     @When("^a find-insurance message contains personal identifier (\\d+)-(\\d+)$")
