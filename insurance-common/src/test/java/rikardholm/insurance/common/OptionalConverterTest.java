@@ -1,12 +1,11 @@
-package rikardholm.insurance.service.insurance;
+package rikardholm.insurance.common;
 
 import org.junit.Test;
-import rikardholm.insurance.service.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static rikardholm.insurance.service.matchers.OptionalMatchers.hasValue;
-import static rikardholm.insurance.service.matchers.OptionalMatchers.isAbsent;
+import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
+import static rikardholm.insurance.common.test.OptionalMatchers.isAbsent;
 
 public class OptionalConverterTest {
     @Test

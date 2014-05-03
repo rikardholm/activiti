@@ -1,11 +1,11 @@
 package rikardholm.insurance.service.insurance.internal;
 
 import com.google.common.base.Predicate;
-import rikardholm.insurance.service.Optional;
+import rikardholm.insurance.common.Optional;
+import rikardholm.insurance.common.OptionalConverter;
+import rikardholm.insurance.service.PersonalIdentifier;
 import rikardholm.insurance.service.insurance.Customer;
 import rikardholm.insurance.service.insurance.CustomerRepository;
-import rikardholm.insurance.service.insurance.OptionalConverter;
-import rikardholm.insurance.service.PersonalIdentifier;
 
 import java.util.ArrayList;
 import java.util.List;

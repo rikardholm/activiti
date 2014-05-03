@@ -2,8 +2,12 @@ package rikardholm.insurance.service.insurance.internal;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import rikardholm.insurance.service.Optional;
-import rikardholm.insurance.service.insurance.*;
+import rikardholm.insurance.common.Optional;
+import rikardholm.insurance.common.OptionalConverter;
+import rikardholm.insurance.service.insurance.Customer;
+import rikardholm.insurance.service.insurance.Insurance;
+import rikardholm.insurance.service.insurance.InsuranceNumber;
+import rikardholm.insurance.service.insurance.InsuranceRepository;
 
 import java.util.ArrayList;
 import java.util.List;

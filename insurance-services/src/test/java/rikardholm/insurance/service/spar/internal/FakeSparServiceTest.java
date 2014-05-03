@@ -4,15 +4,15 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
-import rikardholm.insurance.service.Optional;
+import rikardholm.insurance.common.Optional;
 import rikardholm.insurance.service.PersonalIdentifier;
 import rikardholm.insurance.service.spar.SparResult;
 import rikardholm.insurance.service.spar.SparUnavailableException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
-import static rikardholm.insurance.service.matchers.OptionalMatchers.hasValue;
-import static rikardholm.insurance.service.matchers.OptionalMatchers.isAbsent;
+import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
+import static rikardholm.insurance.common.test.OptionalMatchers.isAbsent;
 
 public class FakeSparServiceTest {
 

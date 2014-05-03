@@ -1,4 +1,4 @@
-package rikardholm.insurance.service.matchers;
+package rikardholm.insurance.common.test;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

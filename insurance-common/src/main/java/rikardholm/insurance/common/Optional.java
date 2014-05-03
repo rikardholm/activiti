@@ -1,4 +1,4 @@
-package rikardholm.insurance.service;
+package rikardholm.insurance.common;
 
 import static java.util.Objects.requireNonNull;
 

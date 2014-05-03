@@ -1,9 +1,9 @@
 package rikardholm.insurance.service.spar.internal;
 
 import com.google.common.base.Predicate;
-import rikardholm.insurance.service.Optional;
+import rikardholm.insurance.common.Optional;
+import rikardholm.insurance.common.OptionalConverter;
 import rikardholm.insurance.service.PersonalIdentifier;
-import rikardholm.insurance.service.insurance.OptionalConverter;
 import rikardholm.insurance.service.spar.SparResult;
 import rikardholm.insurance.service.spar.SparService;
 import rikardholm.insurance.service.spar.SparUnavailableException;

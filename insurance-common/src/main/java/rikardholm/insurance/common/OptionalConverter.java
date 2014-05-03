@@ -1,6 +1,4 @@
-package rikardholm.insurance.service.insurance;
-
-import rikardholm.insurance.service.Optional;
+package rikardholm.insurance.common;
 
 public class OptionalConverter {
     private OptionalConverter() {

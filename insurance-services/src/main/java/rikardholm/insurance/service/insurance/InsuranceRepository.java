@@ -1,6 +1,6 @@
 package rikardholm.insurance.service.insurance;
 
-import rikardholm.insurance.service.Optional;
+import rikardholm.insurance.common.Optional;
 
 import java.util.List;
 

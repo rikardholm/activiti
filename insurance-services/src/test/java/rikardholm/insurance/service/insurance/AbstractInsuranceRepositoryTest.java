@@ -1,17 +1,17 @@
 package rikardholm.insurance.service.insurance;
 
 import org.junit.Test;
-import rikardholm.insurance.service.Optional;
+import rikardholm.insurance.common.Optional;
 import rikardholm.insurance.service.PersonalIdentifier;
 
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
+import static rikardholm.insurance.common.test.OptionalMatchers.isAbsent;
 import static rikardholm.insurance.service.insurance.Builders.aCustomer;
 import static rikardholm.insurance.service.insurance.Builders.anInsurance;
-import static rikardholm.insurance.service.matchers.OptionalMatchers.hasValue;
-import static rikardholm.insurance.service.matchers.OptionalMatchers.isAbsent;
 
 public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTest<InsuranceRepository> {
 

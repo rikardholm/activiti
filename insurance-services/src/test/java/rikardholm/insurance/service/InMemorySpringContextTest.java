@@ -11,7 +11,7 @@ import rikardholm.insurance.service.insurance.InsuranceRepository;
 import rikardholm.insurance.service.spar.SparService;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static rikardholm.insurance.service.matchers.ApplicationContextMatchers.hasExactlyOneBeanOfType;
+import static rikardholm.insurance.common.test.ApplicationContextMatchers.hasExactlyOneBeanOfType;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:META-INF/insurance/spring/in-memory-services.xml")

@@ -1,12 +1,10 @@
-package rikardholm.insurance.service.matchers;
+package rikardholm.insurance.common.test;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import rikardholm.insurance.service.Optional;
+import rikardholm.insurance.common.Optional;
 
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 
 public class OptionalMatchers {

@@ -1,6 +1,7 @@
 package rikardholm.insurance.service.matchers;
 
 import org.hamcrest.Matcher;
+import rikardholm.insurance.common.test.AbstractPropertyMatcher;
 import rikardholm.insurance.service.insurance.Customer;
 import rikardholm.insurance.service.insurance.Insurance;
 import rikardholm.insurance.service.insurance.InsuranceNumber;
