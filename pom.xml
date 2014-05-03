@@ -23,6 +23,20 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Activiti -->
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-engine</artifactId>
+                <version>5.15.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-spring</artifactId>
+                <version>5.15.1</version>
+            </dependency>
+
+
+
             <!-- 3rd Party -->
             <dependency>
                 <groupId>com.google.guava</groupId>

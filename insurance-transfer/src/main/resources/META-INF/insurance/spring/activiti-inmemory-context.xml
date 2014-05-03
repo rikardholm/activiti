@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration"/>
+    </bean>
+
+    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <property name="databaseType" value="h2"/>
+        <property name="databaseSchemaUpdate" value="none"/>
+        <property name="transactionManager">
+            <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+                <property name="dataSource" ref="activitiDataSource"/>
+            </bean>
+        </property>
+        <!-- <property name="deploymentResources" value="classpath*:com/rikardholm/process/*.bpmn" /> -->
+        <property name="jobExecutorActivate" value="false"/>
+    </bean>
+
+    <bean id="activitiDataSource"
+          class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
+        <property name="targetDataSource">
+            <bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+                <!-- <property name="url" value="jdbc:postgresql://localhost/activiti" />
+                <property name="username" value="activiti" />
+                <property name="password" value="activiti" />
+                <property name="driverClass" value="org.postgresql.Driver" />-->
+                <property name="driverClass" value="org.h2.Driver" />
+                <property name="url" value="jdbc:h2:mem:asdf;DB_CLOSE_DELAY=1000"/>
+                <property name="username" value="sa" />
+                <property name="password" value="" />
+            </bean>
+        </property>
+    </bean>
+</beans>

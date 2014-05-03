@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-autowire="constructor">
+
+    <bean class="rikardholm.insurance.transfer.MessageHandler"
+            init-method="start" destroy-method="stop"/>
+    <bean class="rikardholm.insurance.transfer.ProcessDispatcher">
+        <constructor-arg>
+            <util:map>
+                <entry key="rikardholm.insurance.messaging.message.InsuranceInformationRequest" value="insurance-information-process"/>
+            </util:map>
+        </constructor-arg>
+    </bean>
+
+    <bean factory-bean="processEngine" factory-method="getRuntimeService"/>
+
+
+</beans>
