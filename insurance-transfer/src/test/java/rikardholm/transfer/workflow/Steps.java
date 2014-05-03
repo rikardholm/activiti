@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import rikardholm.insurance.messaging.InboxRepository;
+import rikardholm.insurance.messaging.OutboxRepository;
+import rikardholm.insurance.messaging.message.InsuranceInformationRequest;
+import rikardholm.insurance.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.service.PersonalIdentifier;
 import rikardholm.insurance.service.insurance.*;
 import rikardholm.insurance.service.spar.internal.FakeSparService;
@@ -22,8 +26,7 @@ import rikardholm.insurance.service.spar.internal.FakeSparService;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static rikardholm.insurance.service.insurance.Builders.aCustomer;
 
 @Component
@@ -34,12 +37,18 @@ public class Steps {
     @Autowired
     private InsuranceRepository insuranceRepository;
 
+    @Autowired
+    private InboxRepository inboxRepository;
+
+    @Autowired
+    private OutboxRepository outboxRepository;
+
     public static final PersonalIdentifier PERSONAL_IDENTIFIER = PersonalIdentifier.of("670913-4506");
     public static final Customer CUSTOMER = aCustomer().withPersonalIdentifier(PERSONAL_IDENTIFIER).build();
     public static final InsuranceNumber INSURANCE_NUMBER = InsuranceNumber.of(35968L);
 
 
-    @Givet("^en försäkring som tillhör en person$")
+    @Givet("^en person som har en försäkring på företaget$")
     public void en_försäkring_som_tillhör_en_person() throws Throwable {
         Insurance insurance = Builders.anInsurance()
                 .withInsuranceNumber(INSURANCE_NUMBER)
@@ -49,7 +58,7 @@ public class Steps {
         insuranceRepository.create(insurance);
     }
 
-    @Givet("^att det inte finns någon försäkring som tillhör en person")
+    @Givet("^en person som saknar försäkringar hos bolaget$")
     public void att_det_inte_finns_någon_försäkring_som_tillhör_en_person() {
         List<Insurance> insurances = insuranceRepository.findBy(CUSTOMER);
         assertThat(insurances, is(empty()));
@@ -57,17 +66,22 @@ public class Steps {
 
     @När("^vi tar emot en förfrågan om personen$")
     public void vi_tar_emot_en_förfrågan_om_personen() throws Throwable {
-        throw new PendingException();
+        inboxRepository.add(new InsuranceInformationRequest(PERSONAL_IDENTIFIER.getPersonalIdentifier()));
     }
 
     @Så("^svarar vi med information om försäkringen$")
     public void svarar_vi_med_information_om_försäkringen() throws Throwable {
-        throw new PendingException();
+        List<InsuranceInformationResponse> insuranceInformationResponses = outboxRepository.find(InsuranceInformationResponse.class);
+        assertThat(insuranceInformationResponses, hasSize(1));
+        InsuranceInformationResponse insuranceInformationResponse = insuranceInformationResponses.get(0);
+        assertThat(insuranceInformationResponse.personalIdentificationNumber, equalTo(PERSONAL_IDENTIFIER.getPersonalIdentifier()));
+        assertThat(insuranceInformationResponse.insuranceNumbers, hasSize(1));
+        assertThat(insuranceInformationResponse.insuranceNumbers.get(0), equalTo(INSURANCE_NUMBER.getInsuranceNumber()));
     }
 
     @Så("^svarar vi att personen inte har några försäkringar hos oss$")
     public void svarar_vi_att_personen_inte_har_några_försäkringar_hos_oss() {
-
+          throw new PendingException();
     }
 
     /*@Given("^no insurance belongs to customer (\\d+)-(\\d+)$")

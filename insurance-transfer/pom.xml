@@ -23,6 +23,10 @@
             <groupId>activiti</groupId>
             <artifactId>insurance-services</artifactId>
         </dependency>
+        <dependency>
+            <groupId>activiti</groupId>
+            <artifactId>insurance-messaging</artifactId>
+        </dependency>
 
         <!-- Test -->
         <dependency>

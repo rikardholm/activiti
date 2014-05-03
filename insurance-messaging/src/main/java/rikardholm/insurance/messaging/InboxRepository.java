@@ -1,7 +1,7 @@
 package rikardholm.insurance.messaging;
 
-import rikardholm.insurance.messaging.message.InboxMessage;
+import rikardholm.insurance.messaging.message.IncomingMessage;
 
-public interface InboxRepository extends MessageRepository<InboxMessage> {
+public interface InboxRepository extends MessageRepository<IncomingMessage> {
 
 }

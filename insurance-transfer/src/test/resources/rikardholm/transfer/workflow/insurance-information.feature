@@ -5,11 +5,11 @@ Egenskap: Information om en persons innehav hos bolaget
   Vill jag veta om jag har försäkringar hos bolaget
 
   Scenario: En person som har en försäkring
-    Givet en försäkring som tillhör en person
+    Givet en person som har en försäkring på företaget
     När vi tar emot en förfrågan om personen
     Så svarar vi med information om försäkringen
 
   Scenario: En person som inte har en försäkring
-    Givet att det inte finns någon försäkring som tillhör en person
+    Givet en person som saknar försäkringar hos bolaget
     När vi tar emot en förfrågan om personen
     Så svarar vi att personen inte har några försäkringar

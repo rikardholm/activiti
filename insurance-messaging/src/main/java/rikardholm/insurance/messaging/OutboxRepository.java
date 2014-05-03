@@ -1,6 +1,6 @@
 package rikardholm.insurance.messaging;
 
-import rikardholm.insurance.messaging.message.OutboxMessage;
+import rikardholm.insurance.messaging.message.OutgoingMessage;
 
-public interface OutboxRepository extends MessageRepository<OutboxMessage> {
+public interface OutboxRepository extends MessageRepository<OutgoingMessage> {
 }
