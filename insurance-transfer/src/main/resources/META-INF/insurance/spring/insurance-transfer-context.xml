@@ -4,8 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="constructor">
 
-    <bean class="rikardholm.insurance.transfer.MessageHandler"
-            init-method="start" destroy-method="stop"/>
     <bean class="rikardholm.insurance.transfer.ProcessDispatcher">
         <constructor-arg>
             <util:map>
@@ -13,8 +11,4 @@
             </util:map>
         </constructor-arg>
     </bean>
-
-    <bean factory-bean="processEngine" factory-method="getRuntimeService"/>
-
-
 </beans>

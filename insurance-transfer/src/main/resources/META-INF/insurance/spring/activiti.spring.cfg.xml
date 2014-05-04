@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService"/>
+
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration"/>
+    </bean>
+
+    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <property name="databaseType" value="h2"/>
+        <property name="databaseSchemaUpdate" value="true"/>
+        <property name="dataSource" ref="activitiDataSource"/>
+        <property name="transactionManager">
+            <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+                <property name="dataSource" ref="activitiDataSource"/>
+            </bean>
+        </property>
+        <property name="deploymentResources" value="classpath*:META-INF/insurance/bpmn/*.bpmn" />
+        <property name="jobExecutorActivate" value="false"/>
+    </bean>
+</beans>

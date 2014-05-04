@@ -8,6 +8,7 @@ import org.activiti.engine.test.Deployment;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import rikardholm.insurance.messaging.internal.InMemoryInboxRepository;
 import rikardholm.insurance.messaging.message.IncomingMessage;
 
 import java.util.HashMap;
@@ -20,9 +21,10 @@ import static org.hamcrest.Matchers.*;
 public class ProcessDispatcherTest {
     public static final TestMessage INCOMING_MESSAGE = new TestMessage(7);
     public static final String PROCESS_KEY = "noop-process";
+    public final InMemoryInboxRepository inMemoryInboxRepository = new InMemoryInboxRepository();
 
     @Rule
-    public ActivitiRule activitiRule = new ActivitiRule("rikardholm/transfer/workflow/activiti.standalone.inmemory.cfg.xml");
+    public ActivitiRule activitiRule = new ActivitiRule("test/spring/activiti.standalone.inmemory.cfg.xml");
 
     private ProcessDispatcher processDispatcher;
 
@@ -31,13 +33,14 @@ public class ProcessDispatcherTest {
         Map<Class<? extends IncomingMessage>, String> processMap = new HashMap<Class<? extends IncomingMessage>, String>();
         processMap.put(TestMessage.class, PROCESS_KEY);
 
-        processDispatcher = new ProcessDispatcher(activitiRule.getRuntimeService(), processMap);
+        processDispatcher = new ProcessDispatcher(activitiRule.getRuntimeService(), inMemoryInboxRepository, processMap);
     }
 
     @Test
     @Deployment(resources = "rikardholm/transfer/workflow/start-stop-process.bpmn")
     public void starts_a_mapped_process() throws Exception {
-        processDispatcher.newMessage(INCOMING_MESSAGE);
+        inMemoryInboxRepository.add(INCOMING_MESSAGE);
+        processDispatcher.pollInbox();
 
         HistoricProcessInstance instance = getHistoricProcessInstance();
 
@@ -47,7 +50,8 @@ public class ProcessDispatcherTest {
     @Test
     @Deployment(resources = "rikardholm/transfer/workflow/start-stop-process.bpmn")
     public void sets_IncomingMessage_as_process_variable() throws Exception {
-        processDispatcher.newMessage(INCOMING_MESSAGE);
+        inMemoryInboxRepository.add(INCOMING_MESSAGE);
+        processDispatcher.pollInbox();
 
         HistoricProcessInstance historicProcessInstance = getHistoricProcessInstance();
 

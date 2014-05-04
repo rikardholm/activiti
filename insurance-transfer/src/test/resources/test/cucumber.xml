@@ -5,6 +5,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     <import resource="classpath*:META-INF/insurance/spring/in-memory-services.xml"/>
     <import resource="classpath*:META-INF/insurance/spring/in-memory-messaging.xml"/>
+    <import resource="classpath*:META-INF/insurance/spring/insurance-transfer-context.xml"/>
+    <import resource="classpath*:META-INF/insurance/spring/activiti.spring.cfg.xml"/>
+    <import resource="classpath*:test/spring/activiti-datasource-inmemory.cfg.xml"/>
 
     <context:component-scan base-package="rikardholm.transfer.workflow"/>
 </beans>

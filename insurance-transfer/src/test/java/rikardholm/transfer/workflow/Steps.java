@@ -1,14 +1,9 @@
 package rikardholm.transfer.workflow;
 
 import cucumber.api.PendingException;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import cucumber.api.java.sv.Givet;
 import cucumber.api.java.sv.När;
 import cucumber.api.java.sv.Så;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +16,7 @@ import rikardholm.insurance.messaging.message.InsuranceInformationRequest;
 import rikardholm.insurance.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.service.PersonalIdentifier;
 import rikardholm.insurance.service.insurance.*;
-import rikardholm.insurance.service.spar.internal.FakeSparService;
+import rikardholm.insurance.transfer.ProcessDispatcher;
 
 import java.util.List;
 
@@ -30,8 +25,7 @@ import static org.hamcrest.Matchers.*;
 import static rikardholm.insurance.service.insurance.Builders.aCustomer;
 
 @Component
-@ContextConfiguration("classpath*:cucumber.xml")
-@DirtiesContext
+@ContextConfiguration("classpath*:test/cucumber.xml")
 public class Steps {
     private static Logger log = LoggerFactory.getLogger(Steps.class);
     @Autowired
@@ -66,7 +60,8 @@ public class Steps {
 
     @När("^vi tar emot en förfrågan om personen$")
     public void vi_tar_emot_en_förfrågan_om_personen() throws Throwable {
-        inboxRepository.add(new InsuranceInformationRequest(PERSONAL_IDENTIFIER.getPersonalIdentifier()));
+        InsuranceInformationRequest message = new InsuranceInformationRequest(PERSONAL_IDENTIFIER.getPersonalIdentifier());
+        inboxRepository.add(message);
     }
 
     @Så("^svarar vi med information om försäkringen$")
