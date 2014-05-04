@@ -24,11 +24,11 @@ public class ProcessDispatcher {
     public void pollInbox() {
         List<IncomingMessage> incomingMessages = inboxRepository.find(IncomingMessage.class);
         for (IncomingMessage incomingMessage : incomingMessages) {
-            newMessage(incomingMessage);
+            startProcess(incomingMessage);
         }
     }
 
-    private void newMessage(IncomingMessage incomingMessage) {
+    private void startProcess(IncomingMessage incomingMessage) {
         String processKey = processMap.get(incomingMessage.getClass());
 
         Map<String, Object> properties = new HashMap<String, Object>();

@@ -3,12 +3,14 @@ package rikardholm.transfer.workflow;
 import cucumber.api.PendingException;
 import cucumber.api.java.sv.Givet;
 import cucumber.api.java.sv.När;
+import cucumber.api.java.sv.Och;
 import cucumber.api.java.sv.Så;
+import org.joda.time.Duration;
+import org.joda.time.Seconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import rikardholm.insurance.messaging.InboxRepository;
 import rikardholm.insurance.messaging.OutboxRepository;
@@ -16,7 +18,6 @@ import rikardholm.insurance.messaging.message.InsuranceInformationRequest;
 import rikardholm.insurance.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.service.PersonalIdentifier;
 import rikardholm.insurance.service.insurance.*;
-import rikardholm.insurance.transfer.ProcessDispatcher;
 
 import java.util.List;
 
@@ -62,6 +63,13 @@ public class Steps {
     public void vi_tar_emot_en_förfrågan_om_personen() throws Throwable {
         InsuranceInformationRequest message = new InsuranceInformationRequest(PERSONAL_IDENTIFIER.getPersonalIdentifier());
         inboxRepository.add(message);
+    }
+
+    @Och("^ger systemet (\\d+) sekunder att behandla meddelandet$")
+    public void ger_systemet_X_sekunder_att_behandla_meddelandet(int seconds) throws InterruptedException {
+        Duration duration = Seconds.seconds(seconds).toStandardDuration();
+
+        Thread.sleep(duration.getMillis());
     }
 
     @Så("^svarar vi med information om försäkringen$")

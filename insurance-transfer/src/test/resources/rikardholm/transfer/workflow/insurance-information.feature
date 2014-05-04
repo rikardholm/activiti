@@ -7,9 +7,11 @@ Egenskap: Information om en persons innehav hos bolaget
   Scenario: En person som har en försäkring
     Givet en person som har en försäkring på företaget
     När vi tar emot en förfrågan om personen
+    Och ger systemet 2 sekunder att behandla meddelandet
     Så svarar vi med information om försäkringen
 
   Scenario: En person som inte har en försäkring
     Givet en person som saknar försäkringar hos bolaget
     När vi tar emot en förfrågan om personen
+    Och ger systemet 2 sekunder att behandla meddelandet
     Så svarar vi att personen inte har några försäkringar

@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
        default-autowire="constructor">
+
+    <task:scheduler id="processDispatcherScheduler" pool-size="1"/>
+
+    <task:scheduled-tasks>
+        <task:scheduled ref="rikardholm.insurance.transfer.ProcessDispatcher" method="pollInbox" fixed-delay="100"/>
+    </task:scheduled-tasks>
 
     <bean class="rikardholm.insurance.transfer.ProcessDispatcher">
         <constructor-arg>
             <util:map>
-                <entry key="rikardholm.insurance.messaging.message.InsuranceInformationRequest" value="insurance-information-process"/>
+                <entry key="rikardholm.insurance.messaging.message.InsuranceInformationRequest"
+                       value="insurance-information-process"/>
             </util:map>
         </constructor-arg>
     </bean>
