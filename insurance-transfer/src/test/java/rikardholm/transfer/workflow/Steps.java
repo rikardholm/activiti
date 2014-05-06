@@ -29,6 +29,10 @@ import static rikardholm.insurance.service.insurance.Builders.aCustomer;
 @ContextConfiguration("classpath*:test/cucumber.xml")
 public class Steps {
     private static Logger log = LoggerFactory.getLogger(Steps.class);
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
     @Autowired
     private InsuranceRepository insuranceRepository;
 
@@ -51,6 +55,7 @@ public class Steps {
                 .build();
 
         insuranceRepository.create(insurance);
+        customerRepository.create(CUSTOMER);
     }
 
     @Givet("^en person som saknar försäkringar hos bolaget$")

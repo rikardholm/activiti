@@ -21,8 +21,12 @@
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow2" sourceRef="scripttask2" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow3" sourceRef="scripttask1" targetRef="scripttask2"></sequenceFlow>
-    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="scripttask3"></sequenceFlow>
-    <sequenceFlow id="flow5" sourceRef="exclusivegateway1" targetRef="scripttask4"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="scripttask3">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${insurances.size() > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="exclusivegateway1" targetRef="scripttask4">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${insurances.size() == 0}]]></conditionExpression>
+    </sequenceFlow>
     <sequenceFlow id="flow6" sourceRef="scripttask3" targetRef="insurance-information-end"></sequenceFlow>
     <endEvent id="insurance-information-end" name="End"></endEvent>
     <startEvent id="insurance-information-start" name="Start"></startEvent>
@@ -30,10 +34,16 @@
     <endEvent id="endevent1" name="End"></endEvent>
     <sequenceFlow id="flow8" sourceRef="scripttask4" targetRef="endevent1"></sequenceFlow>
     <scriptTask id="scripttask1" name="Skapa beställning" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>println('Skapar beställning…');</script>
+      <script>println('Skapar beställning…');
+var personnummer = execution.getVariable('incomingMessage').personalIdentificationNumber;
+execution.setVariable('personnummer',personnummer);</script>
     </scriptTask>
-    <scriptTask id="scripttask2" name="Sök efter försäkringar" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>println('Letar…');</script>
+    <scriptTask id="scripttask2" name="Sök efter försäkringar på personnummer" scriptFormat="javascript" activiti:autoStoreVariables="false">
+      <script>var personnummer = execution.getVariable('personnummer');
+println('Letar efter '  + personnummer);
+var insurances = insuranceFinder.findByPersonnummer(personnummer);
+println('Insurances: ' + insurances.size());
+execution.setVariable('insurances',insurances);</script>
     </scriptTask>
     <scriptTask id="scripttask3" name="Skicka information om försäkringar" scriptFormat="javascript" activiti:autoStoreVariables="false">
       <script>println('Skickar information om försäkringar…');</script>
@@ -66,7 +76,7 @@
         <omgdc:Bounds height="55.0" width="105.0" x="110.0" y="86.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
-        <omgdc:Bounds height="66.0" width="105.0" x="260.0" y="81.0"></omgdc:Bounds>
+        <omgdc:Bounds height="70.0" width="105.0" x="260.0" y="79.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask3" id="BPMNShape_scripttask3">
         <omgdc:Bounds height="63.0" width="105.0" x="500.0" y="24.0"></omgdc:Bounds>
