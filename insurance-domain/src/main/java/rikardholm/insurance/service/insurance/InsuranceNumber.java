@@ -1,6 +1,8 @@
 package rikardholm.insurance.service.insurance;
 
-public class InsuranceNumber {
+import java.io.Serializable;
+
+public class InsuranceNumber implements Serializable {
     private final Long insuranceNumber;
 
     private InsuranceNumber(Long insuranceNumber) {
