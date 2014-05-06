@@ -8,8 +8,8 @@ import org.activiti.engine.test.Deployment;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import rikardholm.insurance.messaging.internal.InMemoryInboxRepository;
-import rikardholm.insurance.messaging.message.IncomingMessage;
+import rikardholm.insurance.infrastructure.inmemory.InMemoryInboxRepository;
+import rikardholm.insurance.application.messaging.IncomingMessage;
 
 import java.util.HashMap;
 import java.util.Map;

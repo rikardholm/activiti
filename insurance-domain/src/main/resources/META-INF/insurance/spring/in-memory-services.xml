@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="insuranceRepository" class="rikardholm.insurance.service.insurance.internal.InMemoryInsuranceRepository"/>
-    <bean id="customerRepository" class="rikardholm.insurance.service.insurance.internal.InMemoryCustomerRepository"/>
-    <bean id="sparService" class="rikardholm.insurance.service.spar.internal.FakeSparService"/>
+    <bean id="insuranceRepository" class="rikardholm.insurance.infrastructure.inmemory.InMemoryInsuranceRepository"/>
+    <bean id="customerRepository" class="rikardholm.insurance.infrastructure.inmemory.InMemoryCustomerRepository"/>
+    <bean id="sparService" class="rikardholm.insurance.infrastructure.fake.FakeSparService"/>
 </beans>

@@ -14,7 +14,7 @@
     <bean id="processDispatcher" class="rikardholm.insurance.transfer.ProcessDispatcher">
         <constructor-arg>
             <util:map>
-                <entry key="rikardholm.insurance.messaging.message.InsuranceInformationRequest"
+                <entry key="rikardholm.insurance.application.messaging.message.InsuranceInformationRequest"
                        value="insurance-information-process"/>
             </util:map>
         </constructor-arg>

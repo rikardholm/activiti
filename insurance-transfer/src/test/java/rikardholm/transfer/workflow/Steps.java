@@ -12,18 +12,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
-import rikardholm.insurance.messaging.InboxRepository;
-import rikardholm.insurance.messaging.OutboxRepository;
-import rikardholm.insurance.messaging.message.InsuranceInformationRequest;
-import rikardholm.insurance.messaging.message.InsuranceInformationResponse;
-import rikardholm.insurance.service.PersonalIdentifier;
-import rikardholm.insurance.service.insurance.*;
+import rikardholm.insurance.application.messaging.InboxRepository;
+import rikardholm.insurance.application.messaging.OutboxRepository;
+import rikardholm.insurance.application.messaging.message.InsuranceInformationRequest;
+import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
+import rikardholm.insurance.domain.PersonalIdentifier;
+import rikardholm.insurance.domain.insurance.*;
 
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static rikardholm.insurance.service.insurance.Builders.aCustomer;
+import static rikardholm.insurance.domain.insurance.Builders.aCustomer;
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")

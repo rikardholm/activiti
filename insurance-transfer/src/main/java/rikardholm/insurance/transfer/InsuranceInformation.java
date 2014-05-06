@@ -1,6 +1,6 @@
 package rikardholm.insurance.transfer;
 
-import rikardholm.insurance.service.insurance.InsuranceNumber;
+import rikardholm.insurance.domain.insurance.InsuranceNumber;
 
 import java.io.Serializable;
 

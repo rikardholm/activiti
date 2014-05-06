@@ -12,7 +12,7 @@
 
     <modules>
         <module>insurance-transfer</module>
-        <module>insurance-services</module>
+        <module>insurance-domain</module>
         <module>insurance-messaging</module>
         <module>insurance-common</module>
     </modules>

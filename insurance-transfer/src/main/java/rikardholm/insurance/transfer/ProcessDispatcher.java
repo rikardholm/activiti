@@ -1,8 +1,8 @@
 package rikardholm.insurance.transfer;
 
 import org.activiti.engine.RuntimeService;
-import rikardholm.insurance.messaging.InboxRepository;
-import rikardholm.insurance.messaging.message.IncomingMessage;
+import rikardholm.insurance.application.messaging.InboxRepository;
+import rikardholm.insurance.application.messaging.IncomingMessage;
 
 import java.util.HashMap;
 import java.util.List;

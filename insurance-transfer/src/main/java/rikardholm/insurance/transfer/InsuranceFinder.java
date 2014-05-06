@@ -1,11 +1,11 @@
 package rikardholm.insurance.transfer;
 
 import rikardholm.insurance.common.Optional;
-import rikardholm.insurance.service.PersonalIdentifier;
-import rikardholm.insurance.service.insurance.Customer;
-import rikardholm.insurance.service.insurance.CustomerRepository;
-import rikardholm.insurance.service.insurance.Insurance;
-import rikardholm.insurance.service.insurance.InsuranceRepository;
+import rikardholm.insurance.domain.PersonalIdentifier;
+import rikardholm.insurance.domain.insurance.Customer;
+import rikardholm.insurance.domain.insurance.CustomerRepository;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceRepository;
 
 import java.util.ArrayList;
 import java.util.List;
