@@ -13,8 +13,8 @@ import static rikardholm.insurance.common.test.ApplicationContextMatchers.hasExa
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath*:META-INF/insurance/spring/insurance-transfer-context.xml",
-        "classpath*:META-INF/insurance/spring/in-memory-messaging.xml",
-        "classpath*:META-INF/insurance/spring/in-memory-services.xml",
+        "classpath*:META-INF/insurance/spring/in-memory-application-context.xml",
+        "classpath*:META-INF/insurance/spring/in-memory-domain-context.xml",
         "classpath*:META-INF/insurance/spring/activiti.spring.cfg.xml",
         "classpath*:test/spring/activiti-datasource-inmemory.cfg.xml"})
 public class SpringContextLoadTest {

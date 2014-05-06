@@ -4,10 +4,10 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import rikardholm.insurance.common.Optional;
 import rikardholm.insurance.common.OptionalConverter;
-import rikardholm.insurance.domain.insurance.Customer;
-import rikardholm.insurance.domain.insurance.Insurance;
-import rikardholm.insurance.domain.insurance.InsuranceNumber;
-import rikardholm.insurance.domain.insurance.InsuranceRepository;
+import rikardholm.insurance.domain.Customer;
+import rikardholm.insurance.domain.Insurance;
+import rikardholm.insurance.domain.InsuranceNumber;
+import rikardholm.insurance.domain.InsuranceRepository;
 
 import java.util.ArrayList;
 import java.util.List;

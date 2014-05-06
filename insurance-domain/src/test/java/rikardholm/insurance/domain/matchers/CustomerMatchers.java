@@ -3,7 +3,7 @@ package rikardholm.insurance.domain.matchers;
 import org.hamcrest.Matcher;
 import rikardholm.insurance.common.test.AbstractPropertyMatcher;
 import rikardholm.insurance.domain.PersonalIdentifier;
-import rikardholm.insurance.domain.insurance.Customer;
+import rikardholm.insurance.domain.Customer;
 
 public class CustomerMatchers {
     public static Matcher<Customer> hasPersonalIdentifier(final Matcher<PersonalIdentifier> personalIdentifierMatcher) {

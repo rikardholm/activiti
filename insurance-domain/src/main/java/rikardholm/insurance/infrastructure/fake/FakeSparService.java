@@ -4,9 +4,9 @@ import com.google.common.base.Predicate;
 import rikardholm.insurance.common.Optional;
 import rikardholm.insurance.common.OptionalConverter;
 import rikardholm.insurance.domain.PersonalIdentifier;
-import rikardholm.insurance.domain.spar.SparResult;
-import rikardholm.insurance.domain.spar.SparService;
-import rikardholm.insurance.domain.spar.SparUnavailableException;
+import rikardholm.insurance.application.spar.SparResult;
+import rikardholm.insurance.application.spar.SparService;
+import rikardholm.insurance.application.spar.SparUnavailableException;
 
 import java.util.ArrayList;
 import java.util.List;

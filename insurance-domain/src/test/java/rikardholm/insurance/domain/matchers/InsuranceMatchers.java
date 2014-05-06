@@ -2,9 +2,9 @@ package rikardholm.insurance.domain.matchers;
 
 import org.hamcrest.Matcher;
 import rikardholm.insurance.common.test.AbstractPropertyMatcher;
-import rikardholm.insurance.domain.insurance.Customer;
-import rikardholm.insurance.domain.insurance.Insurance;
-import rikardholm.insurance.domain.insurance.InsuranceNumber;
+import rikardholm.insurance.domain.Customer;
+import rikardholm.insurance.domain.Insurance;
+import rikardholm.insurance.domain.InsuranceNumber;
 
 public class InsuranceMatchers {
     public static Matcher<Insurance> hasInsuranceNumber(final Matcher<InsuranceNumber> insuranceNumberMatcher) {
