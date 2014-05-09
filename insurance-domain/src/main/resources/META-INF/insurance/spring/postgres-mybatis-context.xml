@@ -3,17 +3,22 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="constructor">
-    <bean class="rikardholm.insurance.infrastructure.postgres.PostgresCustomerRepository">
-        <constructor-arg ref="customerMapper"/>
-    </bean>
+    <bean class="rikardholm.insurance.infrastructure.postgres.PostgresCustomerRepository"/>
+
+    <bean class="rikardholm.insurance.infrastructure.postgres.PostgresInsuranceRepository"/>
 
     <bean id="customerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface" value="rikardholm.insurance.infrastructure.postgres.CustomerMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 
+    <bean id="insuranceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="rikardholm.insurance.infrastructure.postgres.InsuranceMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSourceAB"/>
+        <property name="dataSource" ref="dataSource"/>
         <!-- <property name="typeHandlersPackage" value="rikardholm.insurance.infrastructure.mybatis.typehandlers"/> -->
        <property name="typeHandlers">
             <list>

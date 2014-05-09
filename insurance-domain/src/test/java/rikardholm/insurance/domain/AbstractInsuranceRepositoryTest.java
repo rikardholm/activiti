@@ -1,5 +1,6 @@
 package rikardholm.insurance.domain;
 
+import org.junit.Before;
 import org.junit.Test;
 import rikardholm.insurance.common.Optional;
 
@@ -26,7 +27,12 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
             .belongsTo(CUSTOMER)
             .build();
 
-    private InsuranceRepository insuranceRepository = getInstance();
+    private InsuranceRepository insuranceRepository;
+
+    @Before
+    public void setUp() throws Exception {
+        insuranceRepository = getInstance();
+    }
 
     @Test
     public void findByInsuranceNumber_should_return_absent_when_Insurance_does_not_exist() {

@@ -12,6 +12,36 @@
     <artifactId>insurance-domain</artifactId>
 
 
+    <profiles>
+        <profile>
+            <id>postgres</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>3.0</version>
+                        <configuration>
+                            <url>jdbc:postgresql://localhost:5432/test</url>
+                            <user>test</user>
+                            <password>test</password>
+                            <locations>
+                                <location>postgres/migrations</location>
+                            </locations>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.postgresql</groupId>
+                                <artifactId>postgresql</artifactId>
+                                <version>9.3-1101-jdbc41</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -65,4 +95,6 @@
             <version>9.3-1101-jdbc41</version>
         </dependency>
     </dependencies>
+
+
 </project>

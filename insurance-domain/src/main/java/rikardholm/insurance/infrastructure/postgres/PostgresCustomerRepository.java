@@ -15,7 +15,7 @@ public class PostgresCustomerRepository implements CustomerRepository {
 
     @Override
     public Optional<Customer> findBy(PersonalIdentifier personalIdentifier) {
-        String result = customerMapper.findByPersonalIdentifier(personalIdentifier.getValue());
+        Customer result = customerMapper.findByPersonalIdentifier(personalIdentifier);
 
         if (result == null) {
             return Optional.absent();
@@ -27,13 +27,13 @@ public class PostgresCustomerRepository implements CustomerRepository {
 
     @Override
     public void create(Customer instance) {
-        String personalIdentifier = instance.getPersonalIdentifier().getValue();
-        String result = customerMapper.findByPersonalIdentifier(personalIdentifier);
+        PersonalIdentifier personalIdentifier = instance.getPersonalIdentifier();
+        Customer result = customerMapper.findByPersonalIdentifier(personalIdentifier);
 
         if (result != null) {
             throw new IllegalArgumentException("Personal Identifier already exists: " + personalIdentifier);
         }
-        customerMapper.insert(instance.getPersonalIdentifier());
+        customerMapper.insert(personalIdentifier);
     }
 
     @Override
