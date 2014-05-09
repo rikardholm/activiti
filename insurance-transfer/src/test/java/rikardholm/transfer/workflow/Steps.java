@@ -65,8 +65,8 @@ public class Steps {
 
     @När("^vi tar emot en förfrågan om personen$")
     public void vi_tar_emot_en_förfrågan_om_personen() throws Throwable {
-        InsuranceInformationRequest message = new InsuranceInformationRequest(PERSONAL_IDENTIFIER.getPersonalIdentifier());
-        inboxRepository.add(message);
+        InsuranceInformationRequest message = new InsuranceInformationRequest(PERSONAL_IDENTIFIER.getValue());
+        inboxRepository.create(message);
     }
 
     @Och("^ger systemet (\\d+) sekunder att behandla meddelandet$")
@@ -81,7 +81,7 @@ public class Steps {
         List<InsuranceInformationResponse> insuranceInformationResponses = outboxRepository.find(InsuranceInformationResponse.class);
         assertThat(insuranceInformationResponses, hasSize(1));
         InsuranceInformationResponse insuranceInformationResponse = insuranceInformationResponses.get(0);
-        assertThat(insuranceInformationResponse.personalIdentificationNumber, equalTo(PERSONAL_IDENTIFIER.getPersonalIdentifier()));
+        assertThat(insuranceInformationResponse.personalIdentificationNumber, equalTo(PERSONAL_IDENTIFIER.getValue()));
         assertThat(insuranceInformationResponse.insuranceNumbers, hasSize(1));
         assertThat(insuranceInformationResponse.insuranceNumbers.get(0), equalTo(INSURANCE_NUMBER.getInsuranceNumber()));
     }

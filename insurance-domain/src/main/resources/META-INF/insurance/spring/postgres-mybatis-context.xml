@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-autowire="constructor">
+    <bean class="rikardholm.insurance.infrastructure.postgres.PostgresCustomerRepository">
+        <constructor-arg ref="customerMapper"/>
+    </bean>
+
+    <bean id="customerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="rikardholm.insurance.infrastructure.postgres.CustomerMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceAB"/>
+        <!-- <property name="typeHandlersPackage" value="rikardholm.insurance.infrastructure.mybatis.typehandlers"/> -->
+       <property name="typeHandlers">
+            <list>
+                <bean class="rikardholm.insurance.infrastructure.mybatis.typehandlers.PersonalIdentifierTypeHandler"/>
+            </list>
+        </property>
+   </bean>
+</beans>

@@ -4,8 +4,18 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 public class PersonalIdentifierTest {
+
+    @Test
+    public void contains_the_set_value() {
+        String expected = "asdf2345";
+        PersonalIdentifier personalIdentifier = PersonalIdentifier.of(expected);
+
+        assertThat(expected, is(equalTo(personalIdentifier.getValue())));
+    }
+
     @Test(expected = NullPointerException.class)
     public void refuses_null_personalIdentifier() throws Exception {
         PersonalIdentifier.of(null);

@@ -10,11 +10,6 @@ public class InMemoryMessageRepository<M extends Message> implements MessageRepo
     private List<M> store = new ArrayList<M>();
 
     @Override
-    public void add(M message) {
-        store.add(message);
-    }
-
-    @Override
     public <T extends M> List<T> find(Class<T> type) {
         List<T> foundMessages = new ArrayList<T>();
         for (M message : store) {
@@ -28,5 +23,15 @@ public class InMemoryMessageRepository<M extends Message> implements MessageRepo
 
     private boolean messageMatchesType(Object message, Class<?> type) {
         return type.isAssignableFrom(message.getClass());
+    }
+
+    @Override
+    public void create(M instance) {
+        store.add(instance);
+    }
+
+    @Override
+    public void delete(M instance) {
+        throw new UnsupportedOperationException();
     }
 }

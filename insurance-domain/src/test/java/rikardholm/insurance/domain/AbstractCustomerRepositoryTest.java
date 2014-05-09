@@ -1,5 +1,6 @@
 package rikardholm.insurance.domain;
 
+import org.junit.Before;
 import org.junit.Test;
 import rikardholm.insurance.common.Optional;
 
@@ -15,7 +16,13 @@ public abstract class AbstractCustomerRepositoryTest extends AbstractContractTes
     public static final Customer CUSTOMER = aCustomer()
             .withPersonalIdentifier(PERSONAL_IDENTIFIER)
             .build();
-    private CustomerRepository customerRepository = getInstance();
+    private CustomerRepository customerRepository;
+
+    @Before
+    public void setUp() throws Exception {
+        customerRepository = getInstance();
+        customerRepository.delete(CUSTOMER);
+    }
 
     @Test
     public void findByPersonalIdentifier_should_return_absent_when_not_found() throws Exception {

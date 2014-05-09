@@ -17,9 +17,9 @@ public class InMemoryMessageRepositoryTest {
         AMessage messageTwo = new AMessage();
         BMessage bMessage = new BMessage();
 
-        target.add(messageOne);
-        target.add(messageTwo);
-        target.add(bMessage);
+        target.create(messageOne);
+        target.create(messageTwo);
+        target.create(bMessage);
 
         List<AMessage> aMessages = target.find(AMessage.class);
         List<BMessage> bMessages = target.find(BMessage.class);

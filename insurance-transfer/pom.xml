@@ -34,7 +34,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>4.0.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -47,11 +46,11 @@
         <!-- Siblings -->
         <dependency>
             <groupId>activiti</groupId>
-            <artifactId>insurance-services</artifactId>
+            <artifactId>insurance-common</artifactId>
         </dependency>
         <dependency>
             <groupId>activiti</groupId>
-            <artifactId>insurance-messaging</artifactId>
+            <artifactId>insurance-domain</artifactId>
         </dependency>
 
         <!-- Test -->
@@ -86,6 +85,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

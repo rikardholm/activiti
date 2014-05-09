@@ -39,7 +39,7 @@ public class ProcessDispatcherTest {
     @Test
     @Deployment(resources = "rikardholm/transfer/workflow/start-stop-process.bpmn")
     public void starts_a_mapped_process() throws Exception {
-        inMemoryInboxRepository.add(INCOMING_MESSAGE);
+        inMemoryInboxRepository.create(INCOMING_MESSAGE);
         processDispatcher.pollInbox();
 
         HistoricProcessInstance instance = getHistoricProcessInstance();
@@ -50,7 +50,7 @@ public class ProcessDispatcherTest {
     @Test
     @Deployment(resources = "rikardholm/transfer/workflow/start-stop-process.bpmn")
     public void sets_IncomingMessage_as_process_variable() throws Exception {
-        inMemoryInboxRepository.add(INCOMING_MESSAGE);
+        inMemoryInboxRepository.create(INCOMING_MESSAGE);
         processDispatcher.pollInbox();
 
         HistoricProcessInstance historicProcessInstance = getHistoricProcessInstance();

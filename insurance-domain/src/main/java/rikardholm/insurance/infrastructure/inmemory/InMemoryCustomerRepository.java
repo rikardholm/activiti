@@ -27,6 +27,11 @@ public class InMemoryCustomerRepository implements CustomerRepository {
     }
 
     @Override
+    public void delete(Customer instance) {
+
+    }
+
+    @Override
     public Optional<Customer> findBy(final PersonalIdentifier personalIdentifier) {
         return OptionalConverter.convert(tryFind(customers, new Predicate<Customer>() {
             @Override

@@ -25,6 +25,11 @@ public class InMemoryInsuranceRepository implements InsuranceRepository {
     }
 
     @Override
+    public void delete(Insurance instance) {
+
+    }
+
+    @Override
     public Optional<Insurance> findBy(final InsuranceNumber insuranceNumber) {
         return OptionalConverter.convert(Iterables.tryFind(insurances, new Predicate<Insurance>() {
             @Override
