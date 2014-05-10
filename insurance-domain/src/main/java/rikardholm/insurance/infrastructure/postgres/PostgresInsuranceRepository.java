@@ -1,6 +1,6 @@
 package rikardholm.insurance.infrastructure.postgres;
 
-import rikardholm.insurance.common.Optional;
+import com.google.common.base.Optional;
 import rikardholm.insurance.domain.*;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class PostgresInsuranceRepository implements InsuranceRepository {
     }
 
     @Override
-    public Optional<Insurance> findBy(InsuranceNumber insuranceNumber) {
+    public com.google.common.base.Optional<Insurance> findBy(InsuranceNumber insuranceNumber) {
         Insurance insurance = insuranceMapper.findByInsuranceNumber(insuranceNumber);
 
         if (insurance == null) {

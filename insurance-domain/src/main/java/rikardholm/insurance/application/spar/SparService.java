@@ -1,6 +1,6 @@
 package rikardholm.insurance.application.spar;
 
-import rikardholm.insurance.common.Optional;
+import com.google.common.base.Optional;
 import rikardholm.insurance.domain.PersonalIdentifier;
 
 public interface SparService {

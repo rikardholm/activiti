@@ -1,6 +1,6 @@
 package rikardholm.insurance.domain;
 
-import rikardholm.insurance.common.Optional;
+import com.google.common.base.Optional;
 
 public interface CustomerRepository extends Repository<Customer> {
     Optional<Customer> findBy(PersonalIdentifier personalIdentifier);

@@ -1,9 +1,9 @@
 package rikardholm.insurance.common.test;
 
+import com.google.common.base.Optional;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import rikardholm.insurance.common.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -41,7 +41,7 @@ public class OptionalMatchers {
 
             @Override
             protected void describeMismatchSafely(Optional<?> item, Description mismatchDescription) {
-                mismatchDescription.appendText("value was present: ").appendValue(item.getValue());
+                mismatchDescription.appendText("value was present: ").appendValue(item.get());
             }
         };
     }
@@ -54,7 +54,7 @@ public class OptionalMatchers {
                     return false;
                 }
 
-                return matcher.matches(item.getValue());
+                return matcher.matches(item.get());
             }
 
             @Override
@@ -70,7 +70,7 @@ public class OptionalMatchers {
                 }
 
                 mismatchDescription.appendText("value ");
-                matcher.describeMismatch(item.getValue(), mismatchDescription);
+                matcher.describeMismatch(item.get(), mismatchDescription);
             }
         };
     }

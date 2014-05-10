@@ -1,12 +1,11 @@
 package rikardholm.insurance.infrastructure.fake;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import rikardholm.insurance.common.Optional;
-import rikardholm.insurance.common.OptionalConverter;
-import rikardholm.insurance.domain.PersonalIdentifier;
 import rikardholm.insurance.application.spar.SparResult;
 import rikardholm.insurance.application.spar.SparService;
 import rikardholm.insurance.application.spar.SparUnavailableException;
+import rikardholm.insurance.domain.PersonalIdentifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +22,12 @@ public class FakeSparService implements SparService {
             throw new SparUnavailableException();
         }
 
-        return OptionalConverter.convert(tryFind(sparResults, new Predicate<SparResult>() {
+        return tryFind(sparResults, new Predicate<SparResult>() {
             @Override
             public boolean apply(SparResult input) {
                 return personalIdentifier.equals(input.personalIdentifier);
             }
-        }));
+        });
     }
 
     public void addSecret(PersonalIdentifier personalIdentifier) {

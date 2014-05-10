@@ -1,8 +1,7 @@
 package rikardholm.insurance.infrastructure.inmemory;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import rikardholm.insurance.common.Optional;
-import rikardholm.insurance.common.OptionalConverter;
 import rikardholm.insurance.domain.PersonalIdentifier;
 import rikardholm.insurance.domain.Customer;
 import rikardholm.insurance.domain.CustomerRepository;
@@ -33,11 +32,11 @@ public class InMemoryCustomerRepository implements CustomerRepository {
 
     @Override
     public Optional<Customer> findBy(final PersonalIdentifier personalIdentifier) {
-        return OptionalConverter.convert(tryFind(customers, new Predicate<Customer>() {
+        return tryFind(customers, new Predicate<Customer>() {
             @Override
             public boolean apply(Customer input) {
                 return personalIdentifier.equals(input.getPersonalIdentifier());
             }
-        }));
+        });
     }
 }

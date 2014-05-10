@@ -1,14 +1,13 @@
 package rikardholm.insurance.infrastructure.fake;
 
+import com.google.common.base.Optional;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
-import rikardholm.insurance.common.Optional;
-import rikardholm.insurance.domain.PersonalIdentifier;
 import rikardholm.insurance.application.spar.SparResult;
 import rikardholm.insurance.application.spar.SparUnavailableException;
-import rikardholm.insurance.infrastructure.fake.FakeSparService;
+import rikardholm.insurance.domain.PersonalIdentifier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;

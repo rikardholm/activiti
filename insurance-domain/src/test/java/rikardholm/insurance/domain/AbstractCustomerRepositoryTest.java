@@ -1,8 +1,8 @@
 package rikardholm.insurance.domain;
 
+import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import rikardholm.insurance.common.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;

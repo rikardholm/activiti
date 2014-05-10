@@ -1,6 +1,6 @@
 package rikardholm.insurance.transfer;
 
-import rikardholm.insurance.common.Optional;
+import com.google.common.base.Optional;
 import rikardholm.insurance.domain.PersonalIdentifier;
 import rikardholm.insurance.domain.Customer;
 import rikardholm.insurance.domain.CustomerRepository;
@@ -28,7 +28,7 @@ public class InsuranceFinder {
             return emptyList();
         }
 
-        List<Insurance> insurances = insuranceRepository.findBy(customerOptional.getValue());
+        List<Insurance> insurances = insuranceRepository.findBy(customerOptional.get());
 
         List<InsuranceInformation> insuranceInformations = new ArrayList<>();
         for (Insurance insurance : insurances) {

@@ -1,6 +1,6 @@
 package rikardholm.insurance.infrastructure.postgres;
 
-import rikardholm.insurance.common.Optional;
+import com.google.common.base.Optional;
 import rikardholm.insurance.domain.PersonalIdentifier;
 import rikardholm.insurance.domain.Customer;
 import rikardholm.insurance.domain.CustomerRepository;

@@ -1,10 +1,10 @@
 package rikardholm.insurance.domain;
 
+import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
-import rikardholm.insurance.common.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
