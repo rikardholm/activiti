@@ -50,7 +50,7 @@
 
         <dependency>
             <groupId>activiti</groupId>
-            <artifactId>insurance-common</artifactId>
+            <artifactId>testing</artifactId>
         </dependency>
 
 
