@@ -13,6 +13,10 @@ public class InsuranceImpl implements Insurance {
         this.customer = customer;
     }
 
+    public InsuranceImpl(InsuranceNumber insuranceNumber, CustomerImpl customer) {
+        this(insuranceNumber, (Customer) customer);
+    }
+
     @Override
     public Customer getCustomer() {
         return customer;
@@ -21,6 +25,23 @@ public class InsuranceImpl implements Insurance {
     @Override
     public InsuranceNumber getInsuranceNumber() {
         return insuranceNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InsuranceImpl insurance = (InsuranceImpl) o;
+
+        if (!insuranceNumber.equals(insurance.insuranceNumber)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return insuranceNumber.hashCode();
     }
 
     @Override

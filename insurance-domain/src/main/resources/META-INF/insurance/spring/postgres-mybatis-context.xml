@@ -23,6 +23,7 @@
        <property name="typeHandlers">
             <list>
                 <bean class="rikardholm.insurance.infrastructure.mybatis.typehandlers.PersonalIdentifierTypeHandler"/>
+                <bean class="rikardholm.insurance.infrastructure.mybatis.typehandlers.InsuranceNumberTypeHandler"/>
             </list>
         </property>
    </bean>

@@ -15,4 +15,11 @@ public interface CustomerMapper {
 
     @Delete("DELETE FROM customers WHERE personal_identifier = #{personalIdentifier}")
     void delete(PersonalIdentifier personalIdentifier);
+
+    @Select("SELECT id FROM customers WHERE personal_identifier = #{personalIdentifier}")
+    Integer selectId(Customer customer);
+
+    @Select("SELECT personal_identifier FROM customers WHERE id = #{customerId}")
+    @ConstructorArgs(@Arg(column = "personal_identifier", javaType = PersonalIdentifier.class))
+    CustomerImpl findById(Integer customerId);
 }

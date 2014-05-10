@@ -83,7 +83,7 @@ public class Steps {
         InsuranceInformationResponse insuranceInformationResponse = insuranceInformationResponses.get(0);
         assertThat(insuranceInformationResponse.personalIdentificationNumber, equalTo(PERSONAL_IDENTIFIER.getValue()));
         assertThat(insuranceInformationResponse.insuranceNumbers, hasSize(1));
-        assertThat(insuranceInformationResponse.insuranceNumbers.get(0), equalTo(INSURANCE_NUMBER.getInsuranceNumber()));
+        assertThat(insuranceInformationResponse.insuranceNumbers.get(0), equalTo(INSURANCE_NUMBER.getValue()));
     }
 
     @Så("^svarar vi att personen inte har några försäkringar hos oss$")

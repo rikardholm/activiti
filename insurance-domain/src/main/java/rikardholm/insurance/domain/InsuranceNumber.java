@@ -2,20 +2,10 @@ package rikardholm.insurance.domain;
 
 import java.io.Serializable;
 
-public class InsuranceNumber implements Serializable {
-    private final Long insuranceNumber;
+public class InsuranceNumber extends AbstractValueObject<Long> implements Serializable {
 
     private InsuranceNumber(Long insuranceNumber) {
-        this.insuranceNumber = insuranceNumber;
-    }
-
-    public Long getInsuranceNumber() {
-        return insuranceNumber;
-    }
-
-    @Override
-    public String toString() {
-        return "Insurance Number " + insuranceNumber;
+        super(insuranceNumber);
     }
 
     public static InsuranceNumber of(Long value) {

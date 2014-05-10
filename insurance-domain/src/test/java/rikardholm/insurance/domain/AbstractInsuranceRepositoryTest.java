@@ -1,9 +1,12 @@
 package rikardholm.insurance.domain;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExternalResource;
 import rikardholm.insurance.common.Optional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,11 +30,22 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
             .belongsTo(CUSTOMER)
             .build();
 
+    @Rule
+    public InsuranceRule insuranceRule = new InsuranceRule();
+
     private InsuranceRepository insuranceRepository;
+    private CustomerRepository customerRepository;
+
+
+    abstract protected CustomerRepository getCustomerRepository();
 
     @Before
     public void setUp() throws Exception {
         insuranceRepository = getInstance();
+        customerRepository = getCustomerRepository();
+
+        insuranceRule.setCustomerRepository(customerRepository);
+        insuranceRule.setInsuranceRepository(insuranceRepository);
     }
 
     @Test
@@ -43,7 +57,7 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
 
     @Test
     public void findByInsuranceNumber_should_return_Insurance_when_it_exists() throws Exception {
-        insuranceRepository.create(INSURANCE);
+        insuranceRule.create(INSURANCE);
 
         Optional<Insurance> result = insuranceRepository.findBy(INSURANCE_NUMBER);
 
@@ -59,7 +73,7 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
 
     @Test
     public void findByCustomer_should_return_Insurance_if_found() throws Exception {
-        insuranceRepository.create(INSURANCE);
+        insuranceRule.create(INSURANCE);
 
         List<Insurance> result = insuranceRepository.findBy(CUSTOMER);
 
@@ -83,12 +97,57 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
                 .belongsTo(CUSTOMER)
                 .build();
 
-        insuranceRepository.create(insuranceA);
-        insuranceRepository.create(insuranceB);
-        insuranceRepository.create(insuranceC);
+        insuranceRule.create(insuranceA);
+        insuranceRule.create(insuranceB);
+        insuranceRule.create(insuranceC);
 
         List<Insurance> result = insuranceRepository.findBy(CUSTOMER);
 
         assertThat(result, contains(insuranceA, insuranceB, insuranceC));
+    }
+
+    private void create(Insurance insurance) {
+        Optional<Customer> customer = customerRepository.findBy(insurance.getCustomer().getPersonalIdentifier());
+        if (!customer.isPresent()) {
+            customerRepository.create(insurance.getCustomer());
+        }
+
+        insuranceRepository.create(insurance);
+    }
+
+    private static class InsuranceRule extends ExternalResource {
+
+        private List<Insurance> createdInsurances = new ArrayList<>();
+
+        private InsuranceRepository insuranceRepository;
+        private CustomerRepository customerRepository;
+
+        public void setInsuranceRepository(InsuranceRepository insuranceRepository) {
+            this.insuranceRepository = insuranceRepository;
+        }
+
+        public void setCustomerRepository(CustomerRepository customerRepository) {
+            this.customerRepository = customerRepository;
+        }
+
+        public void create(Insurance insurance) {
+            Optional<Customer> customer = customerRepository.findBy(insurance.getCustomer().getPersonalIdentifier());
+            if (!customer.isPresent()) {
+                customerRepository.create(insurance.getCustomer());
+            }
+            insuranceRepository.create(insurance);
+            createdInsurances.add(insurance);
+        }
+
+        @Override
+        protected void after() {
+            for (Insurance insurance : createdInsurances) {
+                insuranceRepository.delete(insurance);
+
+                if (insuranceRepository.findBy(insurance.getCustomer()).isEmpty()) {
+                    customerRepository.delete(insurance.getCustomer());
+                }
+            }
+        }
     }
 }
