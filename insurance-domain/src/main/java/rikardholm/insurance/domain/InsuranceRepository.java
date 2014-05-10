@@ -1,6 +1,7 @@
 package rikardholm.insurance.domain;
 
 import com.google.common.base.Optional;
+import rikardholm.insurance.domain.common.Repository;
 
 import java.util.List;
 

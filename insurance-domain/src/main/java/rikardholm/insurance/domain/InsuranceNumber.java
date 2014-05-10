@@ -1,5 +1,7 @@
 package rikardholm.insurance.domain;
 
+import rikardholm.insurance.domain.common.AbstractValueObject;
+
 import java.io.Serializable;
 
 public class InsuranceNumber extends AbstractValueObject<Long> implements Serializable {

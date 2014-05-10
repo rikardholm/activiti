@@ -3,17 +3,17 @@ package rikardholm.insurance.domain;
 import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import rikardholm.insurance.domain.builder.CustomerBuilder;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
 import static rikardholm.insurance.common.test.OptionalMatchers.isAbsent;
-import static rikardholm.insurance.domain.Builders.aCustomer;
 
 public abstract class AbstractCustomerRepositoryTest extends AbstractContractTest<CustomerRepository> {
 
     public static final String PERSONAL_IDENTIFIER_STRING = "560830-4028";
     public static final PersonalIdentifier PERSONAL_IDENTIFIER = PersonalIdentifier.of(PERSONAL_IDENTIFIER_STRING);
-    public static final Customer CUSTOMER = aCustomer()
+    public static final Customer CUSTOMER = CustomerBuilder.aCustomer()
             .withPersonalIdentifier(PERSONAL_IDENTIFIER)
             .build();
     private CustomerRepository customerRepository;
@@ -45,7 +45,7 @@ public abstract class AbstractCustomerRepositoryTest extends AbstractContractTes
         customerRepository.create(CUSTOMER);
 
         PersonalIdentifier personalIdentifier = PersonalIdentifier.of(PERSONAL_IDENTIFIER_STRING);
-        Customer customer = aCustomer()
+        Customer customer = CustomerBuilder.aCustomer()
                 .withPersonalIdentifier(personalIdentifier)
                 .build();
 

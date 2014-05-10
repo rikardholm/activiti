@@ -1,5 +1,7 @@
 package rikardholm.insurance.domain;
 
+import rikardholm.insurance.domain.common.AbstractValueObject;
+
 public class PersonalIdentifier extends AbstractValueObject<String> {
 
     private PersonalIdentifier(String personalIdentifier) {

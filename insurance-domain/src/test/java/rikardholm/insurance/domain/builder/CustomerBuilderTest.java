@@ -6,7 +6,6 @@ import rikardholm.insurance.domain.PersonalIdentifier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static rikardholm.insurance.domain.Builders.aCustomer;
 import static rikardholm.insurance.domain.matchers.CustomerMatchers.hasPersonalIdentifier;
 
 public class CustomerBuilderTest {
@@ -15,7 +14,7 @@ public class CustomerBuilderTest {
 
     @Test
     public void withPersonalIdentifier_sets_personal_identifier() throws Exception {
-        Customer result = aCustomer()
+        Customer result = CustomerBuilder.aCustomer()
                 .withPersonalIdentifier(PERSONAL_IDENTIFIER)
                 .build();
 
@@ -24,6 +23,6 @@ public class CustomerBuilderTest {
 
     @Test(expected = NullPointerException.class)
     public void refuses_nulls() throws Exception {
-        aCustomer().withPersonalIdentifier(null).build();
+        CustomerBuilder.aCustomer().withPersonalIdentifier(null).build();
     }
 }

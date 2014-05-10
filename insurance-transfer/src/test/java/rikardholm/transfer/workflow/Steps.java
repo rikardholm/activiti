@@ -17,12 +17,13 @@ import rikardholm.insurance.application.messaging.OutboxRepository;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationRequest;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.domain.*;
+import rikardholm.insurance.domain.builder.CustomerBuilder;
+import rikardholm.insurance.domain.builder.InsuranceBuilder;
 
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static rikardholm.insurance.domain.Builders.aCustomer;
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")
@@ -42,13 +43,13 @@ public class Steps {
     private OutboxRepository outboxRepository;
 
     public static final PersonalIdentifier PERSONAL_IDENTIFIER = PersonalIdentifier.of("670913-4506");
-    public static final Customer CUSTOMER = aCustomer().withPersonalIdentifier(PERSONAL_IDENTIFIER).build();
+    public static final Customer CUSTOMER = CustomerBuilder.aCustomer().withPersonalIdentifier(PERSONAL_IDENTIFIER).build();
     public static final InsuranceNumber INSURANCE_NUMBER = InsuranceNumber.of(35968L);
 
 
     @Givet("^en person som har en försäkring på företaget$")
     public void en_försäkring_som_tillhör_en_person() throws Throwable {
-        Insurance insurance = Builders.anInsurance()
+        Insurance insurance = InsuranceBuilder.anInsurance()
                 .withInsuranceNumber(INSURANCE_NUMBER)
                 .belongsTo(CUSTOMER)
                 .build();

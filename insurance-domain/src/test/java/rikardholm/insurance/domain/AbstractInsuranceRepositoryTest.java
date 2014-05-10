@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
+import rikardholm.insurance.domain.builder.CustomerBuilder;
+import rikardholm.insurance.domain.builder.InsuranceBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,19 +15,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
 import static rikardholm.insurance.common.test.OptionalMatchers.isAbsent;
-import static rikardholm.insurance.domain.Builders.aCustomer;
-import static rikardholm.insurance.domain.Builders.anInsurance;
 
 public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTest<InsuranceRepository> {
 
     private static final InsuranceNumber INSURANCE_NUMBER = InsuranceNumber.of(311768L);
 
-    public static final Customer CUSTOMER = aCustomer()
+    public static final Customer CUSTOMER = CustomerBuilder.aCustomer()
             .withPersonalIdentifier(PersonalIdentifier.of("840325-9043"))
             .build();
 
-    private static final Insurance INSURANCE = Builders
-            .anInsurance()
+    private static final Insurance INSURANCE = InsuranceBuilder.anInsurance()
             .withInsuranceNumber(INSURANCE_NUMBER)
             .belongsTo(CUSTOMER)
             .build();
@@ -82,17 +81,17 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
 
     @Test
     public void findByCustomer_should_return_multiple_Insurances_if_found() throws Exception {
-        Insurance insuranceA = anInsurance()
+        Insurance insuranceA = InsuranceBuilder.anInsurance()
                 .withInsuranceNumber(InsuranceNumber.of(1L))
                 .belongsTo(CUSTOMER)
                 .build();
 
-        Insurance insuranceB = anInsurance()
+        Insurance insuranceB = InsuranceBuilder.anInsurance()
                 .withInsuranceNumber(InsuranceNumber.of(2L))
                 .belongsTo(CUSTOMER)
                 .build();
 
-        Insurance insuranceC = anInsurance()
+        Insurance insuranceC = InsuranceBuilder.anInsurance()
                 .withInsuranceNumber(InsuranceNumber.of(3L))
                 .belongsTo(CUSTOMER)
                 .build();

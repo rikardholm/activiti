@@ -10,7 +10,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static rikardholm.insurance.domain.builder.CustomerBuilder.aCustomer;
-import static rikardholm.insurance.domain.Builders.anInsurance;
 import static rikardholm.insurance.domain.matchers.InsuranceMatchers.hasCustomer;
 import static rikardholm.insurance.domain.matchers.InsuranceMatchers.hasInsuranceNumber;
 
@@ -19,7 +18,7 @@ public class InsuranceBuilderTest {
     private static final Customer CUSTOMER = aCustomer()
             .withPersonalIdentifier(PersonalIdentifier.of("880415-3028"))
             .build();
-    private static final Insurance INSURANCE = anInsurance()
+    private static final Insurance INSURANCE = InsuranceBuilder.anInsurance()
             .withInsuranceNumber(INSURANCE_NUMBER)
             .belongsTo(CUSTOMER)
             .build();
@@ -42,12 +41,12 @@ public class InsuranceBuilderTest {
 
     @Test(expected = NullPointerException.class)
     public void refuses_null_InsuranceNumber() throws Exception {
-        anInsurance().withInsuranceNumber(null);
+        InsuranceBuilder.anInsurance().withInsuranceNumber(null);
     }
 
     @Test(expected = NullPointerException.class)
     public void refuses_null_Customer() {
-        anInsurance()
+        InsuranceBuilder.anInsurance()
                 .withInsuranceNumber(INSURANCE_NUMBER)
                 .belongsTo(null);
     }

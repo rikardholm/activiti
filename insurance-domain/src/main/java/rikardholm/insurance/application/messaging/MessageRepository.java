@@ -1,6 +1,6 @@
 package rikardholm.insurance.application.messaging;
 
-import rikardholm.insurance.domain.Repository;
+import rikardholm.insurance.domain.common.Repository;
 
 import java.util.List;
 

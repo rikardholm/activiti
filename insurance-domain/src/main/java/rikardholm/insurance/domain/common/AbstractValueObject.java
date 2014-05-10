@@ -1,4 +1,4 @@
-package rikardholm.insurance.domain;
+package rikardholm.insurance.domain.common;
 
 import static java.util.Objects.requireNonNull;
 
