@@ -4,5 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean class="rikardholm.insurance.infrastructure.inmemory.InMemoryInboxRepository"/>
     <bean class="rikardholm.insurance.infrastructure.inmemory.InMemoryOutboxRepository"/>
+    <bean class="rikardholm.insurance.infrastructure.inmemory.InMemoryMessageEventRepository"/>
     <bean id="sparService" class="rikardholm.insurance.infrastructure.fake.FakeSparService"/>
 </beans>

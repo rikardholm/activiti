@@ -35,7 +35,7 @@
     <sequenceFlow id="flow8" sourceRef="scripttask4" targetRef="endevent1"></sequenceFlow>
     <scriptTask id="scripttask1" name="Skapa beställning" scriptFormat="javascript" activiti:autoStoreVariables="false">
       <script>println('Skapar beställning…');
-var personnummer = execution.getVariable('incomingMessage').personalIdentificationNumber;
+var personnummer = execution.getVariable('incomingMessage').personalIdentifier;
 execution.setVariable('personnummer',personnummer);</script>
     </scriptTask>
     <scriptTask id="scripttask2" name="Sök efter försäkringar på personnummer" scriptFormat="javascript" activiti:autoStoreVariables="false">

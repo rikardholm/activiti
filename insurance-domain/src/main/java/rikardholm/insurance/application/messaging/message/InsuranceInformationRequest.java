@@ -1,14 +1,15 @@
 package rikardholm.insurance.application.messaging.message;
 
 import rikardholm.insurance.application.messaging.IncomingMessage;
+import rikardholm.insurance.domain.PersonalIdentifier;
 
 import static java.util.Objects.requireNonNull;
 
 public class InsuranceInformationRequest implements IncomingMessage {
-    public final String personalIdentificationNumber;
+    public final PersonalIdentifier personalIdentifier;
 
-    public InsuranceInformationRequest(String personalIdentificationNumber) {
-        this.personalIdentificationNumber = requireNonNull(personalIdentificationNumber);
+    public InsuranceInformationRequest(PersonalIdentifier personalIdentifier) {
+        this.personalIdentifier = requireNonNull(personalIdentifier);
     }
 
     @Override
@@ -18,13 +19,13 @@ public class InsuranceInformationRequest implements IncomingMessage {
 
         InsuranceInformationRequest that = (InsuranceInformationRequest) o;
 
-        if (!personalIdentificationNumber.equals(that.personalIdentificationNumber)) return false;
+        if (!personalIdentifier.equals(that.personalIdentifier)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return personalIdentificationNumber.hashCode();
+        return personalIdentifier.hashCode();
     }
 }

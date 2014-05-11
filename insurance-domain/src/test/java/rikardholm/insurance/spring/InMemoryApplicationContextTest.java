@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import rikardholm.insurance.application.messaging.InboxRepository;
+import rikardholm.insurance.application.messaging.MessageEventRepository;
 import rikardholm.insurance.application.messaging.OutboxRepository;
 import rikardholm.insurance.application.spar.SparService;
 
@@ -27,6 +28,11 @@ public class InMemoryApplicationContextTest {
     @Test
     public void wires_an_OutboxRepository() throws Exception {
         assertThat(applicationContext, hasExactlyOneBeanOfType(OutboxRepository.class));
+    }
+
+    @Test
+    public void wires_a_MessageEventRepository() throws Exception {
+        assertThat(applicationContext, hasExactlyOneBeanOfType(MessageEventRepository.class));
     }
 
     @Test

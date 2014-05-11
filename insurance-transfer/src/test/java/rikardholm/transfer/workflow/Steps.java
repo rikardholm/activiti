@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import rikardholm.insurance.application.messaging.InboxRepository;
 import rikardholm.insurance.application.messaging.OutboxRepository;
@@ -27,6 +28,7 @@ import static org.hamcrest.Matchers.*;
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")
+@DirtiesContext
 public class Steps {
     private static Logger log = LoggerFactory.getLogger(Steps.class);
 
@@ -54,8 +56,8 @@ public class Steps {
                 .belongsTo(CUSTOMER)
                 .build();
 
-        insuranceRepository.create(insurance);
         customerRepository.create(CUSTOMER);
+        insuranceRepository.create(insurance);
     }
 
     @Givet("^en person som saknar försäkringar hos bolaget$")
@@ -66,7 +68,7 @@ public class Steps {
 
     @När("^vi tar emot en förfrågan om personen$")
     public void vi_tar_emot_en_förfrågan_om_personen() throws Throwable {
-        InsuranceInformationRequest message = new InsuranceInformationRequest(PERSONAL_IDENTIFIER.getValue());
+        InsuranceInformationRequest message = new InsuranceInformationRequest(PERSONAL_IDENTIFIER);
         inboxRepository.create(message);
     }
 
