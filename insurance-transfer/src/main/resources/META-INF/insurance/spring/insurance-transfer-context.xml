@@ -21,4 +21,5 @@
     </bean>
 
     <bean id="insuranceFinder" class="rikardholm.insurance.transfer.InsuranceFinder"/>
+    <bean id="messageSender" class="rikardholm.insurance.transfer.MessageSender"/>
 </beans>

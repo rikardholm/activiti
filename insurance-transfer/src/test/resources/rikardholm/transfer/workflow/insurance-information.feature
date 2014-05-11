@@ -14,4 +14,4 @@ Egenskap: Information om en persons innehav hos bolaget
     Givet en person som saknar försäkringar hos bolaget
     När vi tar emot en förfrågan om personen
     Och ger systemet 2 sekunder att behandla meddelandet
-    Så svarar vi att personen inte har några försäkringar
+    Så svarar vi att personen inte har några försäkringar hos oss

@@ -25,6 +25,5 @@ public class SpringContextLoadTest {
     @Test
     public void wires_a_ProcessDispatcher() throws Exception {
         assertThat(applicationContext, hasExactlyOneBeanOfType(ProcessDispatcher.class));
-
     }
 }

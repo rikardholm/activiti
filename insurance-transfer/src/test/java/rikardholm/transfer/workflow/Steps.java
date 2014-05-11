@@ -17,6 +17,7 @@ import rikardholm.insurance.application.messaging.InboxRepository;
 import rikardholm.insurance.application.messaging.OutboxRepository;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationRequest;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
+import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
 import rikardholm.insurance.domain.*;
 import rikardholm.insurance.domain.builder.CustomerBuilder;
 import rikardholm.insurance.domain.builder.InsuranceBuilder;
@@ -91,7 +92,9 @@ public class Steps {
 
     @Så("^svarar vi att personen inte har några försäkringar hos oss$")
     public void svarar_vi_att_personen_inte_har_några_försäkringar_hos_oss() {
-          throw new PendingException();
+        List<NoInsurancesResponse> noInsurancesResponses = outboxRepository.find(NoInsurancesResponse.class);
+        assertThat(noInsurancesResponses, hasSize(1));
+        assertThat(noInsurancesResponses.get(0).personalIdentificationNumber, is(equalTo(PERSONAL_IDENTIFIER.getValue())));
     }
 
     /*@Given("^no insurance belongs to customer (\\d+)-(\\d+)$")

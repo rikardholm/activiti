@@ -1,15 +1,13 @@
 package rikardholm.insurance.transfer;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import rikardholm.insurance.domain.PersonalIdentifier;
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.CustomerRepository;
-import rikardholm.insurance.domain.Insurance;
-import rikardholm.insurance.domain.InsuranceRepository;
+import com.google.common.collect.ImmutableList;
+import rikardholm.insurance.domain.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.collect.Lists.transform;
 import static java.util.Collections.emptyList;
 
 public class InsuranceFinder {
@@ -21,8 +19,8 @@ public class InsuranceFinder {
         this.insuranceRepository = insuranceRepository;
     }
 
-    public List<InsuranceInformation> findByPersonnummer(String personnummer) {
-        Optional<Customer> customerOptional = customerRepository.findBy(PersonalIdentifier.of(personnummer));
+    public List<InsuranceNumber> findByPersonnummer(PersonalIdentifier personnummer) {
+        Optional<Customer> customerOptional = customerRepository.findBy(personnummer);
 
         if (!customerOptional.isPresent()) {
             return emptyList();
@@ -30,11 +28,21 @@ public class InsuranceFinder {
 
         List<Insurance> insurances = insuranceRepository.findBy(customerOptional.get());
 
-        List<InsuranceInformation> insuranceInformations = new ArrayList<>();
-        for (Insurance insurance : insurances) {
-            insuranceInformations.add(new InsuranceInformation(insurance.getInsuranceNumber()));
-        }
+        List<InsuranceNumber> insuranceNumbers = asInsuranceNumbers(insurances);
 
-        return insuranceInformations;
+        return insuranceNumbers;
+    }
+
+    private List<InsuranceNumber> asInsuranceNumbers(List<Insurance> insurances) {
+        return ImmutableList.copyOf(transform(insurances, toInsuranceNumber()));
+    }
+
+    private Function<? super Insurance, InsuranceNumber> toInsuranceNumber() {
+        return new Function<Insurance, InsuranceNumber>() {
+            @Override
+            public InsuranceNumber apply(Insurance input) {
+                return input.getInsuranceNumber();
+            }
+        };
     }
 }

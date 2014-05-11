@@ -14,25 +14,25 @@
         <flowNodeRef>endevent1</flowNodeRef>
         <flowNodeRef>scripttask1</flowNodeRef>
         <flowNodeRef>scripttask2</flowNodeRef>
-        <flowNodeRef>scripttask3</flowNodeRef>
-        <flowNodeRef>scripttask4</flowNodeRef>
+        <flowNodeRef>servicetask1</flowNodeRef>
+        <flowNodeRef>servicetask2</flowNodeRef>
       </lane>
     </laneSet>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow2" sourceRef="scripttask2" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow3" sourceRef="scripttask1" targetRef="scripttask2"></sequenceFlow>
-    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="scripttask3">
+    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="servicetask1">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${insurances.size() > 0}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow5" sourceRef="exclusivegateway1" targetRef="scripttask4">
+    <sequenceFlow id="flow5" sourceRef="exclusivegateway1" targetRef="servicetask2">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${insurances.size() == 0}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow6" sourceRef="scripttask3" targetRef="insurance-information-end"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="servicetask1" targetRef="insurance-information-end"></sequenceFlow>
     <endEvent id="insurance-information-end" name="End"></endEvent>
     <startEvent id="insurance-information-start" name="Start"></startEvent>
     <sequenceFlow id="flow1" sourceRef="insurance-information-start" targetRef="scripttask1"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
-    <sequenceFlow id="flow8" sourceRef="scripttask4" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="servicetask2" targetRef="endevent1"></sequenceFlow>
     <scriptTask id="scripttask1" name="Skapa beställning" scriptFormat="javascript" activiti:autoStoreVariables="false">
       <script>println('Skapar beställning…');
 var personnummer = execution.getVariable('incomingMessage').personalIdentifier;
@@ -45,12 +45,8 @@ var insurances = insuranceFinder.findByPersonnummer(personnummer);
 println('Insurances: ' + insurances.size());
 execution.setVariable('insurances',insurances);</script>
     </scriptTask>
-    <scriptTask id="scripttask3" name="Skicka information om försäkringar" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>println('Skickar information om försäkringar…');</script>
-    </scriptTask>
-    <scriptTask id="scripttask4" name="Meddela att det inte finns några försäkringar" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>println('Meddelar att försäkringar inte finns…');</script>
-    </scriptTask>
+    <serviceTask id="servicetask1" name="Skicka information om försäkringar" activiti:expression="${messageSender.sendInsuranceInformationResponse(execution)}"></serviceTask>
+    <serviceTask id="servicetask2" name="Meddela att det inte finns några försäkringar" activiti:expression="${messageSender.sendNoInsurancesResponse(personnummer)}"></serviceTask>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_Collaboration">
     <bpmndi:BPMNPlane bpmnElement="Collaboration" id="BPMNPlane_Collaboration">
@@ -78,10 +74,10 @@ execution.setVariable('insurances',insurances);</script>
       <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
         <omgdc:Bounds height="70.0" width="105.0" x="260.0" y="79.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="scripttask3" id="BPMNShape_scripttask3">
+      <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
         <omgdc:Bounds height="63.0" width="105.0" x="500.0" y="24.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="scripttask4" id="BPMNShape_scripttask4">
+      <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
         <omgdc:Bounds height="71.0" width="105.0" x="500.0" y="165.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
