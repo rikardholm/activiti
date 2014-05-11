@@ -33,7 +33,7 @@
     <sequenceFlow id="flow1" sourceRef="insurance-information-start" targetRef="scripttask1"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
     <sequenceFlow id="flow8" sourceRef="servicetask2" targetRef="endevent1"></sequenceFlow>
-    <scriptTask id="scripttask1" name="Skapa beställning" scriptFormat="javascript" activiti:autoStoreVariables="false">
+    <scriptTask id="scripttask1" name="Skapa beställning från meddelande" scriptFormat="javascript" activiti:autoStoreVariables="false">
       <script>println('Skapar beställning…');
 var personnummer = execution.getVariable('incomingMessage').personalIdentifier;
 execution.setVariable('personnummer',personnummer);</script>
@@ -69,7 +69,7 @@ execution.setVariable('insurances',insurances);</script>
         <omgdc:Bounds height="35.0" width="35.0" x="660.0" y="183.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
-        <omgdc:Bounds height="55.0" width="105.0" x="110.0" y="86.0"></omgdc:Bounds>
+        <omgdc:Bounds height="63.0" width="105.0" x="110.0" y="82.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
         <omgdc:Bounds height="70.0" width="105.0" x="260.0" y="79.0"></omgdc:Bounds>
