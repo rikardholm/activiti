@@ -11,8 +11,25 @@
 
     <artifactId>insurance-domain</artifactId>
 
-
     <profiles>
+        <profile>
+            <id>inmemory</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.17</version>
+                        <configuration>
+                            <excludedGroups>rikardholm.insurance.infrastructure.PostgresCategory</excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>postgres</id>
             <build>
@@ -26,7 +43,7 @@
                             <user>test</user>
                             <password>test</password>
                             <locations>
-                                <location>postgres/migrations</location>
+                                <location>postgres/migration</location>
                             </locations>
                         </configuration>
                         <dependencies>
@@ -36,6 +53,48 @@
                                 <version>9.3-1101-jdbc41</version>
                             </dependency>
                         </dependencies>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.17</version>
+                        <configuration>
+                            <!-- <groups>rikardholm.insurance.infrastructure.PostgresCategory</groups> -->
+                            <!-- <excludedGroups></excludedGroups>-->
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>oracle</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>3.0</version>
+                        <configuration>
+                            <url>jdbc:oracle:thin:@//localhost:1521/xe</url>
+                            <user>test</user>
+                            <password>test</password>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.oracle</groupId>
+                                <artifactId>se.avanza.ojdbc14</artifactId>
+                                <version>10.2.0.3.0</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.17</version>
+                        <configuration>
+                            <!-- <groups>rikardholm.insurance.infrastructure.PostgresCategory</groups> -->
+                            <!-- <excludedGroups></excludedGroups>-->
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -93,6 +152,12 @@
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
             <version>9.3-1101-jdbc41</version>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>se.avanza.ojdbc14</artifactId>
+            <scope>test</scope>
+            <version>10.2.0.3.0</version>
         </dependency>
     </dependencies>
 
