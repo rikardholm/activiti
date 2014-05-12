@@ -20,7 +20,7 @@ public class InsuranceFinder {
     }
 
     public List<InsuranceNumber> findByPersonnummer(PersonalIdentifier personnummer) {
-        Optional<Customer> customerOptional = customerRepository.findBy(personnummer);
+        Optional<? extends Customer> customerOptional = customerRepository.findBy(personnummer);
 
         if (!customerOptional.isPresent()) {
             return emptyList();

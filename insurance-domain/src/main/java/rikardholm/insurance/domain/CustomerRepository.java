@@ -4,5 +4,5 @@ import com.google.common.base.Optional;
 import rikardholm.insurance.domain.common.Repository;
 
 public interface CustomerRepository extends Repository<Customer> {
-    Optional<Customer> findBy(PersonalIdentifier personalIdentifier);
+    Optional<? extends Customer> findBy(PersonalIdentifier personalIdentifier);
 }

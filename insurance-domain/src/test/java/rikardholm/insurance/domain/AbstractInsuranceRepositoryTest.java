@@ -65,6 +65,11 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
 
     @Test
     public void findByCustomer_should_return_empty_list_when_Insurance_is_not_found() throws Exception {
+        List<Insurance> existing = insuranceRepository.findBy(CUSTOMER);
+        for (Insurance insurance : existing) {
+            insuranceRepository.delete(insurance);
+        }
+
         List<Insurance> result = insuranceRepository.findBy(CUSTOMER);
 
         assertThat(result, is(empty()));
@@ -106,7 +111,7 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
     }
 
     private void create(Insurance insurance) {
-        Optional<Customer> customer = customerRepository.findBy(insurance.getCustomer().getPersonalIdentifier());
+        Optional<? extends Customer> customer = customerRepository.findBy(insurance.getCustomer().getPersonalIdentifier());
         if (!customer.isPresent()) {
             customerRepository.create(insurance.getCustomer());
         }
@@ -130,7 +135,7 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
         }
 
         public void create(Insurance insurance) {
-            Optional<Customer> customer = customerRepository.findBy(insurance.getCustomer().getPersonalIdentifier());
+            Optional<? extends Customer> customer = customerRepository.findBy(insurance.getCustomer().getPersonalIdentifier());
             if (!customer.isPresent()) {
                 customerRepository.create(insurance.getCustomer());
             }

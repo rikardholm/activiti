@@ -26,7 +26,7 @@ public abstract class AbstractCustomerRepositoryTest extends AbstractContractTes
 
     @Test
     public void findByPersonalIdentifier_should_return_absent_when_not_found() throws Exception {
-        Optional<Customer> result = customerRepository.findBy(PERSONAL_IDENTIFIER);
+        Optional<? extends Customer> result = customerRepository.findBy(PERSONAL_IDENTIFIER);
 
         assertThat(result, isAbsent());
     }
@@ -35,7 +35,7 @@ public abstract class AbstractCustomerRepositoryTest extends AbstractContractTes
     public void findByPersonalIdentifier_should_find_existing_Customer() throws Exception {
         customerRepository.create(CUSTOMER);
 
-        Optional<Customer> result = customerRepository.findBy(PERSONAL_IDENTIFIER);
+        Optional<? extends Customer> result = customerRepository.findBy(PERSONAL_IDENTIFIER);
 
         assertThat(result, hasValue(CUSTOMER));
     }

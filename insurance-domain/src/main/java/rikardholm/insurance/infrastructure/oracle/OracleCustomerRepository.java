@@ -16,7 +16,7 @@ public class OracleCustomerRepository implements CustomerRepository {
 	}
 
 	@Override
-	public Optional<Customer> findBy(PersonalIdentifier personalIdentifier) {
+	public Optional<? extends Customer> findBy(PersonalIdentifier personalIdentifier) {
 		Customer result = customerMapper.findByPersonalIdentifier(personalIdentifier);
 
 		if (result == null) {

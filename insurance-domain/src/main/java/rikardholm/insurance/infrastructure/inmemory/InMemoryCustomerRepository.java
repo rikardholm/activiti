@@ -27,11 +27,15 @@ public class InMemoryCustomerRepository implements CustomerRepository {
 
     @Override
     public void delete(Customer instance) {
+        Optional<? extends Customer> existing = findBy(instance.getPersonalIdentifier());
 
+        if (existing.isPresent()) {
+            customers.remove(existing.get());
+        }
     }
 
     @Override
-    public Optional<Customer> findBy(final PersonalIdentifier personalIdentifier) {
+    public Optional<? extends Customer> findBy(final PersonalIdentifier personalIdentifier) {
         return tryFind(customers, new Predicate<Customer>() {
             @Override
             public boolean apply(Customer input) {

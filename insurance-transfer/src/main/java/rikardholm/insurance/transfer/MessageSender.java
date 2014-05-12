@@ -39,7 +39,7 @@ public class MessageSender {
     public void sendInsuranceInformationResponse(DelegateExecution execution) {
         PersonalIdentifier personalIdentifier = (PersonalIdentifier) execution.getVariable("personnummer");
 
-        Optional<Customer> customer = customerRepository.findBy(personalIdentifier);
+        Optional<? extends Customer> customer = customerRepository.findBy(personalIdentifier);
 
         List<Insurance> insurances = insuranceRepository.findBy(customer.get());
 

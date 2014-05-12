@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import rikardholm.insurance.domain.PersonalIdentifier;
 import rikardholm.insurance.domain.Customer;
 import rikardholm.insurance.domain.CustomerRepository;
-import rikardholm.insurance.domain.internal.CustomerImpl;
 
 public class PostgresCustomerRepository implements CustomerRepository {
     private CustomerMapper customerMapper;
@@ -14,31 +13,25 @@ public class PostgresCustomerRepository implements CustomerRepository {
     }
 
     @Override
-    public Optional<Customer> findBy(PersonalIdentifier personalIdentifier) {
-        Customer result = customerMapper.findByPersonalIdentifier(personalIdentifier);
-
-        if (result == null) {
-            return Optional.absent();
-        }
-
-        Customer customer = new CustomerImpl(personalIdentifier);
-        return Optional.of(customer);
+    public Optional<? extends Customer> findBy(PersonalIdentifier personalIdentifier) {
+        return Optional.fromNullable(customerMapper.findByPersonalIdentifier(personalIdentifier));
     }
 
     @Override
     public void create(Customer instance) {
         PersonalIdentifier personalIdentifier = instance.getPersonalIdentifier();
-        Customer result = customerMapper.findByPersonalIdentifier(personalIdentifier);
+        Optional<? extends Customer> customer = Optional.fromNullable(customerMapper.findByPersonalIdentifier(personalIdentifier));
 
-        if (result != null) {
+        if (customer.isPresent()) {
             throw new IllegalArgumentException("Personal Identifier already exists: " + personalIdentifier);
         }
-        customerMapper.insert(personalIdentifier);
+
+        customerMapper.insert(instance);
     }
 
     @Override
     public void delete(Customer instance) {
-        customerMapper.delete(instance.getPersonalIdentifier());
+        customerMapper.delete(instance);
     }
 
 

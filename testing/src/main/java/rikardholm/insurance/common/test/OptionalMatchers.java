@@ -46,10 +46,10 @@ public class OptionalMatchers {
         };
     }
 
-    public static <T> Matcher<Optional<T>> hasValue(final Matcher<T> matcher) {
-        return new TypeSafeMatcher<Optional<T>>() {
+    public static <T> Matcher<Optional<? extends T>> hasValue(final Matcher<T> matcher) {
+        return new TypeSafeMatcher<Optional<? extends T>>() {
             @Override
-            protected boolean matchesSafely(Optional<T> item) {
+            protected boolean matchesSafely(Optional<? extends T> item) {
                 if (!item.isPresent()) {
                     return false;
                 }
@@ -63,7 +63,7 @@ public class OptionalMatchers {
             }
 
             @Override
-            protected void describeMismatchSafely(Optional<T> item, Description mismatchDescription) {
+            protected void describeMismatchSafely(Optional<? extends T> item, Description mismatchDescription) {
                 if (!item.isPresent()) {
                     mismatchDescription.appendText("value is absent");
                     return;
@@ -75,7 +75,7 @@ public class OptionalMatchers {
         };
     }
 
-    public static <T> Matcher<Optional<T>> hasValue(final T value) {
+    public static <T> Matcher<Optional<? extends T>> hasValue(final T value) {
         return hasValue(equalTo(value));
     }
 }

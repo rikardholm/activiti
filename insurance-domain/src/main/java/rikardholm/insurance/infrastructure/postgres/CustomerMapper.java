@@ -11,10 +11,10 @@ public interface CustomerMapper {
     CustomerImpl findByPersonalIdentifier(PersonalIdentifier personalIdentifier);
 
     @Insert("INSERT INTO customers (personal_identifier) values (#{personalIdentifier})")
-    void insert(PersonalIdentifier personalIdentifier);
+    void insert(Customer customer);
 
     @Delete("DELETE FROM customers WHERE personal_identifier = #{personalIdentifier}")
-    void delete(PersonalIdentifier personalIdentifier);
+    void delete(Customer customer);
 
     @Select("SELECT id FROM customers WHERE personal_identifier = #{personalIdentifier}")
     Integer selectId(Customer customer);
