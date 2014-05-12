@@ -12,7 +12,7 @@ import rikardholm.insurance.infrastructure.PostgresCategory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath*:test/spring/datasource-postgres.xml",
-        "classpath*:META-INF/insurance/spring/postgres-mybatis-context.xml"})
+		"classpath*:META-INF/insurance/spring/mybatis-context-postgres.xml"})
 @Category(PostgresCategory.class)
 public class PostgresCustomerRepositoryTest extends AbstractCustomerRepositoryTest {
     @Autowired
