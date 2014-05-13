@@ -110,6 +110,21 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
         assertThat(result, contains(insuranceA, insuranceB, insuranceC));
     }
 
+    @Test
+    public void should_delete_insurances_by_InsuranceNumber() throws Exception {
+        insuranceRule.create(INSURANCE);
+
+        Insurance sameEntity = InsuranceBuilder.anInsurance()
+                .withInsuranceNumber(INSURANCE.getInsuranceNumber())
+                .belongsTo(CUSTOMER)
+                .build();
+        insuranceRepository.delete(sameEntity);
+
+        Optional<Insurance> insurance = insuranceRepository.findBy(INSURANCE.getInsuranceNumber());
+
+        assertThat(insurance, isAbsent());
+    }
+
     private void create(Insurance insurance) {
         Optional<? extends Customer> customer = customerRepository.findBy(insurance.getCustomer().getPersonalIdentifier());
         if (!customer.isPresent()) {

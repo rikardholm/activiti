@@ -25,7 +25,11 @@ public class InMemoryInsuranceRepository implements InsuranceRepository {
 
     @Override
     public void delete(Insurance instance) {
+        Optional<Insurance> insurance = findBy(instance.getInsuranceNumber());
 
+        if (insurance.isPresent()) {
+            insurances.remove(insurance.get());
+        }
     }
 
     @Override

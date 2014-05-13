@@ -1,6 +1,6 @@
 # language: sv
 Egenskap: Information om en persons innehav hos bolaget
-  För att kunna se sitt innehav hos ett försäkringsbolag
+  För att kunna se mitt innehav hos ett försäkringsbolag
   Som en person
   Vill jag veta om jag har försäkringar hos bolaget
 

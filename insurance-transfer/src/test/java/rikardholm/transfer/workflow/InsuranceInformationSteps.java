@@ -1,6 +1,5 @@
 package rikardholm.transfer.workflow;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.sv.Givet;
 import cucumber.api.java.sv.När;
 import cucumber.api.java.sv.Och;
@@ -30,8 +29,8 @@ import static org.hamcrest.Matchers.*;
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")
 @DirtiesContext
-public class Steps {
-    private static Logger log = LoggerFactory.getLogger(Steps.class);
+public class InsuranceInformationSteps {
+    private static Logger log = LoggerFactory.getLogger(InsuranceInformationSteps.class);
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -64,7 +63,11 @@ public class Steps {
     @Givet("^en person som saknar försäkringar hos bolaget$")
     public void att_det_inte_finns_någon_försäkring_som_tillhör_en_person() {
         List<Insurance> insurances = insuranceRepository.findBy(CUSTOMER);
-        assertThat(insurances, is(empty()));
+        for (Insurance insurance : insurances) {
+            insuranceRepository.delete(insurance);
+        }
+
+        customerRepository.delete(CUSTOMER);
     }
 
     @När("^vi tar emot en förfrågan om personen$")
