@@ -22,10 +22,10 @@
     <sequenceFlow id="flow2" sourceRef="scripttask2" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow3" sourceRef="scripttask1" targetRef="scripttask2"></sequenceFlow>
     <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="servicetask1">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${insurances.size() > 0}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${insuranceCount > 0}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow5" sourceRef="exclusivegateway1" targetRef="servicetask2">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${insurances.size() == 0}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${insuranceCount == 0}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow6" sourceRef="servicetask1" targetRef="insurance-information-end"></sequenceFlow>
     <endEvent id="insurance-information-end" name="End"></endEvent>
@@ -42,8 +42,8 @@ execution.setVariable('personnummer',personnummer);</script>
       <script>var personnummer = execution.getVariable('personnummer');
 println('Letar efter '  + personnummer);
 var insurances = insuranceFinder.findByPersonnummer(personnummer);
-println('Insurances: ' + insurances.size());
-execution.setVariable('insurances',insurances);</script>
+println('Antal försäkringar funna: ' + insurances.size());
+execution.setVariable('insuranceCount',insurances.size());</script>
     </scriptTask>
     <serviceTask id="servicetask1" name="Skicka information om försäkringar" activiti:expression="${messageSender.sendInsuranceInformationResponse(execution)}"></serviceTask>
     <serviceTask id="servicetask2" name="Meddela att det inte finns några försäkringar" activiti:expression="${messageSender.sendNoInsurancesResponse(personnummer)}"></serviceTask>

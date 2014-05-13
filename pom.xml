@@ -82,9 +82,6 @@
                 <version>1.2.2</version>
             </dependency>
 
-            <!-- slf4j -->
-
-
             <!-- Miscellaneous 3rd Party -->
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -186,7 +183,6 @@
             </dependency>
 
             <!-- Test: Spring -->
-
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
