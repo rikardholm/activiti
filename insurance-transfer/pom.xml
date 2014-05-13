@@ -20,7 +20,6 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.3</version>
         </dependency>
 
         <dependency>
@@ -39,13 +38,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-            <version>1.4.177</version>
-        </dependency>
-
 
         <!-- Siblings -->
         <dependency>
@@ -61,7 +53,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
-            <version>1.7.5</version>
         </dependency>
         <!-- <dependency>
             <groupId>org.slf4j</groupId>
@@ -99,6 +90,10 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -24,7 +24,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>2.17</version>
                         <configuration>
-                            <excludedGroups>rikardholm.insurance.infrastructure.PostgresCategory</excludedGroups>
+                            <excludedGroups>rikardholm.insurance.infrastructure.OracleCategory,rikardholm.insurance.infrastructure.PostgresCategory</excludedGroups>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -59,7 +59,6 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>2.17</version>
                         <configuration>
-                            <!-- <groups>rikardholm.insurance.infrastructure.PostgresCategory</groups> -->
                             <excludedGroups>rikardholm.insurance.infrastructure.OracleCategory</excludedGroups>
                         </configuration>
                     </plugin>
@@ -100,8 +99,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>2.17</version>
                         <configuration>
-                            <!-- <groups>rikardholm.insurance.infrastructure.PostgresCategory</groups> -->
-                            <!-- <excludedGroups></excludedGroups>-->
+                            <excludedGroups>rikardholm.insurance.infrastructure.PostgresCategory</excludedGroups>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -124,20 +122,16 @@
         </dependency>
 
         <dependency>
-            <groupId>activiti</groupId>
-            <artifactId>testing</artifactId>
-        </dependency>
-
-
-        <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.2.7</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
-            <version>1.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>activiti</groupId>
+            <artifactId>testing</artifactId>
         </dependency>
 
         <!-- Test -->
