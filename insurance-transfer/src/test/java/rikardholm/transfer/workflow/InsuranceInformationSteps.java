@@ -30,8 +30,6 @@ import static org.hamcrest.Matchers.*;
 @ContextConfiguration("classpath*:test/cucumber.xml")
 @DirtiesContext
 public class InsuranceInformationSteps {
-    private static Logger log = LoggerFactory.getLogger(InsuranceInformationSteps.class);
-
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -62,7 +60,7 @@ public class InsuranceInformationSteps {
 
     @Givet("^en person som saknar försäkringar hos bolaget$")
     public void att_det_inte_finns_någon_försäkring_som_tillhör_en_person() {
-        List<Insurance> insurances = insuranceRepository.findBy(CUSTOMER);
+        List<? extends Insurance> insurances = insuranceRepository.findBy(CUSTOMER);
         for (Insurance insurance : insurances) {
             insuranceRepository.delete(insurance);
         }
@@ -99,16 +97,4 @@ public class InsuranceInformationSteps {
         assertThat(noInsurancesResponses, hasSize(1));
         assertThat(noInsurancesResponses.get(0).personalIdentificationNumber, is(equalTo(PERSONAL_IDENTIFIER.getValue())));
     }
-
-    /*@Given("^no insurance belongs to customer (\\d+)-(\\d+)$")
-    public void no_insurance_belongs_to_customer(int arg1, int arg2) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    } */
-        /*
-    @Then("^the outgoing message should be no-information$")
-    public void the_outgoing_message_should_be_no_information() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }     */
 }

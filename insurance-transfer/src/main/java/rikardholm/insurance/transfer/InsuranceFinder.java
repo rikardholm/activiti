@@ -26,14 +26,14 @@ public class InsuranceFinder {
             return emptyList();
         }
 
-        List<Insurance> insurances = insuranceRepository.findBy(customerOptional.get());
+        List<? extends Insurance> insurances = insuranceRepository.findBy(customerOptional.get());
 
         List<InsuranceNumber> insuranceNumbers = asInsuranceNumbers(insurances);
 
         return insuranceNumbers;
     }
 
-    private List<InsuranceNumber> asInsuranceNumbers(List<Insurance> insurances) {
+    private List<InsuranceNumber> asInsuranceNumbers(List<? extends Insurance> insurances) {
         return ImmutableList.copyOf(transform(insurances, toInsuranceNumber()));
     }
 

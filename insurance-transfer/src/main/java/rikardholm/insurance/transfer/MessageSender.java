@@ -41,7 +41,7 @@ public class MessageSender {
 
         Optional<? extends Customer> customer = customerRepository.findBy(personalIdentifier);
 
-        List<Insurance> insurances = insuranceRepository.findBy(customer.get());
+        List<? extends Insurance> insurances = insuranceRepository.findBy(customer.get());
 
         List<Long> insuranceNumbers = transform(insurances, toInsuranceNumber());
 

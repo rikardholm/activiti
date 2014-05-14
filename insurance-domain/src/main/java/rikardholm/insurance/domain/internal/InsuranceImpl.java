@@ -7,19 +7,26 @@ import rikardholm.insurance.domain.InsuranceNumber;
 public class InsuranceImpl implements Insurance {
     private final InsuranceNumber insuranceNumber;
     public final Customer customer;
-    private final String address;
+	private Long id;
 
-    public InsuranceImpl(InsuranceNumber insuranceNumber, Customer customer, String address) {
+    public InsuranceImpl(InsuranceNumber insuranceNumber, Customer customer) {
         this.insuranceNumber = insuranceNumber;
         this.customer = customer;
-        this.address = address;
     }
 
-    public InsuranceImpl(InsuranceNumber insuranceNumber, CustomerImpl customer, String address) {
-        this(insuranceNumber, (Customer) customer, address);
+    public InsuranceImpl(InsuranceNumber insuranceNumber, CustomerImpl customer) {
+        this(insuranceNumber, (Customer) customer);
     }
 
-    @Override
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Override
     public Customer getCustomer() {
         return customer;
     }
@@ -27,10 +34,6 @@ public class InsuranceImpl implements Insurance {
     @Override
     public InsuranceNumber getInsuranceNumber() {
         return insuranceNumber;
-    }
-
-    public String getAddress() {
-        return address;
     }
 
     @Override

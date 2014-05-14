@@ -11,23 +11,33 @@ import rikardholm.insurance.domain.InsuranceRepository;
 
 public class OracleInsuranceRepository implements InsuranceRepository {
 
-	@Override
-	public Optional<Insurance> findBy(InsuranceNumber insuranceNumber) {
-		throw new UnsupportedOperationException();
+	private final InsuranceMapper insuranceMapper;
+	private final CustomerMapper customerMapper;
+
+	public OracleInsuranceRepository(InsuranceMapper insuranceMapper, CustomerMapper customerMapper) {
+		this.insuranceMapper = insuranceMapper;
+		this.customerMapper = customerMapper;
 	}
 
 	@Override
-	public List<Insurance> findBy(Customer customer) {
-		throw new UnsupportedOperationException();
+	public Optional<? extends Insurance> findBy(InsuranceNumber insuranceNumber) {
+		return Optional.fromNullable(insuranceMapper.findByInsuranceNumber(insuranceNumber));
+	}
+
+	@Override
+	public List<? extends Insurance> findBy(Customer customer) {
+		return insuranceMapper.findByCustomer(customer);
 	}
 
 	@Override
 	public void create(Insurance instance) {
-		throw new UnsupportedOperationException();
+		Integer customerId = customerMapper.selectId(instance.getCustomer());
+
+		insuranceMapper.insert(instance, customerId);
 	}
 
 	@Override
 	public void delete(Insurance instance) {
-		throw new UnsupportedOperationException();
+		insuranceMapper.delete(instance);
 	}
 }

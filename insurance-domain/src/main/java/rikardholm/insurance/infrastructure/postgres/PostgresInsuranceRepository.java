@@ -16,20 +16,13 @@ public class PostgresInsuranceRepository implements InsuranceRepository {
     }
 
     @Override
-    public com.google.common.base.Optional<Insurance> findBy(InsuranceNumber insuranceNumber) {
-        Insurance insurance = insuranceMapper.findByInsuranceNumber(insuranceNumber);
-
-        if (insurance == null) {
-            return Optional.absent();
-        }
-
-        return Optional.of(insurance);
+    public Optional<? extends Insurance> findBy(InsuranceNumber insuranceNumber) {
+        return Optional.fromNullable(insuranceMapper.findByInsuranceNumber(insuranceNumber));
     }
 
     @Override
-    public List<Insurance> findBy(Customer customer) {
-        List<Insurance> insurances = (List<Insurance>) (List<? extends Insurance>) insuranceMapper.findByCustomer(customer);
-        return insurances;
+	public List<? extends Insurance> findBy(Customer customer) {
+		return insuranceMapper.findByCustomer(customer);
     }
 
     @Override

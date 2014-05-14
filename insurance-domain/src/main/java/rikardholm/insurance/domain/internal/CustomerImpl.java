@@ -7,12 +7,21 @@ import static java.util.Objects.requireNonNull;
 
 public class CustomerImpl implements Customer {
     private final PersonalIdentifier personalIdentifier;
+	private Long id;
 
     public CustomerImpl(PersonalIdentifier personalIdentifier) {
         this.personalIdentifier = requireNonNull(personalIdentifier);
     }
 
-    @Override
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	@Override
     public PersonalIdentifier getPersonalIdentifier() {
         return personalIdentifier;
     }

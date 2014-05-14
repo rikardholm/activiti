@@ -17,29 +17,26 @@ public class OracleCustomerRepository implements CustomerRepository {
 
 	@Override
 	public Optional<? extends Customer> findBy(PersonalIdentifier personalIdentifier) {
-		Customer result = customerMapper.findByPersonalIdentifier(personalIdentifier);
-
-		if (result == null) {
-			return Optional.absent();
-		}
-
-		Customer customer = new CustomerImpl(personalIdentifier);
-		return Optional.of(customer);
+		return Optional.fromNullable(customerMapper.findByPersonalIdentifier(personalIdentifier));
 	}
 
 	@Override
 	public void create(Customer instance) {
-		PersonalIdentifier personalIdentifier = instance.getPersonalIdentifier();
-		Customer result = customerMapper.findByPersonalIdentifier(personalIdentifier);
+		checkCustomerDoesNotExist(instance);
+		customerMapper.insert(instance);
+	}
 
-		if (result != null) {
+	private void checkCustomerDoesNotExist(Customer instance) {
+		PersonalIdentifier personalIdentifier = instance.getPersonalIdentifier();
+		Optional<? extends Customer> existing = Optional.fromNullable(customerMapper.findByPersonalIdentifier(personalIdentifier));
+
+		if (existing.isPresent()) {
 			throw new IllegalArgumentException("Personal Identifier already exists: " + personalIdentifier);
 		}
-		customerMapper.insert(personalIdentifier);
 	}
 
 	@Override
 	public void delete(Customer instance) {
-		customerMapper.delete(instance.getPersonalIdentifier());
+		customerMapper.delete(instance);
 	}
 }

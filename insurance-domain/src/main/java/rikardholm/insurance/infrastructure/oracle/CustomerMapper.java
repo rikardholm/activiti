@@ -15,12 +15,12 @@ public interface CustomerMapper {
 	@SelectKey(statement = "SELECT customers_seq.nextval FROM DUAL",
 			keyProperty = "id",
 			keyColumn = "id",
-			resultType = int.class, before = true
+			resultType = Long.class, before = true
 	)
-	void insert(PersonalIdentifier personalIdentifier);
+	void insert(Customer customer);
 
 	@Delete("DELETE FROM customers WHERE personal_identifier = #{personalIdentifier}")
-	void delete(PersonalIdentifier personalIdentifier);
+	void delete(Customer customer);
 
 	@Select("SELECT id FROM customers WHERE personal_identifier = #{personalIdentifier}")
 	Integer selectId(Customer customer);

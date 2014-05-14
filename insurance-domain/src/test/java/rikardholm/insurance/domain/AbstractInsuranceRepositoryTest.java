@@ -49,7 +49,7 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
 
     @Test
     public void findByInsuranceNumber_should_return_absent_when_Insurance_does_not_exist() {
-        Optional<Insurance> result = insuranceRepository.findBy(INSURANCE_NUMBER);
+        Optional<? extends Insurance> result = insuranceRepository.findBy(INSURANCE_NUMBER);
 
         assertThat(result, isAbsent());
     }
@@ -58,19 +58,19 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
     public void findByInsuranceNumber_should_return_Insurance_when_it_exists() throws Exception {
         insuranceRule.create(INSURANCE);
 
-        Optional<Insurance> result = insuranceRepository.findBy(INSURANCE_NUMBER);
+        Optional<? extends Insurance> result = insuranceRepository.findBy(INSURANCE_NUMBER);
 
         assertThat(result, hasValue(equalTo(INSURANCE)));
     }
 
     @Test
     public void findByCustomer_should_return_empty_list_when_Insurance_is_not_found() throws Exception {
-        List<Insurance> existing = insuranceRepository.findBy(CUSTOMER);
+        List<? extends Insurance> existing = insuranceRepository.findBy(CUSTOMER);
         for (Insurance insurance : existing) {
             insuranceRepository.delete(insurance);
         }
 
-        List<Insurance> result = insuranceRepository.findBy(CUSTOMER);
+        List<? extends Insurance> result = insuranceRepository.findBy(CUSTOMER);
 
         assertThat(result, is(empty()));
     }
@@ -79,7 +79,7 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
     public void findByCustomer_should_return_Insurance_if_found() throws Exception {
         insuranceRule.create(INSURANCE);
 
-        List<Insurance> result = insuranceRepository.findBy(CUSTOMER);
+        List<? extends Insurance> result = insuranceRepository.findBy(CUSTOMER);
 
         assertThat(result, contains(INSURANCE));
     }
@@ -105,9 +105,9 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
         insuranceRule.create(insuranceB);
         insuranceRule.create(insuranceC);
 
-        List<Insurance> result = insuranceRepository.findBy(CUSTOMER);
+        List<? extends Insurance> result = insuranceRepository.findBy(CUSTOMER);
 
-        assertThat(result, contains(insuranceA, insuranceB, insuranceC));
+        assertThat(result, containsInAnyOrder(insuranceA, insuranceB, insuranceC));
     }
 
     @Test
@@ -120,7 +120,7 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
                 .build();
         insuranceRepository.delete(sameEntity);
 
-        Optional<Insurance> insurance = insuranceRepository.findBy(INSURANCE.getInsuranceNumber());
+        Optional<? extends Insurance> insurance = insuranceRepository.findBy(INSURANCE.getInsuranceNumber());
 
         assertThat(insurance, isAbsent());
     }

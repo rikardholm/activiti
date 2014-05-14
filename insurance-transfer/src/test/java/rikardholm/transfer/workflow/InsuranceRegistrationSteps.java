@@ -68,26 +68,26 @@ public class InsuranceRegistrationSteps {
 
     @Så("^skapas en försäkring med kundens existerande uppgifter")
     public void skapas_en_försäkring_med_kundens_existerande_uppgifter() {
-        List<Insurance> insurances = getInsurances(PERSONAL_IDENTIFIER);
+        List<? extends Insurance> insurances = getInsurances(PERSONAL_IDENTIFIER);
 
         assertThat(insurances, contains(insuranceWithAddress(EXISTERANDE_UPPGIFTER)));
     }
 
     @Så("^skapas en försäkring med personens uppgifter i SPAR")
     public void skapas_en_försäkring_med_personens_uppgifter_i_SPAR() {
-        List<Insurance> insurances = getInsurances(PERSONAL_IDENTIFIER);
+        List<? extends Insurance> insurances = getInsurances(PERSONAL_IDENTIFIER);
 
         assertThat(insurances, contains(insuranceWithAddress(SPAR_UPPGIFTER)));
     }
 
     @Och("^försäkringen skapas med MOs uppgifter")
     public void försäkringen_skapas_med_MOs_uppgifter() {
-        List<Insurance> insurances = getInsurances(PERSONAL_IDENTIFIER);
+        List<? extends Insurance> insurances = getInsurances(PERSONAL_IDENTIFIER);
 
         assertThat(insurances, contains(insuranceWithAddress(MOS_UPPGIFTER)));
     }
 
-    private List<Insurance> getInsurances(PersonalIdentifier personalIdentifier) {
+    private List<? extends Insurance> getInsurances(PersonalIdentifier personalIdentifier) {
         Optional<? extends Customer> customer = customerRepository.findBy(personalIdentifier);
         assertThat(customer, isPresent());
         return insuranceRepository.findBy(customer.get());
@@ -97,7 +97,7 @@ public class InsuranceRegistrationSteps {
         return new TypeSafeMatcher<Insurance>() {
             @Override
             protected boolean matchesSafely(Insurance item) {
-                return uppgifter.equals(item.getAddress());
+                return uppgifter.equals("");
             }
 
             @Override
@@ -107,7 +107,7 @@ public class InsuranceRegistrationSteps {
 
             @Override
             protected void describeMismatchSafely(Insurance item, Description mismatchDescription) {
-                mismatchDescription.appendText("the address was ").appendValue(item.getAddress());
+                mismatchDescription.appendText("the address was ").appendValue("");
             }
         };
     }

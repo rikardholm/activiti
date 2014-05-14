@@ -1,6 +1,5 @@
 package rikardholm.insurance.infrastructure.oracle;
 
-import org.junit.Ignore;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import rikardholm.insurance.infrastructure.OracleCategory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath*:META-INF/insurance/spring/mybatis-context-oracle.xml","classpath*:test/spring/datasource-oracle.xml"})
-@Ignore
 @Category(OracleCategory.class)
 public class OracleInsuranceRepositoryTest extends AbstractInsuranceRepositoryTest{
 	@Autowired

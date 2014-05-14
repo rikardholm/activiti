@@ -32,7 +32,7 @@ public class InsuranceBuilder {
 
         @Override
         public Insurance build() {
-            return new InsuranceImpl(insuranceNumber, customer, "asd");
+            return new InsuranceImpl(insuranceNumber, customer);
         }
     }
 

@@ -6,6 +6,6 @@ import rikardholm.insurance.domain.common.Repository;
 import java.util.List;
 
 public interface InsuranceRepository extends Repository<Insurance> {
-    Optional<Insurance> findBy(InsuranceNumber insuranceNumber);
-    List<Insurance> findBy(Customer customer);
+    Optional<? extends Insurance> findBy(InsuranceNumber insuranceNumber);
+    List<? extends Insurance> findBy(Customer customer);
 }
