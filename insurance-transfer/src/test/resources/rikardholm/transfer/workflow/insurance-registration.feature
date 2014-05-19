@@ -4,34 +4,33 @@ Egenskap: Registrering av försäkring hos företaget
   Som en potentiell kund
   Vill jag kunna registrera en försäkring med mitt personnummer
 
+  Bakgrund:
+    Givet en blivande kund med personnummer 650416-0646 och adress "SPARtorget 80, 120 66 Stockholm"
+    Och en existerande kund med personnummer 900830-2037 utan försäkringar
+
   Scenario: En person som redan är kund hos företaget
-    Givet en person som är kund hos företaget
-    När vi tar emot en anmälan med bara personnummer
-    Så skapas en försäkring med kundens existerande uppgifter
+    När vi tar emot en anmälan för personnummer 900830-2037
+    Så skapas en försäkring kopplad till kundkonto 900830-2037
 
   Scenario: En person som inte är kund hos företaget
-    Givet en person som inte är kund hos företaget
-    Och som finns i SPAR
-    När vi tar emot en anmälan med bara personnummer
-    Så skapas en försäkring med personens uppgifter i SPAR
+    Givet adressen för 650416-0646 i SPAR är "SPARtorget 80, 120 66 Stockholm"
+    När vi tar emot en anmälan för personnummer 650416-0646
+    Så skapas en försäkring kopplad till ett kundkonto med personnummer 650416-0646 och adress "SPARtorget 80, 120 66 Stockholm"
 
   Scenario: En person som inte finns i SPAR
-    Givet en person som inte är kund hos företaget
-    Och som inte finns i SPAR
-    När vi tar emot en anmälan med bara personnummer
-    Så utreder MO vilka uppgifter personen har
-    Och försäkringen skapas med MOs uppgifter
+    Men om 650416-0646 inte finns i SPAR
+    När vi tar emot en anmälan för personnummer 650416-0646
+    Så utreder MO att personen har adress "SPARtorget 80, 120 66 Stockholm"
+    Och skapas en försäkring kopplad till ett kundkonto med personnummer 650416-0646 och adress "SPARtorget 80, 120 66 Stockholm"
 
   Scenario: En person med skyddad identitet i SPAR
-    Givet en person som inte är kund hos företaget
-    Och som har skyddad identitet i SPAR
-    När vi tar emot en anmälan med bara personnummer
-    Så utreder MO vilka uppgifter personen har
-    Och försäkringen skapas med MOs uppgifter
+    Men om 650416-0646 har skyddad identitet
+    När vi tar emot en anmälan för personnummer 650416-0646
+    Så utreder MO att personen har adress "SPARtorget 80, 120 66 Stockholm"
+    Och det skapas en försäkring kopplad till ett kundkonto med personnummer 650416-0646 och adress "SPARtorget 80, 120 66 Stockholm"
 
   Scenario: SPAR-slagning lyckas inte i tid
-    Givet en person som inte är kund hos företaget
-    Och att SPAR är nere
-    När vi tar emot en anmälan med bara personnummer
-    Så utreder MO vilka uppgifter personen har
-    Och försäkringen skapas med MOs uppgifter
+    Men om SPAR är nere
+    När vi tar emot en anmälan för personnummer 650416-0646
+    Så utreder MO att personen har adress "SPARtorget 80, 120 66 Stockholm"
+    Och det skapas en försäkring kopplad till ett kundkonto med personnummer 650416-0646 och adress "SPARtorget 80, 120 66 Stockholm"

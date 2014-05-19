@@ -1,5 +1,7 @@
 package rikardholm.insurance.domain.common;
 
+import java.util.Objects;
+
 import static java.util.Objects.requireNonNull;
 
 public abstract class AbstractValueObject<VALUE> implements ValueObject<VALUE> {
@@ -17,19 +19,16 @@ public abstract class AbstractValueObject<VALUE> implements ValueObject<VALUE> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o instanceof AbstractValueObject) {
+          return Objects.equals(value, ((AbstractValueObject) o).value);
+        }
 
-        AbstractValueObject that = (AbstractValueObject) o;
-
-        if (!value.equals(that.value)) return false;
-
-        return true;
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return Objects.hash(value);
     }
 
     @Override

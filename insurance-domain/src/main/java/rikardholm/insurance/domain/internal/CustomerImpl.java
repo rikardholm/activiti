@@ -1,5 +1,6 @@
 package rikardholm.insurance.domain.internal;
 
+import rikardholm.insurance.domain.Address;
 import rikardholm.insurance.domain.Customer;
 import rikardholm.insurance.domain.PersonalIdentifier;
 
@@ -7,9 +8,12 @@ import static java.util.Objects.requireNonNull;
 
 public class CustomerImpl implements Customer {
     private final PersonalIdentifier personalIdentifier;
+    private final Address address;
 	private Long id;
 
-    public CustomerImpl(PersonalIdentifier personalIdentifier) {
+
+    public CustomerImpl(PersonalIdentifier personalIdentifier, Address address) {
+        this.address = requireNonNull(address);
         this.personalIdentifier = requireNonNull(personalIdentifier);
     }
 
@@ -24,6 +28,11 @@ public class CustomerImpl implements Customer {
 	@Override
     public PersonalIdentifier getPersonalIdentifier() {
         return personalIdentifier;
+    }
+
+    @Override
+    public Address getAddress() {
+        return address;
     }
 
     @Override

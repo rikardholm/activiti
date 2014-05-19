@@ -1,10 +1,7 @@
 package rikardholm.insurance.domain.builder;
 
 import org.junit.Test;
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.Insurance;
-import rikardholm.insurance.domain.InsuranceNumber;
-import rikardholm.insurance.domain.PersonalIdentifier;
+import rikardholm.insurance.domain.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -17,7 +14,7 @@ public class InsuranceBuilderTest {
     private static final InsuranceNumber INSURANCE_NUMBER = InsuranceNumber.of(600134L);
     private static final Customer CUSTOMER = aCustomer()
             .withPersonalIdentifier(PersonalIdentifier.of("880415-3028"))
-            .build();
+            .withAddress(Address.of("Testallén 67")).build();
     private static final Insurance INSURANCE = InsuranceBuilder.anInsurance()
             .withInsuranceNumber(INSURANCE_NUMBER)
             .belongsTo(CUSTOMER)

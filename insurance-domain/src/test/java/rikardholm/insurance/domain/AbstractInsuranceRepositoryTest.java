@@ -22,6 +22,7 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
 
     public static final Customer CUSTOMER = CustomerBuilder.aCustomer()
             .withPersonalIdentifier(PersonalIdentifier.of("840325-9043"))
+            .withAddress(Address.of("Teststreet 129L"))
             .build();
 
     private static final Insurance INSURANCE = InsuranceBuilder.anInsurance()

@@ -1,5 +1,7 @@
 package rikardholm.transfer.workflow;
 
+import org.activiti.engine.FormService;
+import org.activiti.engine.RuntimeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +27,15 @@ public class SpringContextLoadTest {
     @Test
     public void wires_a_ProcessDispatcher() throws Exception {
         assertThat(applicationContext, hasExactlyOneBeanOfType(ProcessDispatcher.class));
+    }
+
+    @Test
+    public void wires_a_FormService() throws Exception {
+        assertThat(applicationContext, hasExactlyOneBeanOfType(FormService.class));
+    }
+
+    @Test
+    public void wires_a_RuntimeService() throws Exception {
+        assertThat(applicationContext, hasExactlyOneBeanOfType(RuntimeService.class));
     }
 }

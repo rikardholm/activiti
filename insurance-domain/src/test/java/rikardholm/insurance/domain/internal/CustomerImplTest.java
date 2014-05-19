@@ -1,6 +1,7 @@
 package rikardholm.insurance.domain.internal;
 
 import org.junit.Test;
+import rikardholm.insurance.domain.Address;
 import rikardholm.insurance.domain.Customer;
 import rikardholm.insurance.domain.PersonalIdentifier;
 
@@ -10,7 +11,12 @@ import static org.hamcrest.Matchers.equalTo;
 public class CustomerImplTest {
     @Test(expected = NullPointerException.class)
     public void should_refuse_null_PersonalIdentifier() throws Exception {
-         new CustomerImpl(null);
+         new CustomerImpl(null, Address.of("asdf"));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void should_refuse_null_Address() throws Exception {
+        new CustomerImpl(PersonalIdentifier.of("341209-3045"),null);
     }
 
     @Test
@@ -19,8 +25,8 @@ public class CustomerImplTest {
         PersonalIdentifier personalIdentifierA = PersonalIdentifier.of(personalIdentifier);
         PersonalIdentifier personalIdentifierB = PersonalIdentifier.of(personalIdentifier);
 
-        Customer customerA = new CustomerImpl(personalIdentifierA);
-        Customer customerB = new CustomerImpl(personalIdentifierB);
+        Customer customerA = new CustomerImpl(personalIdentifierA, Address.of("asdfstreet"));
+        Customer customerB = new CustomerImpl(personalIdentifierB, Address.of("Qwertyplan 12"));
 
         assertTheyAreEqual(customerA, customerB);
     }

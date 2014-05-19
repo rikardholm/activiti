@@ -2,8 +2,11 @@ package rikardholm.transfer.workflow;
 
 import com.google.common.base.Optional;
 import cucumber.api.java.sv.Givet;
+import cucumber.api.java.sv.När;
 import cucumber.api.java.sv.Och;
 import cucumber.api.java.sv.Så;
+import org.activiti.engine.FormService;
+import org.activiti.engine.RuntimeService;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -14,10 +17,13 @@ import rikardholm.insurance.domain.*;
 import rikardholm.insurance.domain.builder.CustomerBuilder;
 import rikardholm.insurance.infrastructure.fake.FakeSparService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
 import static rikardholm.insurance.common.test.OptionalMatchers.isPresent;
 
 @Component
@@ -27,11 +33,15 @@ public class InsuranceRegistrationSteps {
     public static final PersonalIdentifier PERSONAL_IDENTIFIER = PersonalIdentifier.of("561102-3048");
     public static final Customer CUSTOMER = CustomerBuilder.aCustomer()
             .withPersonalIdentifier(PERSONAL_IDENTIFIER)
+            .withAddress(Address.of("Testvägen 80"))
             .build();
 
     public static final String EXISTERANDE_UPPGIFTER = "Existensplan 8, 42 666 Ingenstans";
     public static final String SPAR_UPPGIFTER = "SPARgatan 511, 120 66 Stockholm";
     public static final String MOS_UPPGIFTER = "MOgränd 234, 117 28 Stockholm";
+
+    @Autowired
+    private FormService formService;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -40,6 +50,41 @@ public class InsuranceRegistrationSteps {
     @Autowired
     private InsuranceRepository insuranceRepository;
 
+    @Givet("^en blivande kund med personnummer (\\d{6}-\\d{4}) och adress \"(.*)\"$")
+    public void en_blivande_kund_med_personnummer(String personalIdentifier, String adress) {
+        Optional<? extends Customer> customer = customerRepository.findBy(PersonalIdentifier.of(personalIdentifier));
+
+        if (customer.isPresent()) {
+            customerRepository.delete(customer.get());
+        }
+    }
+
+    @Och("^en existerande kund med personnummer (\\d{6}-\\d{4}) utan försäkringar$")
+    public void en_existerande_kund_med_personnummer(String personalIdentifier) {
+        Customer customer = CustomerBuilder.aCustomer()
+                .withPersonalIdentifier(PersonalIdentifier.of(personalIdentifier))
+                .withAddress(Address.of("Verifikationsvägen 45"))
+                .build();
+
+        customerRepository.create(customer);
+    }
+
+    @När("^vi tar emot en anmälan för personnummer (\\d{6}-\\d{4})$")
+    public void vi_tar_emot_en_anmälan_för_personnummer(String personalIdentifier) {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("personalIdentifier", personalIdentifier);
+
+        formService.submitStartFormData("register-insurance", properties);
+    }
+
+    @Så("^skapas en försäkring kopplad till kundkonto (\\d{6}-\\d{4})$")
+    public void skapas_en_försäkring_kopplad_till_kundens_konto(String personalIdentifier) {
+        Optional<? extends Customer> customer = customerRepository.findBy(PersonalIdentifier.of(personalIdentifier));
+
+        List<? extends Insurance> insurances = insuranceRepository.findBy(customer.get());
+
+        assertThat(insurances, hasSize(1));
+    }
 
     @Givet("^en person som är kund hos företaget")
     public void en_person_som_är_kund_hos_företaget() {

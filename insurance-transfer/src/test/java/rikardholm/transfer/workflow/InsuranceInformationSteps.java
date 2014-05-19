@@ -43,7 +43,11 @@ public class InsuranceInformationSteps {
     private OutboxRepository outboxRepository;
 
     public static final PersonalIdentifier PERSONAL_IDENTIFIER = PersonalIdentifier.of("670913-4506");
-    public static final Customer CUSTOMER = CustomerBuilder.aCustomer().withPersonalIdentifier(PERSONAL_IDENTIFIER).build();
+    public static final Customer CUSTOMER = CustomerBuilder
+            .aCustomer()
+            .withPersonalIdentifier(PERSONAL_IDENTIFIER)
+            .withAddress(Address.of("Testgatan 130, 134 56 Stockholm"))
+            .build();
     public static final InsuranceNumber INSURANCE_NUMBER = InsuranceNumber.of(35968L);
 
 

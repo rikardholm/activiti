@@ -15,6 +15,7 @@ public abstract class AbstractCustomerRepositoryTest extends AbstractContractTes
     public static final PersonalIdentifier PERSONAL_IDENTIFIER = PersonalIdentifier.of(PERSONAL_IDENTIFIER_STRING);
     public static final Customer CUSTOMER = CustomerBuilder.aCustomer()
             .withPersonalIdentifier(PERSONAL_IDENTIFIER)
+            .withAddress(Address.of("Testgatan 80"))
             .build();
     private CustomerRepository customerRepository;
 
@@ -47,7 +48,7 @@ public abstract class AbstractCustomerRepositoryTest extends AbstractContractTes
         PersonalIdentifier personalIdentifier = PersonalIdentifier.of(PERSONAL_IDENTIFIER_STRING);
         Customer customer = CustomerBuilder.aCustomer()
                 .withPersonalIdentifier(personalIdentifier)
-                .build();
+                .withAddress(Address.of("Testvägen 5")).build();
 
         customerRepository.create(customer);
     }

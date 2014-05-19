@@ -1,10 +1,7 @@
 package rikardholm.insurance.domain.internal;
 
 import org.junit.Test;
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.Insurance;
-import rikardholm.insurance.domain.InsuranceNumber;
-import rikardholm.insurance.domain.PersonalIdentifier;
+import rikardholm.insurance.domain.*;
 import rikardholm.insurance.domain.builder.CustomerBuilder;
 import rikardholm.insurance.domain.builder.InsuranceBuilder;
 
@@ -17,6 +14,7 @@ public class InsuranceImplTest {
 
     public static final Customer CUSTOMER = CustomerBuilder.aCustomer()
             .withPersonalIdentifier(PersonalIdentifier.of("3455"))
+            .withAddress(Address.of("Testlane 30"))
             .build();
     public static final InsuranceNumber INSURANCE_NUMBER = InsuranceNumber.of(45967L);
     public static final Insurance INSURANCE = InsuranceBuilder.anInsurance()
@@ -29,6 +27,7 @@ public class InsuranceImplTest {
 
         Customer otherCustomer = CustomerBuilder.aCustomer()
                 .withPersonalIdentifier(PersonalIdentifier.of("192339"))
+                .withAddress(Address.of("Testbrook Ave. 14567"))
                 .build();
 
         Insurance otherInsurance = InsuranceBuilder.anInsurance()
