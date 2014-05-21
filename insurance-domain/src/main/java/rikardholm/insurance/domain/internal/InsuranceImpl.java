@@ -4,6 +4,8 @@ import rikardholm.insurance.domain.Customer;
 import rikardholm.insurance.domain.Insurance;
 import rikardholm.insurance.domain.InsuranceNumber;
 
+import java.util.Objects;
+
 public class InsuranceImpl implements Insurance {
     private final InsuranceNumber insuranceNumber;
     public final Customer customer;
@@ -38,14 +40,11 @@ public class InsuranceImpl implements Insurance {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o instanceof Insurance) {
+            return Objects.equals(insuranceNumber, ((Insurance) o).getInsuranceNumber());
+        }
 
-        InsuranceImpl insurance = (InsuranceImpl) o;
-
-        if (!insuranceNumber.equals(insurance.insuranceNumber)) return false;
-
-        return true;
+        return false;
     }
 
     @Override

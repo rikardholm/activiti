@@ -15,7 +15,7 @@
         <constructor-arg>
             <util:map>
                 <entry key="rikardholm.insurance.application.messaging.message.InsuranceInformationRequest"
-                       value="insurance-information-process"/>
+                       value="insurance-information"/>
             </util:map>
         </constructor-arg>
     </bean>

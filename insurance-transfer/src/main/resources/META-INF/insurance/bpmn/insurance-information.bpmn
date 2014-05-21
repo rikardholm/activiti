@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <collaboration id="Collaboration">
-    <participant id="company" name="Försäkringsbolag" processRef="insurance-information-process"></participant>
+    <participant id="company" name="Försäkringsbolag" processRef="insurance-information"></participant>
   </collaboration>
-  <process id="insurance-information-process" name="process_pool2" isExecutable="true">
+  <process id="insurance-information" name="process_pool2" isExecutable="true">
     <laneSet id="laneSet_insurance-information-process">
       <lane id="lane2">
         <flowNodeRef>exclusivegateway1</flowNodeRef>

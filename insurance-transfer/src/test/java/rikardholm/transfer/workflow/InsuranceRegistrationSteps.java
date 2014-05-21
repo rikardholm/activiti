@@ -6,7 +6,9 @@ import cucumber.api.java.sv.När;
 import cucumber.api.java.sv.Och;
 import cucumber.api.java.sv.Så;
 import org.activiti.engine.FormService;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -41,7 +43,11 @@ public class InsuranceRegistrationSteps {
     public static final String MOS_UPPGIFTER = "MOgränd 234, 117 28 Stockholm";
 
     @Autowired
+    private RepositoryService repositoryService;
+    @Autowired
     private FormService formService;
+    @Autowired
+    private RuntimeService runtimeService;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -60,9 +66,14 @@ public class InsuranceRegistrationSteps {
     }
 
     @Och("^en existerande kund med personnummer (\\d{6}-\\d{4}) utan försäkringar$")
-    public void en_existerande_kund_med_personnummer(String personalIdentifier) {
+    public void en_existerande_kund_med_personnummer(String personalIdentifierString) {
+        PersonalIdentifier personalIdentifier = PersonalIdentifier.of(personalIdentifierString);
+        if (!customerRepository.findBy(personalIdentifier).isPresent()) {
+             return;
+        }
+
         Customer customer = CustomerBuilder.aCustomer()
-                .withPersonalIdentifier(PersonalIdentifier.of(personalIdentifier))
+                .withPersonalIdentifier(personalIdentifier)
                 .withAddress(Address.of("Verifikationsvägen 45"))
                 .build();
 
@@ -74,7 +85,12 @@ public class InsuranceRegistrationSteps {
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("personalIdentifier", personalIdentifier);
 
-        formService.submitStartFormData("register-insurance", properties);
+        ProcessDefinition processDefinition = repositoryService
+                .createProcessDefinitionQuery()
+                .processDefinitionKey("register-insurance")
+                .singleResult();
+
+        formService.submitStartFormData(processDefinition.getId(), properties);
     }
 
     @Så("^skapas en försäkring kopplad till kundkonto (\\d{6}-\\d{4})$")
