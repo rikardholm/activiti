@@ -13,7 +13,7 @@ Egenskap: Registrering av försäkring hos företaget
     Så skapas en försäkring kopplad till kundkonto 900830-2037
 
   Scenario: En person som inte är kund hos företaget
-    Givet adressen för 650416-0646 i SPAR är "SPARtorget 80, 120 66 Stockholm"
+    Givet att adressen för 650416-0646 i SPAR är "SPARtorget 80, 120 66 Stockholm"
     När vi tar emot en anmälan för personnummer 650416-0646
     Så skapas en försäkring kopplad till ett kundkonto med personnummer 650416-0646 och adress "SPARtorget 80, 120 66 Stockholm"
 

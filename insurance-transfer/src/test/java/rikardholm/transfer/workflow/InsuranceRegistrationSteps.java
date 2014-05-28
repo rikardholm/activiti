@@ -1,14 +1,13 @@
 package rikardholm.transfer.workflow;
 
 import com.google.common.base.Optional;
-import cucumber.api.java.sv.Givet;
-import cucumber.api.java.sv.När;
-import cucumber.api.java.sv.Och;
-import cucumber.api.java.sv.Så;
+import cucumber.api.PendingException;
+import cucumber.api.java.sv.*;
 import org.activiti.engine.FormService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -24,8 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static rikardholm.insurance.common.test.OptionalMatchers.isPresent;
 
 @Component
@@ -55,6 +53,7 @@ public class InsuranceRegistrationSteps {
     private FakeSparService fakeSparService;
     @Autowired
     private InsuranceRepository insuranceRepository;
+    private ProcessInstance processInstance;
 
     @Givet("^en blivande kund med personnummer (\\d{6}-\\d{4}) och adress \"(.*)\"$")
     public void en_blivande_kund_med_personnummer(String personalIdentifier, String adress) {
@@ -90,12 +89,16 @@ public class InsuranceRegistrationSteps {
                 .processDefinitionKey("register-insurance")
                 .singleResult();
 
-        formService.submitStartFormData(processDefinition.getId(), properties);
+        processInstance = formService.submitStartFormData(processDefinition.getId(), properties);
     }
 
     @Så("^skapas en försäkring kopplad till kundkonto (\\d{6}-\\d{4})$")
     public void skapas_en_försäkring_kopplad_till_kundens_konto(String personalIdentifier) {
+        assertThat(processInstance.isEnded(), is(true));
+
         Optional<? extends Customer> customer = customerRepository.findBy(PersonalIdentifier.of(personalIdentifier));
+
+        assertThat(customer, isPresent());
 
         List<? extends Insurance> insurances = insuranceRepository.findBy(customer.get());
 
@@ -174,4 +177,44 @@ public class InsuranceRegistrationSteps {
     }
 
 
+    @Givet("^att adressen för (\\d+)-(\\d+) i SPAR är \"([^\"]*)\"$")
+    public void att_adressen_för_i_SPAR_är(int datum, int crc, String address) throws Throwable {
+        throw new PendingException();
+    }
+
+    @Så("^skapas en försäkring kopplad till ett kundkonto med personnummer (\\d+)-(\\d+) och adress \"([^\"]*)\"$")
+    public void skapas_en_försäkring_kopplad_till_ett_kundkonto_med_personnummer_och_adress(int arg1, int arg2, String arg3) throws Throwable {
+        // Express the Regexp above with the code you wish you had
+        throw new PendingException();
+    }
+
+    @Men("^om (\\d+)-(\\d+) inte finns i SPAR$")
+    public void om_inte_finns_i_SPAR(int arg1, int arg2) throws Throwable {
+        // Express the Regexp above with the code you wish you had
+        throw new PendingException();
+    }
+
+    @Så("^utreder MO att personen har adress \"([^\"]*)\"$")
+    public void utreder_MO_att_personen_har_adress(String arg1) throws Throwable {
+        // Express the Regexp above with the code you wish you had
+        throw new PendingException();
+    }
+
+    @Men("^om (\\d+)-(\\d+) har skyddad identitet$")
+    public void om_har_skyddad_identitet(int arg1, int arg2) throws Throwable {
+        // Express the Regexp above with the code you wish you had
+        throw new PendingException();
+    }
+
+    @Och("^det skapas en försäkring kopplad till ett kundkonto med personnummer (\\d+)-(\\d+) och adress \"([^\"]*)\"$")
+    public void det_skapas_en_försäkring_kopplad_till_ett_kundkonto_med_personnummer_och_adress(int arg1, int arg2, String arg3) throws Throwable {
+        // Express the Regexp above with the code you wish you had
+        throw new PendingException();
+    }
+
+    @Men("^om SPAR är nere$")
+    public void om_SPAR_är_nere() throws Throwable {
+        // Express the Regexp above with the code you wish you had
+        throw new PendingException();
+    }
 }

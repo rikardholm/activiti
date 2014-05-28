@@ -3,11 +3,13 @@
   <process id="register-insurance" name="Registrera en försäkring" isExecutable="true">
     <startEvent id="start" name="Start">
       <extensionElements>
-        <activiti:formProperty id="personalIdentifier" name="Personnummer"></activiti:formProperty>
+        <activiti:formProperty id="personalIdentifier" name="Personnummer" variable="personalIdentifier"></activiti:formProperty>
       </extensionElements>
     </startEvent>
-    <scriptTask id="weee" name="Weeee" activiti:autoStoreVariables="false">
-      <script>println('Weeeeee!');</script>
+    <scriptTask id="weee" name="Weeee" scriptFormat="javascript" activiti:autoStoreVariables="false">
+      <script>println('Weee');
+var personalIdentifier = execution.getVariable('personalIdentifier');
+println('Personal Identifier: ' + personalIdentifier);</script>
     </scriptTask>
     <endEvent id="end" name="End"></endEvent>
     <sequenceFlow id="flow1" sourceRef="start" targetRef="weee"></sequenceFlow>
