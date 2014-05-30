@@ -72,7 +72,7 @@ public class InsuranceRegistrationSteps {
     @Och("^en existerande kund med personnummer (\\d{6}-\\d{4}) utan försäkringar$")
     public void en_existerande_kund_med_personnummer(String personalIdentifierString) {
         PersonalIdentifier personalIdentifier = PersonalIdentifier.of(personalIdentifierString);
-        if (!customerRepository.findBy(personalIdentifier).isPresent()) {
+        if (customerRepository.findBy(personalIdentifier).isPresent()) {
              return;
         }
 
