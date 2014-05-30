@@ -11,7 +11,7 @@ public class InMemoryMessageEventRepository implements MessageEventRepository {
     private List<MessageEvent> events = new ArrayList<>();
 
     @Override
-    public void create(MessageEvent instance) {
+    public void save(MessageEvent instance) {
           events.add(instance);
     }
 

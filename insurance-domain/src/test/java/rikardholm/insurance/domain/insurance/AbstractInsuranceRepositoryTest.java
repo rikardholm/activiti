@@ -1,12 +1,20 @@
-package rikardholm.insurance.domain;
+package rikardholm.insurance.domain.insurance;
 
 import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
-import rikardholm.insurance.domain.builder.CustomerBuilder;
-import rikardholm.insurance.domain.builder.InsuranceBuilder;
+import rikardholm.insurance.domain.AbstractContractTest;
+import rikardholm.insurance.domain.customer.CustomerBuilder;
+import rikardholm.insurance.domain.customer.Address;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.CustomerRepository;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceBuilder;
+import rikardholm.insurance.domain.insurance.InsuranceNumber;
+import rikardholm.insurance.domain.insurance.InsuranceRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,10 +137,10 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
     private void create(Insurance insurance) {
         Optional<? extends Customer> customer = customerRepository.findBy(insurance.getCustomer().getPersonalIdentifier());
         if (!customer.isPresent()) {
-            customerRepository.create(insurance.getCustomer());
+            customerRepository.save(insurance.getCustomer());
         }
 
-        insuranceRepository.create(insurance);
+        insuranceRepository.save(insurance);
     }
 
     private static class InsuranceRule extends ExternalResource {
@@ -153,9 +161,9 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
         public void create(Insurance insurance) {
             Optional<? extends Customer> customer = customerRepository.findBy(insurance.getCustomer().getPersonalIdentifier());
             if (!customer.isPresent()) {
-                customerRepository.create(insurance.getCustomer());
+                customerRepository.save(insurance.getCustomer());
             }
-            insuranceRepository.create(insurance);
+            insuranceRepository.save(insurance);
             createdInsurances.add(insurance);
         }
 

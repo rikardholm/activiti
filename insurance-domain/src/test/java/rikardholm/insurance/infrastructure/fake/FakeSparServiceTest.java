@@ -7,7 +7,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 import rikardholm.insurance.application.spar.SparResult;
 import rikardholm.insurance.application.spar.SparUnavailableException;
-import rikardholm.insurance.domain.PersonalIdentifier;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;

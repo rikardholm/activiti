@@ -26,7 +26,7 @@ public class InMemoryMessageRepository<M extends Message> implements MessageRepo
     }
 
     @Override
-    public void create(M instance) {
+    public void save(M instance) {
         store.add(instance);
     }
 

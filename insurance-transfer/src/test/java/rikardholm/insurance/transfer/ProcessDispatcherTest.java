@@ -5,7 +5,6 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.test.ActivitiRule;
 import org.activiti.engine.test.Deployment;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,7 +46,7 @@ public class ProcessDispatcherTest {
     @Test
     @Deployment(resources = "rikardholm/transfer/workflow/start-stop-process.bpmn")
     public void starts_a_mapped_process() throws Exception {
-        inboxRepository.create(INCOMING_MESSAGE);
+        inboxRepository.save(INCOMING_MESSAGE);
         processDispatcher.pollInbox();
 
         HistoricProcessInstance instance = getHistoricProcessInstance();
@@ -58,7 +57,7 @@ public class ProcessDispatcherTest {
     @Test
     @Deployment(resources = "rikardholm/transfer/workflow/start-stop-process.bpmn")
     public void sets_IncomingMessage_as_process_variable() throws Exception {
-        inboxRepository.create(INCOMING_MESSAGE);
+        inboxRepository.save(INCOMING_MESSAGE);
         processDispatcher.pollInbox();
 
         HistoricProcessInstance historicProcessInstance = getHistoricProcessInstance();
@@ -71,7 +70,7 @@ public class ProcessDispatcherTest {
     @Test
     @Deployment(resources = "rikardholm/transfer/workflow/start-stop-process.bpmn")
     public void adds_MessageHandledEvent_after_processing() throws Exception {
-        inboxRepository.create(INCOMING_MESSAGE);
+        inboxRepository.save(INCOMING_MESSAGE);
         processDispatcher.pollInbox();
 
         List<MessageEvent> messageEvents = messageEventRepository.findBy(INCOMING_MESSAGE);
@@ -82,8 +81,8 @@ public class ProcessDispatcherTest {
     @Test
     @Deployment(resources = "rikardholm/transfer/workflow/start-stop-process.bpmn")
     public void should_not_process_handled_events() throws Exception {
-        inboxRepository.create(INCOMING_MESSAGE);
-        messageEventRepository.create(new MessageHandledEvent(INCOMING_MESSAGE));
+        inboxRepository.save(INCOMING_MESSAGE);
+        messageEventRepository.save(new MessageHandledEvent(INCOMING_MESSAGE));
         processDispatcher.pollInbox();
 
         HistoricProcessInstance historicProcessInstance = getHistoricProcessInstance();

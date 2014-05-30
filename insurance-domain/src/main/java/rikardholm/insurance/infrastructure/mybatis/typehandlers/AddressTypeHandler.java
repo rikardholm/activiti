@@ -2,7 +2,7 @@ package rikardholm.insurance.infrastructure.mybatis.typehandlers;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import rikardholm.insurance.domain.Address;
+import rikardholm.insurance.domain.customer.Address;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;

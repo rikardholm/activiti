@@ -36,7 +36,7 @@ public class ProcessDispatcher {
                 continue;
             }
             startProcess(incomingMessage);
-            messageEventRepository.create(new MessageHandledEvent(incomingMessage));
+            messageEventRepository.save(new MessageHandledEvent(incomingMessage));
         }
     }
 

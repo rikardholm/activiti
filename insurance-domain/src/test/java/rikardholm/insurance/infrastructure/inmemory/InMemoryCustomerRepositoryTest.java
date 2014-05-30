@@ -1,7 +1,7 @@
 package rikardholm.insurance.infrastructure.inmemory;
 
-import rikardholm.insurance.domain.AbstractCustomerRepositoryTest;
-import rikardholm.insurance.domain.CustomerRepository;
+import rikardholm.insurance.domain.customer.AbstractCustomerRepositoryTest;
+import rikardholm.insurance.domain.customer.CustomerRepository;
 
 public class InMemoryCustomerRepositoryTest extends AbstractCustomerRepositoryTest {
     @Override

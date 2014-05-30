@@ -1,8 +1,8 @@
 package rikardholm.insurance.domain.internal;
 
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.Insurance;
-import rikardholm.insurance.domain.InsuranceNumber;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceNumber;
 
 import java.util.Objects;
 

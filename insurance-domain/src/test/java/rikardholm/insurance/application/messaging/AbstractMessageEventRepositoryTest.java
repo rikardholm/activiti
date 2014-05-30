@@ -24,7 +24,7 @@ public abstract class AbstractMessageEventRepositoryTest extends AbstractContrac
 
     @Test
     public void should_be_able_to_find_MessageEvent_that_was_added() throws Exception {
-        target.create(MESSAGE_HANDLED_EVENT);
+        target.save(MESSAGE_HANDLED_EVENT);
 
         List<MessageEvent> messageEvents = target.findBy(MESSAGE);
         assertThat(messageEvents, contains(MESSAGE_HANDLED_EVENT));

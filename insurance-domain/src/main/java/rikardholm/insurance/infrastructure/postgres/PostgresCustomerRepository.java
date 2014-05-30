@@ -1,9 +1,9 @@
 package rikardholm.insurance.infrastructure.postgres;
 
 import com.google.common.base.Optional;
-import rikardholm.insurance.domain.PersonalIdentifier;
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.CustomerRepository;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.CustomerRepository;
 
 public class PostgresCustomerRepository implements CustomerRepository {
     private CustomerMapper customerMapper;
@@ -18,7 +18,7 @@ public class PostgresCustomerRepository implements CustomerRepository {
     }
 
     @Override
-    public void create(Customer instance) {
+    public void save(Customer instance) {
         PersonalIdentifier personalIdentifier = instance.getPersonalIdentifier();
         Optional<? extends Customer> customer = Optional.fromNullable(customerMapper.findByPersonalIdentifier(personalIdentifier));
 

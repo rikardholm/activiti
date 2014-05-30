@@ -1,9 +1,14 @@
-package rikardholm.insurance.domain;
+package rikardholm.insurance.domain.customer;
 
 import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import rikardholm.insurance.domain.builder.CustomerBuilder;
+import rikardholm.insurance.domain.AbstractContractTest;
+import rikardholm.insurance.domain.customer.CustomerBuilder;
+import rikardholm.insurance.domain.customer.Address;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.CustomerRepository;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
@@ -34,7 +39,7 @@ public abstract class AbstractCustomerRepositoryTest extends AbstractContractTes
 
     @Test
     public void findByPersonalIdentifier_should_find_existing_Customer() throws Exception {
-        customerRepository.create(CUSTOMER);
+        customerRepository.save(CUSTOMER);
 
         Optional<? extends Customer> result = customerRepository.findBy(PERSONAL_IDENTIFIER);
 
@@ -43,13 +48,13 @@ public abstract class AbstractCustomerRepositoryTest extends AbstractContractTes
 
     @Test(expected = IllegalArgumentException.class)
     public void create_should_refuse_new_Customer_with_existing_PersonalIdentifier() {
-        customerRepository.create(CUSTOMER);
+        customerRepository.save(CUSTOMER);
 
         PersonalIdentifier personalIdentifier = PersonalIdentifier.of(PERSONAL_IDENTIFIER_STRING);
         Customer customer = CustomerBuilder.aCustomer()
                 .withPersonalIdentifier(personalIdentifier)
                 .withAddress(Address.of("Testvägen 5")).build();
 
-        customerRepository.create(customer);
+        customerRepository.save(customer);
     }
 }

@@ -6,8 +6,6 @@ import cucumber.api.java.sv.Och;
 import cucumber.api.java.sv.Så;
 import org.joda.time.Duration;
 import org.joda.time.Seconds;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
@@ -17,9 +15,15 @@ import rikardholm.insurance.application.messaging.OutboxRepository;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationRequest;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
-import rikardholm.insurance.domain.*;
-import rikardholm.insurance.domain.builder.CustomerBuilder;
-import rikardholm.insurance.domain.builder.InsuranceBuilder;
+import rikardholm.insurance.domain.customer.CustomerBuilder;
+import rikardholm.insurance.domain.customer.Address;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.CustomerRepository;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceBuilder;
+import rikardholm.insurance.domain.insurance.InsuranceNumber;
+import rikardholm.insurance.domain.insurance.InsuranceRepository;
 
 import java.util.List;
 
@@ -58,8 +62,8 @@ public class InsuranceInformationSteps {
                 .belongsTo(CUSTOMER)
                 .build();
 
-        customerRepository.create(CUSTOMER);
-        insuranceRepository.create(insurance);
+        customerRepository.save(CUSTOMER);
+        insuranceRepository.save(insurance);
     }
 
     @Givet("^en person som saknar försäkringar hos bolaget$")
@@ -75,7 +79,7 @@ public class InsuranceInformationSteps {
     @När("^vi tar emot en förfrågan om personen$")
     public void vi_tar_emot_en_förfrågan_om_personen() throws Throwable {
         InsuranceInformationRequest message = new InsuranceInformationRequest(PERSONAL_IDENTIFIER);
-        inboxRepository.create(message);
+        inboxRepository.save(message);
     }
 
     @Och("^ger systemet (\\d+) sekunder att behandla meddelandet$")

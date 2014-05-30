@@ -1,6 +1,6 @@
 package rikardholm.insurance.application.spar;
 
-import rikardholm.insurance.domain.PersonalIdentifier;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 public class SparResult {
     public final PersonalIdentifier personalIdentifier;

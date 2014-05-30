@@ -14,8 +14,13 @@ import org.hamcrest.TypeSafeMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
-import rikardholm.insurance.domain.*;
-import rikardholm.insurance.domain.builder.CustomerBuilder;
+import rikardholm.insurance.domain.customer.CustomerBuilder;
+import rikardholm.insurance.domain.customer.Address;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.CustomerRepository;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceRepository;
 import rikardholm.insurance.infrastructure.fake.FakeSparService;
 
 import java.util.HashMap;
@@ -76,7 +81,7 @@ public class InsuranceRegistrationSteps {
                 .withAddress(Address.of("Verifikationsvägen 45"))
                 .build();
 
-        customerRepository.create(customer);
+        customerRepository.save(customer);
     }
 
     @När("^vi tar emot en anmälan för personnummer (\\d{6}-\\d{4})$")
@@ -107,7 +112,7 @@ public class InsuranceRegistrationSteps {
 
     @Givet("^en person som är kund hos företaget")
     public void en_person_som_är_kund_hos_företaget() {
-        customerRepository.create(CUSTOMER);
+        customerRepository.save(CUSTOMER);
     }
 
     @Givet("^en person som inte är kund hos företaget")

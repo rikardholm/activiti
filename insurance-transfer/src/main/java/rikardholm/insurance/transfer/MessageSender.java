@@ -9,7 +9,11 @@ import rikardholm.insurance.application.messaging.OutboxRepository;
 import rikardholm.insurance.application.messaging.OutgoingMessage;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
-import rikardholm.insurance.domain.*;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.CustomerRepository;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceRepository;
 
 import java.util.List;
 
@@ -33,7 +37,7 @@ public class MessageSender {
 
         log.info("Sending 'No Insurance Information' message for {}", personalIdentifier);
 
-        outboxRepository.create(outgoingMessage);
+        outboxRepository.save(outgoingMessage);
     }
 
     public void sendInsuranceInformationResponse(DelegateExecution execution) {
@@ -49,7 +53,7 @@ public class MessageSender {
 
         log.info("Sending insurance information for {} with {} insurances.",personalIdentifier,insuranceNumbers.size());
 
-        outboxRepository.create(outgoingMessage);
+        outboxRepository.save(outgoingMessage);
     }
 
     private Function<Insurance, Long> toInsuranceNumber() {

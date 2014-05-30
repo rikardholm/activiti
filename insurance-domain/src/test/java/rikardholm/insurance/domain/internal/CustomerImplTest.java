@@ -1,9 +1,9 @@
 package rikardholm.insurance.domain.internal;
 
 import org.junit.Test;
-import rikardholm.insurance.domain.Address;
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.PersonalIdentifier;
+import rikardholm.insurance.domain.customer.Address;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

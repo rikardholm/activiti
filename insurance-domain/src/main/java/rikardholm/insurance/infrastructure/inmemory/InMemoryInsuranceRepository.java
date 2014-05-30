@@ -2,10 +2,10 @@ package rikardholm.insurance.infrastructure.inmemory;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.Insurance;
-import rikardholm.insurance.domain.InsuranceNumber;
-import rikardholm.insurance.domain.InsuranceRepository;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceNumber;
+import rikardholm.insurance.domain.insurance.InsuranceRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class InMemoryInsuranceRepository implements InsuranceRepository {
     private List<Insurance> insurances = new ArrayList<Insurance>();
 
     @Override
-    public void create(Insurance insurance) {
+    public void save(Insurance insurance) {
         insurances.add(insurance);
     }
 

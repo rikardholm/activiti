@@ -1,12 +1,17 @@
-package rikardholm.insurance.domain.builder;
+package rikardholm.insurance.domain.insurance;
 
 import org.junit.Test;
-import rikardholm.insurance.domain.*;
+import rikardholm.insurance.domain.customer.Address;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceBuilder;
+import rikardholm.insurance.domain.insurance.InsuranceNumber;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
-import static rikardholm.insurance.domain.builder.CustomerBuilder.aCustomer;
+import static rikardholm.insurance.domain.customer.CustomerBuilder.aCustomer;
 import static rikardholm.insurance.domain.matchers.InsuranceMatchers.hasCustomer;
 import static rikardholm.insurance.domain.matchers.InsuranceMatchers.hasInsuranceNumber;
 

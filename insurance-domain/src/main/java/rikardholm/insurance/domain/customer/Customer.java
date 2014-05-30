@@ -1,4 +1,4 @@
-package rikardholm.insurance.domain;
+package rikardholm.insurance.domain.customer;
 
 public interface Customer {
     PersonalIdentifier getPersonalIdentifier();

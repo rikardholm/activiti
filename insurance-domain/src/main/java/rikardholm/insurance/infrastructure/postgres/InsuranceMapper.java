@@ -1,9 +1,9 @@
 package rikardholm.insurance.infrastructure.postgres;
 
 import org.apache.ibatis.annotations.*;
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.Insurance;
-import rikardholm.insurance.domain.InsuranceNumber;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceNumber;
 import rikardholm.insurance.domain.internal.CustomerImpl;
 import rikardholm.insurance.domain.internal.InsuranceImpl;
 

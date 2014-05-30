@@ -2,10 +2,9 @@ package rikardholm.insurance.infrastructure.oracle;
 
 import com.google.common.base.Optional;
 
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.CustomerRepository;
-import rikardholm.insurance.domain.PersonalIdentifier;
-import rikardholm.insurance.domain.internal.CustomerImpl;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.CustomerRepository;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 public class OracleCustomerRepository implements CustomerRepository {
 
@@ -21,7 +20,7 @@ public class OracleCustomerRepository implements CustomerRepository {
 	}
 
 	@Override
-	public void create(Customer instance) {
+	public void save(Customer instance) {
 		checkCustomerDoesNotExist(instance);
 		customerMapper.insert(instance);
 	}

@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import rikardholm.insurance.domain.AbstractCustomerRepositoryTest;
-import rikardholm.insurance.domain.CustomerRepository;
+import rikardholm.insurance.domain.customer.AbstractCustomerRepositoryTest;
+import rikardholm.insurance.domain.customer.CustomerRepository;
 import rikardholm.insurance.infrastructure.PostgresCategory;
 
 @RunWith(SpringJUnit4ClassRunner.class)

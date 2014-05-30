@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.google.common.base.Optional;
 
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.Insurance;
-import rikardholm.insurance.domain.InsuranceNumber;
-import rikardholm.insurance.domain.InsuranceRepository;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceNumber;
+import rikardholm.insurance.domain.insurance.InsuranceRepository;
 
 public class OracleInsuranceRepository implements InsuranceRepository {
 
@@ -30,7 +30,7 @@ public class OracleInsuranceRepository implements InsuranceRepository {
 	}
 
 	@Override
-	public void create(Insurance instance) {
+	public void save(Insurance instance) {
 		Integer customerId = customerMapper.selectId(instance.getCustomer());
 
 		insuranceMapper.insert(instance, customerId);

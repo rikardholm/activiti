@@ -3,7 +3,12 @@ package rikardholm.insurance.transfer;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import rikardholm.insurance.domain.*;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.CustomerRepository;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
+import rikardholm.insurance.domain.insurance.Insurance;
+import rikardholm.insurance.domain.insurance.InsuranceNumber;
+import rikardholm.insurance.domain.insurance.InsuranceRepository;
 
 import java.util.List;
 

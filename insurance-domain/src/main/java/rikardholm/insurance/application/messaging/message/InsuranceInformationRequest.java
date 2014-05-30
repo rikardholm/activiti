@@ -1,7 +1,7 @@
 package rikardholm.insurance.application.messaging.message;
 
 import rikardholm.insurance.application.messaging.IncomingMessage;
-import rikardholm.insurance.domain.PersonalIdentifier;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 import static java.util.Objects.requireNonNull;
 

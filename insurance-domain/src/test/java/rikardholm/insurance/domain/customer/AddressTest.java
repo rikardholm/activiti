@@ -1,6 +1,7 @@
-package rikardholm.insurance.domain;
+package rikardholm.insurance.domain.customer;
 
 import org.junit.Test;
+import rikardholm.insurance.domain.customer.Address;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

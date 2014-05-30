@@ -2,9 +2,9 @@ package rikardholm.insurance.infrastructure.inmemory;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import rikardholm.insurance.domain.PersonalIdentifier;
-import rikardholm.insurance.domain.Customer;
-import rikardholm.insurance.domain.CustomerRepository;
+import rikardholm.insurance.domain.customer.PersonalIdentifier;
+import rikardholm.insurance.domain.customer.Customer;
+import rikardholm.insurance.domain.customer.CustomerRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class InMemoryCustomerRepository implements CustomerRepository {
     private List<Customer> customers = new ArrayList<Customer>();
 
     @Override
-    public void create(Customer instance) {
+    public void save(Customer instance) {
         PersonalIdentifier personalIdentifier = instance.getPersonalIdentifier();
         if (findBy(personalIdentifier).isPresent()) {
             throw new IllegalArgumentException("A customer with Personal Identifier=" + personalIdentifier + " already exists.");
