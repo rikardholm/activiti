@@ -4,6 +4,7 @@
     <startEvent id="start" name="Start">
       <extensionElements>
         <activiti:formProperty id="personalIdentifier" name="Personnummer" variable="form.personalIdentifier"></activiti:formProperty>
+        <activiti:formProperty id="address" name="address" variable="form.address"></activiti:formProperty>
       </extensionElements>
     </startEvent>
     <endEvent id="end" name="End"></endEvent>
@@ -13,17 +14,31 @@
 
 var personalIdentifierString = execution.getVariable('form.personalIdentifier');
 var personalIdentifier = PersonalIdentifier.of(personalIdentifierString);
-execution.setVariable('personalIdentifier', personalIdentifier);</script>
+
+if (execution.hasVariable('form.address')) {
+  var addressString = execution.getVariable('form.address');
+  var address = Address.of(addressString);
+}
+
+execution.setVariable('personalIdentifier', personalIdentifier);
+execution.setVariable('address', address);</script>
     </scriptTask>
     <sequenceFlow id="flow3" sourceRef="scripttask1" targetRef="servicetask1"></sequenceFlow>
     <serviceTask id="servicetask1" name="Sök efter kund" activiti:expression="${customerRepository.findBy(personalIdentifier).isPresent()}" activiti:resultVariableName="customerExists"></serviceTask>
-    <sequenceFlow id="flow4" sourceRef="servicetask1" targetRef="scripttask2"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="servicetask1" targetRef="scripttask2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${customerExists}]]></conditionExpression>
+    </sequenceFlow>
     <scriptTask id="scripttask2" name="Registrera försäkring på kund" scriptFormat="javascript" activiti:autoStoreVariables="false">
       <script>var customer = customerRepository.findBy(personalIdentifier).get();
 var insuranceNumber = insuranceRegistration.register(customer).getInsuranceNumber();
 execution.setVariable('insuranceNumber', insuranceNumber);</script>
     </scriptTask>
     <sequenceFlow id="flow5" sourceRef="scripttask2" targetRef="end"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="servicetask1" targetRef="servicetask2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!customerExists}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="servicetask2" targetRef="scripttask2"></sequenceFlow>
+    <serviceTask id="servicetask2" name="Skapa kund" activiti:expression="${customerRegistration.register(personalIdentifier, address)}"></serviceTask>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_register-insurance">
     <bpmndi:BPMNPlane bpmnElement="register-insurance" id="BPMNPlane_register-insurance">
@@ -31,7 +46,7 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
         <omgdc:Bounds height="35.0" width="35.0" x="40.0" y="50.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="35.0" width="35.0" x="560.0" y="50.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="570.0" y="157.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
         <omgdc:Bounds height="55.0" width="105.0" x="130.0" y="40.0"></omgdc:Bounds>
@@ -40,7 +55,10 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
         <omgdc:Bounds height="55.0" width="105.0" x="260.0" y="40.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
-        <omgdc:Bounds height="65.0" width="105.0" x="400.0" y="35.0"></omgdc:Bounds>
+        <omgdc:Bounds height="65.0" width="105.0" x="376.0" y="142.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="376.0" y="40.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
         <omgdi:waypoint x="75.0" y="67.0"></omgdi:waypoint>
@@ -51,12 +69,21 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
         <omgdi:waypoint x="260.0" y="67.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="365.0" y="67.0"></omgdi:waypoint>
-        <omgdi:waypoint x="400.0" y="67.0"></omgdi:waypoint>
+        <omgdi:waypoint x="312.0" y="95.0"></omgdi:waypoint>
+        <omgdi:waypoint x="312.0" y="176.0"></omgdi:waypoint>
+        <omgdi:waypoint x="376.0" y="174.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
-        <omgdi:waypoint x="505.0" y="67.0"></omgdi:waypoint>
-        <omgdi:waypoint x="560.0" y="67.0"></omgdi:waypoint>
+        <omgdi:waypoint x="481.0" y="174.0"></omgdi:waypoint>
+        <omgdi:waypoint x="570.0" y="174.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="365.0" y="67.0"></omgdi:waypoint>
+        <omgdi:waypoint x="376.0" y="67.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="428.0" y="95.0"></omgdi:waypoint>
+        <omgdi:waypoint x="428.0" y="142.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

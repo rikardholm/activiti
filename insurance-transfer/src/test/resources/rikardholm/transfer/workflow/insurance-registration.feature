@@ -5,12 +5,17 @@ Egenskap: Registrering av försäkring hos företaget
   Vill jag kunna registrera en försäkring med mitt personnummer
 
   Bakgrund:
-    Givet en blivande kund med personnummer 650416-0646 och adress "SPARtorget 80, 120 66 Stockholm"
+    Givet en person med personnummer 650416-0646 som inte är kund hos företaget
     Och en existerande kund med personnummer 900830-2037 utan försäkringar
 
   Scenario: En person som redan är kund hos företaget
     När vi tar emot en anmälan för personnummer 900830-2037
     Så skapas en försäkring kopplad till kundkonto 900830-2037
+
+  Scenario: En person som registreras med address
+    När vi tar emot en anmälan för personnummer 650416-0646 med address "Formulärsvägen 18, 384 90 Sundsvall"
+    Så skapas ett kundkonto för personnummer 650416-0646 med address "Formulärsvägen 18, 384 90 Sundsvall"
+    Och det skapas en försäkring kopplad till kundkonto 650416-0646
 
   Scenario: En person som inte är kund hos företaget
     Givet att adressen för 650416-0646 i SPAR är "SPARtorget 80, 120 66 Stockholm"
