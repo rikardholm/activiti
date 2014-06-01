@@ -5,7 +5,6 @@ import cucumber.api.PendingException;
 import cucumber.api.java.sv.*;
 import org.activiti.engine.FormService;
 import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.hamcrest.Description;
@@ -14,7 +13,6 @@ import org.hamcrest.TypeSafeMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
-import rikardholm.insurance.common.test.OptionalMatchers;
 import rikardholm.insurance.domain.customer.*;
 import rikardholm.insurance.domain.insurance.Insurance;
 import rikardholm.insurance.domain.insurance.InsuranceRepository;
@@ -27,29 +25,15 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
-import static rikardholm.insurance.common.test.OptionalMatchers.isPresent;
+import static rikardholm.insurance.common.test.OptionalMatchers.*;
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")
 public class InsuranceRegistrationSteps {
-
-    public static final PersonalIdentifier PERSONAL_IDENTIFIER = PersonalIdentifier.of("561102-3048");
-    public static final Customer CUSTOMER = CustomerBuilder.aCustomer()
-            .withPersonalIdentifier(PERSONAL_IDENTIFIER)
-            .withAddress(Address.of("Testvägen 80"))
-            .build();
-
-    public static final String EXISTERANDE_UPPGIFTER = "Existensplan 8, 42 666 Ingenstans";
-    public static final String SPAR_UPPGIFTER = "SPARgatan 511, 120 66 Stockholm";
-    public static final String MOS_UPPGIFTER = "MOgränd 234, 117 28 Stockholm";
-
     @Autowired
     private RepositoryService repositoryService;
     @Autowired
     private FormService formService;
-    @Autowired
-    private RuntimeService runtimeService;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -126,9 +110,19 @@ public class InsuranceRegistrationSteps {
         assertThat(customer, hasValue(hasAddress(Address.of(address))));
     }
 
-    @Givet("^att adressen för (\\d{6}-\\d{4}) i SPAR är \"([^\"]*)\"$")
-    public void att_adressen_för_i_SPAR_är(String personnummer, String address) throws Throwable {
+    @Och("^(?:att )?personnummer (\\d{6}-\\d{4}) finns i SPAR med address \"([^\"]*)\"$")
+    public void personnummer_finns_i_SPAR_med_address(String personnummer, String address) throws Throwable {
         fakeSparService.add(PersonalIdentifier.of(personnummer), Address.of(address));
+    }
+
+    @Och("^(?:att )?personnummer (\\d{6}-\\d{4}) har skyddad identitet i SPAR$")
+    public void personnummer_har_skyddad_identitet_i_SPAR(String personnummer) throws Throwable {
+        fakeSparService.addSecret(PersonalIdentifier.of(personnummer));
+    }
+
+    @Men("^om SPAR är nere$")
+    public void om_SPAR_är_nere() throws Throwable {
+        fakeSparService.makeUnavailable();
     }
 
     private Matcher<Customer> hasAddress(final Address address) {
@@ -154,33 +148,19 @@ public class InsuranceRegistrationSteps {
         processInstance = formService.submitStartFormData(processDefinition.getId(), properties);
     }
 
-    @Men("^om (\\d+)-(\\d+) inte finns i SPAR$")
-    public void om_inte_finns_i_SPAR(int arg1, int arg2) throws Throwable {
+    @Givet("^ett personnummer (\\d{6}-\\d{4}) som inte existerar i SPAR$")
+    public void ett_personnummer_som_inte_existerar_i_SPAR(String personnummer) throws Throwable {
+           assertThat(fakeSparService.findBy(PersonalIdentifier.of(personnummer)), isAbsent());
+    }
+
+    @Och("^MO utreder i ett ärende att personen har adress \"([^\"]*)\"$")
+    public void MO_utreder_i_ett_ärende_att_personen_har_adress(String arg1) throws Throwable {
         // Express the Regexp above with the code you wish you had
         throw new PendingException();
     }
 
-    @Så("^utreder MO att personen har adress \"([^\"]*)\"$")
-    public void utreder_MO_att_personen_har_adress(String arg1) throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
-    }
-
-    @Men("^om (\\d+)-(\\d+) har skyddad identitet$")
-    public void om_har_skyddad_identitet(int arg1, int arg2) throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
-    }
-
-    @Och("^det skapas en försäkring kopplad till ett kundkonto med personnummer (\\d+)-(\\d+) och adress \"([^\"]*)\"$")
-    public void det_skapas_en_försäkring_kopplad_till_ett_kundkonto_med_personnummer_och_adress(int arg1, int arg2, String arg3) throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
-    }
-
-    @Men("^om SPAR är nere$")
-    public void om_SPAR_är_nere() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+    @Givet("^att SPAR är uppe$")
+    public void att_SPAR_är_uppe() throws Throwable {
+        fakeSparService.makeAvailable();
     }
 }
