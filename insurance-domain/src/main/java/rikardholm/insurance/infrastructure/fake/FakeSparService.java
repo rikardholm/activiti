@@ -5,6 +5,7 @@ import com.google.common.base.Predicate;
 import rikardholm.insurance.application.spar.SparResult;
 import rikardholm.insurance.application.spar.SparService;
 import rikardholm.insurance.application.spar.SparUnavailableException;
+import rikardholm.insurance.domain.customer.Address;
 import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class FakeSparService implements SparService {
         sparResults.add(SparResult.secret(personalIdentifier));
     }
 
-    public void add(PersonalIdentifier personalIdentifier, String address) {
+    public void add(PersonalIdentifier personalIdentifier, Address address) {
         sparResults.add(SparResult.found(personalIdentifier, address));
     }
 

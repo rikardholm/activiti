@@ -1,5 +1,6 @@
 package rikardholm.insurance.application.spar;
 
+import rikardholm.insurance.domain.customer.Address;
 import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 public class SparResult {
@@ -9,7 +10,7 @@ public class SparResult {
         this.personalIdentifier = personalIdentifier;
     }
 
-    public static Found found(PersonalIdentifier personalIdentifier, String address) {
+    public static Found found(PersonalIdentifier personalIdentifier, Address address) {
         return new Found(personalIdentifier, address);
     }
 
@@ -18,9 +19,9 @@ public class SparResult {
     }
 
     public static class Found extends SparResult {
-        public final String address;
+        public final Address address;
 
-        private Found(PersonalIdentifier personalIdentifier, String address) {
+        private Found(PersonalIdentifier personalIdentifier, Address address) {
             super(personalIdentifier);
             this.address = address;
         }

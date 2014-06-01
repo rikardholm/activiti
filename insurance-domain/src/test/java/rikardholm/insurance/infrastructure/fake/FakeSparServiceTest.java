@@ -7,6 +7,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 import rikardholm.insurance.application.spar.SparResult;
 import rikardholm.insurance.application.spar.SparUnavailableException;
+import rikardholm.insurance.domain.customer.Address;
 import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,7 +19,7 @@ public class FakeSparServiceTest {
 
     public static final String PERSONAL_IDENTIFIER_STRING = "45678";
     public static final PersonalIdentifier PERSONAL_IDENTIFIER = PersonalIdentifier.of(PERSONAL_IDENTIFIER_STRING);
-    public static final String ADDRESS = "Aktergatan 11";
+    public static final Address ADDRESS = Address.of("Aktergatan 11");
 
     private FakeSparService fakeSparService = new FakeSparService();
     private Optional<SparResult> result;
@@ -96,7 +97,7 @@ public class FakeSparServiceTest {
         };
     }
 
-    private Matcher<SparResult.Found> withAddress(final String address) {
+    private Matcher<SparResult.Found> withAddress(final Address address) {
         return new TypeSafeMatcher<SparResult.Found>() {
             @Override
             protected boolean matchesSafely(SparResult.Found item) {

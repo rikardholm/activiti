@@ -29,10 +29,14 @@ public class PostgresInsuranceRepository implements InsuranceRepository {
     }
 
     @Override
-    public void save(Insurance instance) {
-        Integer customerId = customerMapper.selectId(instance.getCustomer());
+    public void save(Insurance insurance) {
+        if (findBy(insurance.getInsuranceNumber()).isPresent()) {
+            throw new IllegalArgumentException("An Insurance with this InsuranceNumber already exists: " + insurance.getInsuranceNumber());
+        }
 
-        insuranceMapper.insert(instance, customerId);
+        Integer customerId = customerMapper.selectId(insurance.getCustomer());
+
+        insuranceMapper.insert(insurance, customerId);
     }
 
     @Override

@@ -27,6 +27,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
 import static rikardholm.insurance.common.test.OptionalMatchers.isPresent;
 
 @Component
@@ -63,6 +64,10 @@ public class InsuranceRegistrationSteps {
         Optional<? extends Customer> customer = customerRepository.findBy(PersonalIdentifier.of(personalIdentifier));
 
         if (customer.isPresent()) {
+            for (Insurance insurance : insuranceRepository.findBy(customer.get())) {
+                insuranceRepository.delete(insurance);
+            }
+
             customerRepository.delete(customer.get());
         }
     }
@@ -118,8 +123,12 @@ public class InsuranceRegistrationSteps {
 
         Optional<? extends Customer> customer = customerRepository.findBy(PersonalIdentifier.of(personnummer));
 
-        assertThat(customer, isPresent());
-        assertThat(customer, OptionalMatchers.hasValue(hasAddress(Address.of(address))));
+        assertThat(customer, hasValue(hasAddress(Address.of(address))));
+    }
+
+    @Givet("^att adressen för (\\d{6}-\\d{4}) i SPAR är \"([^\"]*)\"$")
+    public void att_adressen_för_i_SPAR_är(String personnummer, String address) throws Throwable {
+        fakeSparService.add(PersonalIdentifier.of(personnummer), Address.of(address));
     }
 
     private Matcher<Customer> hasAddress(final Address address) {
@@ -143,17 +152,6 @@ public class InsuranceRegistrationSteps {
                 .singleResult();
 
         processInstance = formService.submitStartFormData(processDefinition.getId(), properties);
-    }
-
-    @Givet("^att adressen för (\\d+)-(\\d+) i SPAR är \"([^\"]*)\"$")
-    public void att_adressen_för_i_SPAR_är(int datum, int crc, String address) throws Throwable {
-        throw new PendingException();
-    }
-
-    @Så("^skapas en försäkring kopplad till ett kundkonto med personnummer (\\d+)-(\\d+) och adress \"([^\"]*)\"$")
-    public void skapas_en_försäkring_kopplad_till_ett_kundkonto_med_personnummer_och_adress(int arg1, int arg2, String arg3) throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
     }
 
     @Men("^om (\\d+)-(\\d+) inte finns i SPAR$")

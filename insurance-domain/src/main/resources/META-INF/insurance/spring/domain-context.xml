@@ -4,5 +4,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="constructor">
     <bean id="customerRegistration" class="rikardholm.insurance.domain.internal.CustomerRegistrationImpl"/>
-    <bean id="insuranceRegistration" class="rikardholm.insurance.domain.internal.InsuranceRegistrationImpl"/>
+    <bean id="insuranceRegistration" class="rikardholm.insurance.domain.internal.InsuranceRegistrationImpl">
+        <constructor-arg>
+            <bean class="rikardholm.insurance.domain.internal.InsuranceNumberGenerator"/>
+        </constructor-arg>
+    </bean>
 </beans>

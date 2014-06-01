@@ -18,14 +18,14 @@ var personalIdentifier = PersonalIdentifier.of(personalIdentifierString);
 if (execution.hasVariable('form.address')) {
   var addressString = execution.getVariable('form.address');
   var address = Address.of(addressString);
+  execution.setVariable('address', address);
 }
 
-execution.setVariable('personalIdentifier', personalIdentifier);
-execution.setVariable('address', address);</script>
+execution.setVariable('personalIdentifier', personalIdentifier);</script>
     </scriptTask>
     <sequenceFlow id="flow3" sourceRef="scripttask1" targetRef="servicetask1"></sequenceFlow>
     <serviceTask id="servicetask1" name="Sök efter kund" activiti:expression="${customerRepository.findBy(personalIdentifier).isPresent()}" activiti:resultVariableName="customerExists"></serviceTask>
-    <sequenceFlow id="flow4" sourceRef="servicetask1" targetRef="scripttask2">
+    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="scripttask2">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${customerExists}]]></conditionExpression>
     </sequenceFlow>
     <scriptTask id="scripttask2" name="Registrera försäkring på kund" scriptFormat="javascript" activiti:autoStoreVariables="false">
@@ -34,56 +34,87 @@ var insuranceNumber = insuranceRegistration.register(customer).getInsuranceNumbe
 execution.setVariable('insuranceNumber', insuranceNumber);</script>
     </scriptTask>
     <sequenceFlow id="flow5" sourceRef="scripttask2" targetRef="end"></sequenceFlow>
-    <sequenceFlow id="flow6" sourceRef="servicetask1" targetRef="servicetask2">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!customerExists}]]></conditionExpression>
+    <sequenceFlow id="flow6" sourceRef="exclusivegateway1" targetRef="servicetask2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!customerExists && execution.hasVariable('address')}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow7" sourceRef="servicetask2" targetRef="scripttask2"></sequenceFlow>
     <serviceTask id="servicetask2" name="Skapa kund" activiti:expression="${customerRegistration.register(personalIdentifier, address)}"></serviceTask>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow8" sourceRef="servicetask1" targetRef="exclusivegateway1"></sequenceFlow>
+    <sequenceFlow id="flow9" sourceRef="exclusivegateway1" targetRef="scripttask3">
+      <documentation>Kunden finns inte, och addressen har inte angetts</documentation>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!customerExists && !execution.hasVariable('address')}]]></conditionExpression>
+    </sequenceFlow>
+    <scriptTask id="scripttask3" name="Slå upp adress i SPAR" scriptFormat="javascript" activiti:autoStoreVariables="false">
+      <script>importPackage(Packages.rikardholm.insurance.domain.customer);
+
+var sparResult = sparService.findBy(personalIdentifier).get();
+
+execution.setVariable('address',sparResult.address);</script>
+    </scriptTask>
+    <sequenceFlow id="flow10" sourceRef="scripttask3" targetRef="servicetask2"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_register-insurance">
     <bpmndi:BPMNPlane bpmnElement="register-insurance" id="BPMNPlane_register-insurance">
       <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="35.0" width="35.0" x="40.0" y="50.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="109.0" y="7.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="35.0" width="35.0" x="570.0" y="157.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="570.0" y="330.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
-        <omgdc:Bounds height="55.0" width="105.0" x="130.0" y="40.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="74.0" y="61.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
-        <omgdc:Bounds height="55.0" width="105.0" x="260.0" y="40.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="74.0" y="147.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
-        <omgdc:Bounds height="65.0" width="105.0" x="376.0" y="142.0"></omgdc:Bounds>
+        <omgdc:Bounds height="65.0" width="105.0" x="278.0" y="319.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
-        <omgdc:Bounds height="55.0" width="105.0" x="376.0" y="40.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="400.0" y="143.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="310.0" y="154.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="scripttask3" id="BPMNShape_scripttask3">
+        <omgdc:Bounds height="65.0" width="105.0" x="400.0" y="16.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
-        <omgdi:waypoint x="75.0" y="67.0"></omgdi:waypoint>
-        <omgdi:waypoint x="130.0" y="67.0"></omgdi:waypoint>
+        <omgdi:waypoint x="126.0" y="42.0"></omgdi:waypoint>
+        <omgdi:waypoint x="126.0" y="61.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
-        <omgdi:waypoint x="235.0" y="67.0"></omgdi:waypoint>
-        <omgdi:waypoint x="260.0" y="67.0"></omgdi:waypoint>
+        <omgdi:waypoint x="126.0" y="116.0"></omgdi:waypoint>
+        <omgdi:waypoint x="126.0" y="147.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="312.0" y="95.0"></omgdi:waypoint>
-        <omgdi:waypoint x="312.0" y="176.0"></omgdi:waypoint>
-        <omgdi:waypoint x="376.0" y="174.0"></omgdi:waypoint>
+        <omgdi:waypoint x="330.0" y="194.0"></omgdi:waypoint>
+        <omgdi:waypoint x="330.0" y="319.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
-        <omgdi:waypoint x="481.0" y="174.0"></omgdi:waypoint>
-        <omgdi:waypoint x="570.0" y="174.0"></omgdi:waypoint>
+        <omgdi:waypoint x="383.0" y="351.0"></omgdi:waypoint>
+        <omgdi:waypoint x="570.0" y="347.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
-        <omgdi:waypoint x="365.0" y="67.0"></omgdi:waypoint>
-        <omgdi:waypoint x="376.0" y="67.0"></omgdi:waypoint>
+        <omgdi:waypoint x="350.0" y="174.0"></omgdi:waypoint>
+        <omgdi:waypoint x="400.0" y="170.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
-        <omgdi:waypoint x="428.0" y="95.0"></omgdi:waypoint>
-        <omgdi:waypoint x="428.0" y="142.0"></omgdi:waypoint>
+        <omgdi:waypoint x="452.0" y="198.0"></omgdi:waypoint>
+        <omgdi:waypoint x="330.0" y="319.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="179.0" y="174.0"></omgdi:waypoint>
+        <omgdi:waypoint x="310.0" y="174.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="330.0" y="154.0"></omgdi:waypoint>
+        <omgdi:waypoint x="452.0" y="81.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="452.0" y="81.0"></omgdi:waypoint>
+        <omgdi:waypoint x="452.0" y="143.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

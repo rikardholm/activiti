@@ -17,10 +17,11 @@ Egenskap: Registrering av försäkring hos företaget
     Så skapas ett kundkonto för personnummer 650416-0646 med address "Formulärsvägen 18, 384 90 Sundsvall"
     Och det skapas en försäkring kopplad till kundkonto 650416-0646
 
-  Scenario: En person som inte är kund hos företaget
+  Scenario: En person som registreras med enbart personnummer
     Givet att adressen för 650416-0646 i SPAR är "SPARtorget 80, 120 66 Stockholm"
     När vi tar emot en anmälan för personnummer 650416-0646
-    Så skapas en försäkring kopplad till ett kundkonto med personnummer 650416-0646 och adress "SPARtorget 80, 120 66 Stockholm"
+    Så skapas ett kundkonto för personnummer 650416-0646 med address "SPARtorget 80, 120 66 Stockholm"
+    Och det skapas en försäkring kopplad till kundkonto 650416-0646
 
   Scenario: En person som inte finns i SPAR
     Men om 650416-0646 inte finns i SPAR

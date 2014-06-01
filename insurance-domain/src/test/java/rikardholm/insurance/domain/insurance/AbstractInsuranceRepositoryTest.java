@@ -6,15 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
 import rikardholm.insurance.domain.AbstractContractTest;
-import rikardholm.insurance.domain.customer.CustomerBuilder;
-import rikardholm.insurance.domain.customer.Address;
-import rikardholm.insurance.domain.customer.Customer;
-import rikardholm.insurance.domain.customer.CustomerRepository;
-import rikardholm.insurance.domain.customer.PersonalIdentifier;
-import rikardholm.insurance.domain.insurance.Insurance;
-import rikardholm.insurance.domain.insurance.InsuranceBuilder;
-import rikardholm.insurance.domain.insurance.InsuranceNumber;
-import rikardholm.insurance.domain.insurance.InsuranceRepository;
+import rikardholm.insurance.domain.customer.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,6 +124,18 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
         Optional<? extends Insurance> insurance = insuranceRepository.findBy(INSURANCE.getInsuranceNumber());
 
         assertThat(insurance, isAbsent());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void InsuranceNumbers_should_be_unique() throws Exception {
+        insuranceRule.create(INSURANCE);
+
+        Insurance sameInsuranceNumber = InsuranceBuilder.anInsurance()
+                .withInsuranceNumber(INSURANCE.getInsuranceNumber())
+                .belongsTo(CUSTOMER)
+                .build();
+
+        insuranceRepository.save(sameInsuranceNumber);
     }
 
     private void create(Insurance insurance) {

@@ -20,6 +20,10 @@ public class InMemoryInsuranceRepository implements InsuranceRepository {
 
     @Override
     public void save(Insurance insurance) {
+        if (findBy(insurance.getInsuranceNumber()).isPresent()) {
+            throw new IllegalArgumentException("An Insurance with this InsuranceNumber already exists: " + insurance.getInsuranceNumber());
+        }
+
         insurances.add(insurance);
     }
 
