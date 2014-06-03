@@ -1,5 +1,7 @@
 package rikardholm.insurance.domain.common;
 
-public interface ValueObject<TYPE> {
+import java.io.Serializable;
+
+public interface ValueObject<TYPE extends Serializable> extends Serializable {
     TYPE getValue();
 }
