@@ -34,25 +34,47 @@ var insuranceNumber = insuranceRegistration.register(customer).getInsuranceNumbe
 execution.setVariable('insuranceNumber', insuranceNumber);</script>
     </scriptTask>
     <sequenceFlow id="flow5" sourceRef="scripttask2" targetRef="end"></sequenceFlow>
-    <sequenceFlow id="flow6" sourceRef="exclusivegateway1" targetRef="servicetask2">
+    <sequenceFlow id="flow6" sourceRef="exclusivegateway1" targetRef="scripttask3">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!customerExists && execution.hasVariable('address')}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow7" sourceRef="servicetask2" targetRef="scripttask2"></sequenceFlow>
     <serviceTask id="servicetask2" name="Skapa kund" activiti:expression="${customerRegistration.register(personalIdentifier, address)}"></serviceTask>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow8" sourceRef="servicetask1" targetRef="exclusivegateway1"></sequenceFlow>
-    <sequenceFlow id="flow9" sourceRef="exclusivegateway1" targetRef="scripttask3">
+    <sequenceFlow id="flow9" sourceRef="exclusivegateway1" targetRef="servicetask3">
       <documentation>Kunden finns inte, och addressen har inte angetts</documentation>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!customerExists && !execution.hasVariable('address')}]]></conditionExpression>
     </sequenceFlow>
-    <scriptTask id="scripttask3" name="Slå upp adress i SPAR" scriptFormat="javascript" activiti:autoStoreVariables="false">
+    <sequenceFlow id="flow10" sourceRef="exclusivegateway2" targetRef="servicetask2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${lookupSuccessful && foundPerson && !secretAddress}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="servicetask3" name="Slå upp adress i SPAR" activiti:expression="${sparDelegate.lookup(execution, personalIdentifier)}"></serviceTask>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow11" sourceRef="servicetask3" targetRef="exclusivegateway2"></sequenceFlow>
+    <endEvent id="errorendevent1" name="ErrorEnd">
+      <errorEventDefinition></errorEventDefinition>
+    </endEvent>
+    <sequenceFlow id="flow12" sourceRef="exclusivegateway2" targetRef="errorendevent1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${lookupSuccessful && !foundPerson}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="usertask1" name="MO fixar biffen" activiti:candidateGroups="Middle Office">
+      <extensionElements>
+        <activiti:formProperty id="address" name="Adress" variable="form.address"></activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow13" sourceRef="exclusivegateway2" targetRef="usertask1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!lookupSuccessful || (foundPerson && secretAddress)}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow14" sourceRef="usertask1" targetRef="scripttask3"></sequenceFlow>
+    <scriptTask id="scripttask3" name="Konvertera adress" scriptFormat="javascript" activiti:autoStoreVariables="false">
       <script>importPackage(Packages.rikardholm.insurance.domain.customer);
 
-var sparResult = sparService.findBy(personalIdentifier).get();
-
-execution.setVariable('address',sparResult.address);</script>
+var addressString = execution.getVariable('form.address');
+var address = Address.of(addressString);
+execution.setVariable('address', address);
+println('Address: ' + addressString);</script>
     </scriptTask>
-    <sequenceFlow id="flow10" sourceRef="scripttask3" targetRef="servicetask2"></sequenceFlow>
+    <sequenceFlow id="flow15" sourceRef="scripttask3" targetRef="servicetask2"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_register-insurance">
     <bpmndi:BPMNPlane bpmnElement="register-insurance" id="BPMNPlane_register-insurance">
@@ -72,13 +94,25 @@ execution.setVariable('address',sparResult.address);</script>
         <omgdc:Bounds height="65.0" width="105.0" x="278.0" y="319.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
-        <omgdc:Bounds height="55.0" width="105.0" x="400.0" y="143.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="420.0" y="240.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
-        <omgdc:Bounds height="40.0" width="40.0" x="310.0" y="154.0"></omgdc:Bounds>
+        <omgdc:Bounds height="40.0" width="40.0" x="210.0" y="154.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask3" id="BPMNShape_servicetask3">
+        <omgdc:Bounds height="65.0" width="105.0" x="300.0" y="44.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="452.0" y="64.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="errorendevent1" id="BPMNShape_errorendevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="580.0" y="67.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="535.0" y="117.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask3" id="BPMNShape_scripttask3">
-        <omgdc:Bounds height="65.0" width="105.0" x="400.0" y="16.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="341.0" y="167.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
         <omgdi:waypoint x="126.0" y="42.0"></omgdi:waypoint>
@@ -89,7 +123,7 @@ execution.setVariable('address',sparResult.address);</script>
         <omgdi:waypoint x="126.0" y="147.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="330.0" y="194.0"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="194.0"></omgdi:waypoint>
         <omgdi:waypoint x="330.0" y="319.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
@@ -97,24 +131,44 @@ execution.setVariable('address',sparResult.address);</script>
         <omgdi:waypoint x="570.0" y="347.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
-        <omgdi:waypoint x="350.0" y="174.0"></omgdi:waypoint>
-        <omgdi:waypoint x="400.0" y="170.0"></omgdi:waypoint>
+        <omgdi:waypoint x="250.0" y="174.0"></omgdi:waypoint>
+        <omgdi:waypoint x="341.0" y="194.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
-        <omgdi:waypoint x="452.0" y="198.0"></omgdi:waypoint>
+        <omgdi:waypoint x="472.0" y="295.0"></omgdi:waypoint>
         <omgdi:waypoint x="330.0" y="319.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
         <omgdi:waypoint x="179.0" y="174.0"></omgdi:waypoint>
-        <omgdi:waypoint x="310.0" y="174.0"></omgdi:waypoint>
+        <omgdi:waypoint x="210.0" y="174.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
-        <omgdi:waypoint x="330.0" y="154.0"></omgdi:waypoint>
-        <omgdi:waypoint x="452.0" y="81.0"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="154.0"></omgdi:waypoint>
+        <omgdi:waypoint x="352.0" y="109.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
-        <omgdi:waypoint x="452.0" y="81.0"></omgdi:waypoint>
-        <omgdi:waypoint x="452.0" y="143.0"></omgdi:waypoint>
+        <omgdi:waypoint x="472.0" y="104.0"></omgdi:waypoint>
+        <omgdi:waypoint x="472.0" y="240.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="405.0" y="76.0"></omgdi:waypoint>
+        <omgdi:waypoint x="452.0" y="84.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="492.0" y="84.0"></omgdi:waypoint>
+        <omgdi:waypoint x="580.0" y="84.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13">
+        <omgdi:waypoint x="472.0" y="104.0"></omgdi:waypoint>
+        <omgdi:waypoint x="587.0" y="117.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
+        <omgdi:waypoint x="535.0" y="144.0"></omgdi:waypoint>
+        <omgdi:waypoint x="393.0" y="167.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow15" id="BPMNEdge_flow15">
+        <omgdi:waypoint x="393.0" y="222.0"></omgdi:waypoint>
+        <omgdi:waypoint x="472.0" y="240.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

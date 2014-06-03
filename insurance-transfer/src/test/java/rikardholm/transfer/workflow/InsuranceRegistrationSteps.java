@@ -4,9 +4,12 @@ import com.google.common.base.Optional;
 import cucumber.api.PendingException;
 import cucumber.api.java.sv.*;
 import org.activiti.engine.FormService;
+import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -25,6 +28,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static rikardholm.insurance.common.test.OptionalMatchers.*;
 
 @Component
@@ -34,6 +38,8 @@ public class InsuranceRegistrationSteps {
     private RepositoryService repositoryService;
     @Autowired
     private FormService formService;
+    @Autowired
+    private TaskService taskService;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -81,7 +87,7 @@ public class InsuranceRegistrationSteps {
 
     @Så("^(?:det )?skapas en försäkring kopplad till kundkonto (\\d{6}-\\d{4})$")
     public void skapas_en_försäkring_kopplad_till_kundens_konto(String personalIdentifier) {
-        assertThat(processInstance.isEnded(), is(true));
+        //assertThat(processInstance.isEnded(), is(true));
 
         Optional<? extends Customer> customer = customerRepository.findBy(PersonalIdentifier.of(personalIdentifier));
 
@@ -103,7 +109,7 @@ public class InsuranceRegistrationSteps {
 
     @Så("^skapas ett kundkonto för personnummer (\\d{6}-\\d{4}) med address \"([^\"]*)\"$")
     public void skapas_ett_kundkonto_för_personnummer_med_address(String personnummer, String address) throws Throwable {
-        assertThat(processInstance.isEnded(), is(true));
+        //assertThat(processInstance.isEnded(), is(true));
 
         Optional<? extends Customer> customer = customerRepository.findBy(PersonalIdentifier.of(personnummer));
 
@@ -154,9 +160,19 @@ public class InsuranceRegistrationSteps {
     }
 
     @Och("^MO utreder i ett ärende att personen har adress \"([^\"]*)\"$")
-    public void MO_utreder_i_ett_ärende_att_personen_har_adress(String arg1) throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+    public void MO_utreder_i_ett_ärende_att_personen_har_adress(String address) throws Throwable {
+        Task task = taskService.createTaskQuery()
+                .processDefinitionKey("register-insurance")
+                .taskCandidateGroup("Middle Office")
+                .singleResult();
+
+        assertThat(task, is(notNullValue()));
+
+        taskService.claim(task.getId(),"Rikard");
+
+        Map<String, String> formValues = new HashMap<>();
+        formValues.put("address", address);
+        formService.submitTaskFormData(task.getId(), formValues);
     }
 
     @Givet("^att SPAR är uppe$")

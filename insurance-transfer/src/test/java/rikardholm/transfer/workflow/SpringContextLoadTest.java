@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import rikardholm.insurance.transfer.ProcessDispatcher;
+import rikardholm.insurance.transfer.task.SparDelegate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static rikardholm.insurance.common.test.ApplicationContextMatchers.hasExactlyOneBeanOfType;
@@ -37,5 +38,10 @@ public class SpringContextLoadTest {
     @Test
     public void wires_a_RuntimeService() throws Exception {
         assertThat(applicationContext, hasExactlyOneBeanOfType(RuntimeService.class));
+    }
+
+    @Test
+    public void wires_a_SparDelegate() throws Exception {
+        assertThat(applicationContext, hasExactlyOneBeanOfType(SparDelegate.class));
     }
 }

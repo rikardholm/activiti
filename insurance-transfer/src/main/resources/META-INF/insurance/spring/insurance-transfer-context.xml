@@ -22,4 +22,7 @@
 
     <bean id="insuranceFinder" class="rikardholm.insurance.transfer.InsuranceFinder"/>
     <bean id="messageSender" class="rikardholm.insurance.transfer.MessageSender"/>
+    <bean id="sparDelegate" class="rikardholm.insurance.transfer.task.SparDelegate">
+        <constructor-arg ref="sparService"/>
+    </bean>
 </beans>
