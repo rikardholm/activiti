@@ -25,6 +25,7 @@
         <property name="customFormTypes">
             <list>
                 <bean class="rikardholm.insurance.transfer.form.AddressFormType"/>
+                <bean class="rikardholm.insurance.transfer.form.PersonalIdentifierFormType"/>
             </list>
         </property>
     </bean>
