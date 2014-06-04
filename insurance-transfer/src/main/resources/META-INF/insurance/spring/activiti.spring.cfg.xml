@@ -22,5 +22,10 @@
         </property>
         <property name="deploymentResources" value="classpath*:META-INF/insurance/bpmn/*.bpmn" />
         <property name="jobExecutorActivate" value="false"/>
+        <property name="customFormTypes">
+            <list>
+                <bean class="rikardholm.insurance.transfer.form.AddressFormType"/>
+            </list>
+        </property>
     </bean>
 </beans>
