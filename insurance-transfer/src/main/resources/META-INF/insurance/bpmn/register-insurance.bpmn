@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <process id="register-insurance" name="Registrera en försäkring" isExecutable="true">
+  <process id="register-insurance" name="Registrera en försäkring" isExecutable="true" activiti:candidateStarterGroups="Middle Office">
     <startEvent id="start" name="Start">
       <extensionElements>
-        <activiti:formProperty id="personalIdentifier" name="Personnummer" type="personalidentifier"></activiti:formProperty>
+        <activiti:formProperty id="personalIdentifier" name="Personnummer" type="personalidentifier" required="true"></activiti:formProperty>
         <activiti:formProperty id="address" name="address" type="address"></activiti:formProperty>
       </extensionElements>
     </startEvent>
@@ -17,7 +17,7 @@
 var insuranceNumber = insuranceRegistration.register(customer).getInsuranceNumber();
 execution.setVariable('insuranceNumber', insuranceNumber);</script>
     </scriptTask>
-    <sequenceFlow id="flow5" sourceRef="scripttask2" targetRef="end"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="scripttask2" targetRef="manualtask1"></sequenceFlow>
     <sequenceFlow id="flow6" sourceRef="exclusivegateway3" targetRef="exclusivegateway4">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${execution.hasVariable('address')}]]></conditionExpression>
     </sequenceFlow>
@@ -43,7 +43,8 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
     </sequenceFlow>
     <userTask id="MOUserTaskLookupAddress" name="MO fixar biffen" activiti:candidateGroups="Middle Office">
       <extensionElements>
-        <activiti:formProperty id="address" name="Adress" type="address"></activiti:formProperty>
+        <activiti:formProperty id="personalIdentifier" name="Personnummer" type="personalidentifier" variable="personalIdentifier" writable="false"></activiti:formProperty>
+        <activiti:formProperty id="address" name="Adress" type="address" required="true"></activiti:formProperty>
       </extensionElements>
     </userTask>
     <sequenceFlow id="flow13" sourceRef="exclusivegateway2" targetRef="MOUserTaskLookupAddress">
@@ -61,6 +62,20 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
     <sequenceFlow id="flow18" sourceRef="exclusivegateway5" targetRef="exclusivegateway4"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway6" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow19" sourceRef="exclusivegateway6" targetRef="scripttask2"></sequenceFlow>
+    <sequenceFlow id="flow20" sourceRef="manualtask1" targetRef="end"></sequenceFlow>
+    <manualTask id="manualtask1" name="Skicka välkomstbrev"></manualTask>
+    <textAnnotation id="textannotation1">
+      <text>Om en adress angavs i formuläret</text>
+    </textAnnotation>
+    <association id="association1" sourceRef="textannotation1" targetRef="exclusivegateway3"></association>
+    <textAnnotation id="textannotation2">
+      <text>Om kunden redan existerar</text>
+    </textAnnotation>
+    <association id="association2" sourceRef="textannotation2" targetRef="exclusivegateway1"></association>
+    <textAnnotation id="textannotation3">
+      <text>Om adressen hittades</text>
+    </textAnnotation>
+    <association id="association3" sourceRef="textannotation3" targetRef="exclusivegateway2"></association>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_register-insurance">
     <bpmndi:BPMNPlane bpmnElement="register-insurance" id="BPMNPlane_register-insurance">
@@ -68,13 +83,13 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
         <omgdc:Bounds height="35.0" width="35.0" x="10.0" y="230.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="35.0" width="35.0" x="1330.0" y="240.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="1380.0" y="240.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
         <omgdc:Bounds height="55.0" width="105.0" x="102.0" y="220.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
-        <omgdc:Bounds height="65.0" width="105.0" x="1160.0" y="225.0"></omgdc:Bounds>
+        <omgdc:Bounds height="65.0" width="105.0" x="1100.0" y="225.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
         <omgdc:Bounds height="55.0" width="105.0" x="890.0" y="182.0"></omgdc:Bounds>
@@ -106,6 +121,18 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway6" id="BPMNShape_exclusivegateway6">
         <omgdc:Bounds height="40.0" width="40.0" x="1040.0" y="237.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="manualtask1" id="BPMNShape_manualtask1">
+        <omgdc:Bounds height="67.0" width="105.0" x="1240.0" y="224.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
+        <omgdc:Bounds height="50.0" width="100.0" x="210.0" y="91.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation2" id="BPMNShape_textannotation2">
+        <omgdc:Bounds height="50.0" width="100.0" x="105.0" y="320.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation3" id="BPMNShape_textannotation3">
+        <omgdc:Bounds height="50.0" width="100.0" x="420.0" y="28.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
         <omgdi:waypoint x="250.0" y="267.0"></omgdi:waypoint>
         <omgdi:waypoint x="249.0" y="312.0"></omgdi:waypoint>
@@ -113,8 +140,8 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
         <omgdi:waypoint x="1060.0" y="277.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
-        <omgdi:waypoint x="1265.0" y="257.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1330.0" y="257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1205.0" y="257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1240.0" y="257.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
         <omgdi:waypoint x="359.0" y="229.0"></omgdi:waypoint>
@@ -180,7 +207,24 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow19" id="BPMNEdge_flow19">
         <omgdi:waypoint x="1080.0" y="257.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1160.0" y="257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1100.0" y="257.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow20" id="BPMNEdge_flow20">
+        <omgdi:waypoint x="1345.0" y="257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1380.0" y="257.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association1" id="BPMNEdge_association1">
+        <omgdi:waypoint x="260.0" y="141.0"></omgdi:waypoint>
+        <omgdi:waypoint x="359.0" y="189.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association2" id="BPMNEdge_association2">
+        <omgdi:waypoint x="155.0" y="320.0"></omgdi:waypoint>
+        <omgdi:waypoint x="250.0" y="267.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association3" id="BPMNEdge_association3">
+        <omgdi:waypoint x="470.0" y="78.0"></omgdi:waypoint>
+        <omgdi:waypoint x="528.0" y="86.0"></omgdi:waypoint>
+        <omgdi:waypoint x="551.0" y="116.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

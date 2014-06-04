@@ -1,14 +1,11 @@
 package rikardholm.transfer.workflow;
 
 import com.google.common.base.Optional;
-import cucumber.api.PendingException;
 import cucumber.api.java.sv.*;
 import org.activiti.engine.FormService;
-import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -26,9 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
+import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
 import static rikardholm.insurance.common.test.OptionalMatchers.*;
 
 @Component
@@ -47,7 +43,6 @@ public class InsuranceRegistrationSteps {
     private FakeSparService fakeSparService;
     @Autowired
     private InsuranceRepository insuranceRepository;
-    private ProcessInstance processInstance;
 
     @Givet("^en person med personnummer (\\d{6}-\\d{4}) som inte är kund hos företaget$")
     public void en_blivande_kund_med_personnummer(String personalIdentifier) {
@@ -87,8 +82,6 @@ public class InsuranceRegistrationSteps {
 
     @Så("^(?:det )?skapas en försäkring kopplad till kundkonto (\\d{6}-\\d{4})$")
     public void skapas_en_försäkring_kopplad_till_kundens_konto(String personalIdentifier) {
-        //assertThat(processInstance.isEnded(), is(true));
-
         Optional<? extends Customer> customer = customerRepository.findBy(PersonalIdentifier.of(personalIdentifier));
 
         assertThat(customer, isPresent());
@@ -109,8 +102,6 @@ public class InsuranceRegistrationSteps {
 
     @Så("^skapas ett kundkonto för personnummer (\\d{6}-\\d{4}) med address \"([^\"]*)\"$")
     public void skapas_ett_kundkonto_för_personnummer_med_address(String personnummer, String address) throws Throwable {
-        //assertThat(processInstance.isEnded(), is(true));
-
         Optional<? extends Customer> customer = customerRepository.findBy(PersonalIdentifier.of(personnummer));
 
         assertThat(customer, hasValue(hasAddress(Address.of(address))));
@@ -151,7 +142,7 @@ public class InsuranceRegistrationSteps {
                 .processDefinitionKey("register-insurance")
                 .singleResult();
 
-        processInstance = formService.submitStartFormData(processDefinition.getId(), properties);
+        formService.submitStartFormData(processDefinition.getId(), properties);
     }
 
     @Givet("^ett personnummer (\\d{6}-\\d{4}) som inte existerar i SPAR$")
