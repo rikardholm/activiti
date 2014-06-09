@@ -19,7 +19,7 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
     </scriptTask>
     <sequenceFlow id="flow5" sourceRef="scripttask2" targetRef="manualtask1"></sequenceFlow>
     <sequenceFlow id="flow6" sourceRef="exclusivegateway3" targetRef="exclusivegateway4">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${not empty address}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${execution.hasVariable('address') and not empty address}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow7" sourceRef="servicetask2" targetRef="exclusivegateway6"></sequenceFlow>
     <serviceTask id="servicetask2" name="Skapa kund" activiti:expression="${customerRegistration.register(personalIdentifier, address)}"></serviceTask>
@@ -27,7 +27,7 @@ execution.setVariable('insuranceNumber', insuranceNumber);</script>
     <sequenceFlow id="flow8" sourceRef="servicetask1" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow9" sourceRef="exclusivegateway3" targetRef="servicetask3">
       <documentation>Kunden finns inte, och addressen har inte angetts</documentation>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${empty address}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!execution.hasVariable('address') or empty address}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow10" sourceRef="exclusivegateway2" targetRef="exclusivegateway5">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${lookupSuccessful && foundPerson && !secretAddress}]]></conditionExpression>
