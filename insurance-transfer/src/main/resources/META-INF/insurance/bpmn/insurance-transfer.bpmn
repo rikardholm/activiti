@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <message id="BGC" name="BGC"></message>
+  <message id="create-insurance" name="create-insurance"></message>
+  <message id="bgc" name="bgc"></message>
   <process id="insurance-transfer" name="Insurance Transfer" isExecutable="true">
-    <startEvent id="startevent1" name="Start"></startEvent>
     <callActivity id="callactivity1" name="Skapa försäkring" calledElement="register-insurance">
       <extensionElements>
         <activiti:in source="personalIdentifier" target="personalIdentifier"></activiti:in>
@@ -9,7 +11,7 @@
         <activiti:out source="insuranceNumber" target="insuranceNumber"></activiti:out>
       </extensionElements>
     </callActivity>
-    <scriptTask id="insurance-created-reply" name="Skicka &quot;Försäkring Skapad&quot;" scriptFormat="javascript" activiti:autoStoreVariables="false">
+    <scriptTask id="insurance-created-reply" name="Skicka 8z &quot;Försäkring Skapad&quot;" scriptFormat="javascript" activiti:autoStoreVariables="false">
       <script>importPackage(Packages.rikardholm.insurance.application.messaging.message);
 
 println('OCR: ' + ocr);
@@ -21,11 +23,11 @@ outboxRepository.save(message);</script>
     </scriptTask>
     <sequenceFlow id="flow3" sourceRef="callactivity1" targetRef="insurance-created-reply"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
-    <sequenceFlow id="flow4" sourceRef="insurance-created-reply" targetRef="bgc-transfer"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="insurance-created-reply" targetRef="messageintermediatecatchevent1"></sequenceFlow>
     <boundaryEvent id="boundaryerror2" name="Error" attachedToRef="callactivity1">
       <errorEventDefinition></errorEventDefinition>
     </boundaryEvent>
-    <scriptTask id="respond-with-error" name="Svara att försäkring inte kan skapas" scriptFormat="javascript" activiti:autoStoreVariables="false">
+    <scriptTask id="respond-with-error" name="Skicka 6b &quot;Försäkring kan inte skapas&quot;" scriptFormat="javascript" activiti:autoStoreVariables="false">
       <script>importPackage(Packages.rikardholm.insurance.application.messaging.message);
 
 println('OCR: ' + ocr);
@@ -36,19 +38,25 @@ outboxRepository.save(message);</script>
     </scriptTask>
     <sequenceFlow id="flow5" sourceRef="respond-with-error" targetRef="endevent1"></sequenceFlow>
     <sequenceFlow id="flow6" sourceRef="boundaryerror2" targetRef="respond-with-error"></sequenceFlow>
-    <receiveTask id="bgc-transfer" name="Bankgiro överföring"></receiveTask>
-    <sequenceFlow id="flow8" sourceRef="bgc-transfer" targetRef="add-money"></sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="messageintermediatecatchevent1" targetRef="add-money"></sequenceFlow>
     <scriptTask id="add-money" name="Sätt in pengar" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>println('Sätter in pengar från ' + ocr + ' på försäkring ' + insuranceNumber);</script>
+      <script>println('Sätter in pengar från ' + ocr + ' på försäkring ' + insuranceNumber + '. Summa: ' + amount);</script>
     </scriptTask>
     <sequenceFlow id="flow9" sourceRef="add-money" targetRef="endevent1"></sequenceFlow>
-    <sequenceFlow id="flow10" sourceRef="startevent1" targetRef="callactivity1"></sequenceFlow>
+    <sequenceFlow id="flow10" sourceRef="messagestartevent1" targetRef="callactivity1"></sequenceFlow>
+    <intermediateCatchEvent id="messageintermediatecatchevent1" name="MessageCatchEvent">
+      <messageEventDefinition messageRef="bgc"></messageEventDefinition>
+    </intermediateCatchEvent>
+    <startEvent id="messagestartevent1" name="Message start">
+      <messageEventDefinition messageRef="create-insurance"></messageEventDefinition>
+    </startEvent>
+    <textAnnotation id="textannotation1">
+      <text>Vänta på Bankgiro överföring</text>
+    </textAnnotation>
+    <association id="association1" sourceRef="textannotation1" targetRef="messageintermediatecatchevent1"></association>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_insurance-transfer">
     <bpmndi:BPMNPlane bpmnElement="insurance-transfer" id="BPMNPlane_insurance-transfer">
-      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="200.0" y="180.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="callactivity1" id="BPMNShape_callactivity1">
         <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="170.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
@@ -56,40 +64,46 @@ outboxRepository.save(message);</script>
         <omgdc:Bounds height="30.0" width="30.0" x="370.0" y="220.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="insurance-created-reply" id="BPMNShape_insurance-created-reply">
-        <omgdc:Bounds height="61.0" width="105.0" x="460.0" y="167.0"></omgdc:Bounds>
+        <omgdc:Bounds height="61.0" width="105.0" x="480.0" y="167.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="920.0" y="180.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="respond-with-error" id="BPMNShape_respond-with-error">
-        <omgdc:Bounds height="61.0" width="105.0" x="510.0" y="290.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="bgc-transfer" id="BPMNShape_bgc-transfer">
-        <omgdc:Bounds height="55.0" width="105.0" x="600.0" y="170.0"></omgdc:Bounds>
+        <omgdc:Bounds height="71.0" width="105.0" x="510.0" y="270.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="add-money" id="BPMNShape_add-money">
         <omgdc:Bounds height="55.0" width="105.0" x="750.0" y="170.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="messageintermediatecatchevent1" id="BPMNShape_messageintermediatecatchevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="645.0" y="180.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="messagestartevent1" id="BPMNShape_messagestartevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="210.0" y="180.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
+        <omgdc:Bounds height="50.0" width="100.0" x="679.0" y="90.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
         <omgdi:waypoint x="425.0" y="197.0"></omgdi:waypoint>
-        <omgdi:waypoint x="460.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="480.0" y="197.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="565.0" y="197.0"></omgdi:waypoint>
-        <omgdi:waypoint x="600.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="585.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="645.0" y="197.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
-        <omgdi:waypoint x="615.0" y="320.0"></omgdi:waypoint>
-        <omgdi:waypoint x="937.0" y="320.0"></omgdi:waypoint>
+        <omgdi:waypoint x="615.0" y="305.0"></omgdi:waypoint>
+        <omgdi:waypoint x="937.0" y="305.0"></omgdi:waypoint>
         <omgdi:waypoint x="937.0" y="215.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
         <omgdi:waypoint x="385.0" y="250.0"></omgdi:waypoint>
-        <omgdi:waypoint x="384.0" y="320.0"></omgdi:waypoint>
-        <omgdi:waypoint x="510.0" y="320.0"></omgdi:waypoint>
+        <omgdi:waypoint x="384.0" y="305.0"></omgdi:waypoint>
+        <omgdi:waypoint x="510.0" y="305.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
-        <omgdi:waypoint x="705.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="680.0" y="197.0"></omgdi:waypoint>
         <omgdi:waypoint x="750.0" y="197.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
@@ -97,8 +111,12 @@ outboxRepository.save(message);</script>
         <omgdi:waypoint x="920.0" y="197.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
-        <omgdi:waypoint x="235.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="245.0" y="197.0"></omgdi:waypoint>
         <omgdi:waypoint x="320.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association1" id="BPMNEdge_association1">
+        <omgdi:waypoint x="729.0" y="140.0"></omgdi:waypoint>
+        <omgdi:waypoint x="662.0" y="180.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

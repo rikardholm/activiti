@@ -12,3 +12,7 @@ Egenskap: Flytt av försäkring in i företaget
     Så skapas ett kundkonto för personnummer 670914-5687 med address "Spartacusvägen 8"
     Och det skapas en försäkring kopplad till kundkonto 670914-5687
     Och det skickas ett 8z meddelande med flyttId 99667884, personnummer 670914-5687 och det nya försäkringsnummret
+
+  Scenario: Vi får en bankgiroöverföring
+    När vi får ett meddelande från bankgirocentralen med ocr 99667884 och 56000kr
+    Så sätts pengar in på försäkringen

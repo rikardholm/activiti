@@ -7,6 +7,7 @@ import cucumber.api.java.sv.När;
 import cucumber.api.java.sv.Och;
 import cucumber.api.java.sv.Så;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.runtime.Execution;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -78,7 +79,8 @@ public class InsuranceTransferSteps {
         Map<String, Object> properties = new HashMap<>();
         properties.put("personalIdentifier", PersonalIdentifier.of(personnummer));
         properties.put("ocr", flyttId);
-        runtimeService.startProcessInstanceByKey("insurance-transfer", flyttId, properties);
+
+        runtimeService.startProcessInstanceByMessage("create-insurance",flyttId,properties);
     }
 
     @Så("^skickar vi ett 6b meddelande för personnummer (\\d{6}-\\d{4}) och flyttId (\\d+)$")
@@ -106,6 +108,18 @@ public class InsuranceTransferSteps {
         assertThat(response.ocr, equalTo(flyttId));
         assertThat(response.insuranceNumber, equalTo(insuranceNumber));
         assertThat(response.personalIdentifier, equalTo(personalIdentifier));
+    }
+
+    @När("^vi får ett meddelande från bankgirocentralen med ocr (\\d+) och (\\d+)kr$")
+    public void vi_får_ett_meddelande_från_bankgirocentralen_med_ocr(String ocr, Integer amount) throws Throwable {
+        Execution execution = runtimeService.createExecutionQuery()
+                .messageEventSubscriptionName("bgc")
+                .processVariableValueEquals("ocr", ocr)
+                .singleResult();
+
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put("amount",amount);
+        runtimeService.messageEventReceived("bgc", execution.getId(), properties);
     }
 
     private Matcher<? super PersonDoesNotExistResponse> flyttId(final String flyttId) {

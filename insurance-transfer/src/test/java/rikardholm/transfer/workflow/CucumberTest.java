@@ -6,6 +6,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(format = "pretty", tags = "~@ignore")
-public class CucumberTransferTest {
+public class CucumberTest {
 
 }
