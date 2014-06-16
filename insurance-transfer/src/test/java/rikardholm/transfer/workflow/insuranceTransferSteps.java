@@ -1,7 +1,6 @@
 package rikardholm.transfer.workflow;
 
 import com.google.common.base.Optional;
-import cucumber.api.PendingException;
 import cucumber.api.java.sv.Givet;
 import cucumber.api.java.sv.När;
 import cucumber.api.java.sv.Och;
@@ -10,7 +9,6 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.Execution;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,8 +17,6 @@ import rikardholm.insurance.application.messaging.OutboxRepository;
 import rikardholm.insurance.application.messaging.message.InsuranceCreatedResponse;
 import rikardholm.insurance.application.messaging.message.PersonDoesNotExistResponse;
 import rikardholm.insurance.application.spar.SparResult;
-import rikardholm.insurance.application.spar.SparService;
-import rikardholm.insurance.common.test.OptionalMatchers;
 import rikardholm.insurance.domain.customer.Address;
 import rikardholm.insurance.domain.customer.Customer;
 import rikardholm.insurance.domain.customer.CustomerRepository;
@@ -117,6 +113,8 @@ public class InsuranceTransferSteps {
                 .processVariableValueEquals("ocr", ocr)
                 .singleResult();
 
+        assertThat(execution, notNullValue());
+
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put("amount",amount);
         runtimeService.messageEventReceived("bgc", execution.getId(), properties);
@@ -149,5 +147,16 @@ public class InsuranceTransferSteps {
                 description.appendText("PersonalIdentifier=").appendValue(personalIdentifier);
             }
         };
+    }
+
+    @Och("^väntar (\\d+) dagar$")
+    public void väntar_dagar(int arg1) throws Throwable {
+        Execution execution = runtimeService.createExecutionQuery()
+                .activityId("timerintermediatecatchevent1")
+                .singleResult();
+
+        assertThat(execution, notNullValue());
+
+        runtimeService.signal(execution.getId());
     }
 }
