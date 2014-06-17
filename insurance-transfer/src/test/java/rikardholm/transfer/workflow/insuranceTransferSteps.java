@@ -5,11 +5,15 @@ import cucumber.api.java.sv.Givet;
 import cucumber.api.java.sv.När;
 import cucumber.api.java.sv.Och;
 import cucumber.api.java.sv.Så;
+import org.activiti.engine.ManagementService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.Execution;
+import org.activiti.engine.runtime.Job;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,7 +21,6 @@ import rikardholm.insurance.application.messaging.OutboxRepository;
 import rikardholm.insurance.application.messaging.message.InsuranceCreatedResponse;
 import rikardholm.insurance.application.messaging.message.PersonDoesNotExistResponse;
 import rikardholm.insurance.application.spar.SparResult;
-import rikardholm.insurance.domain.customer.Address;
 import rikardholm.insurance.domain.customer.Customer;
 import rikardholm.insurance.domain.customer.CustomerRepository;
 import rikardholm.insurance.domain.customer.PersonalIdentifier;
@@ -26,6 +29,7 @@ import rikardholm.insurance.domain.insurance.InsuranceNumber;
 import rikardholm.insurance.domain.insurance.InsuranceRepository;
 import rikardholm.insurance.infrastructure.fake.FakeSparService;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,19 +53,8 @@ public class InsuranceTransferSteps {
     private FakeSparService fakeSparService;
     @Autowired
     private OutboxRepository outboxRepository;
-
-
-    @När("^vi får ett meddelande med personnummer (\\d{6}-\\d{4})$")
-    public void vi_får_ett_meddelande_med_personnummer_(String personnummer) throws Throwable {
-        PersonalIdentifier personalIdentifier = PersonalIdentifier.of(personnummer);
-        Address address = Address.of("Skogsvägen 8");
-        fakeSparService.add(personalIdentifier, address);
-
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("personalIdentifier", personalIdentifier);
-        properties.put("ocr", "123456789");
-        runtimeService.startProcessInstanceByKey("insurance-transfer", personalIdentifier.toString(), properties);
-    }
+    @Autowired
+    private ManagementService managementService;
 
     @Givet("^att personnummer (\\d{6}-\\d{4}) inte finns i SPAR$")
     public void att_personnummer_inte_finns_i_SPAR(String personnummer) throws Throwable {
@@ -151,12 +144,12 @@ public class InsuranceTransferSteps {
 
     @Och("^väntar (\\d+) dagar$")
     public void väntar_dagar(int arg1) throws Throwable {
-        Execution execution = runtimeService.createExecutionQuery()
-                .activityId("timerintermediatecatchevent1")
+        Date date = DateTime.now().plus(Days.days(arg1)).toDate();
+        Job job = managementService.createJobQuery()
+                .duedateLowerThan(date)
                 .singleResult();
 
-        assertThat(execution, notNullValue());
-
-        runtimeService.signal(execution.getId());
+        assertThat(job, notNullValue());
+        managementService.executeJob(job.getId());
     }
 }
