@@ -3,7 +3,9 @@ package rikardholm.insurance.infrastructure.inmemory;
 import org.junit.Test;
 import rikardholm.insurance.application.messaging.Message;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -30,7 +32,27 @@ public class InMemoryMessageRepositoryTest {
         assertThat(allMessages, contains(messageOne, messageTwo, bMessage));
     }
 
-    private static class GeneralMessage implements Message {}
+    private static class GeneralMessage implements Message {
+        @Override
+        public UUID getUuid() {
+            return null;
+        }
+
+        @Override
+        public Instant getReceivedAt() {
+            return null;
+        }
+
+        @Override
+        public String getType() {
+            return null;
+        }
+
+        @Override
+        public String getPayload() {
+            return null;
+        }
+    }
 
     private static class AMessage extends GeneralMessage {}
 

@@ -12,7 +12,7 @@ import rikardholm.insurance.application.messaging.OutboxRepository;
 import rikardholm.insurance.application.spar.SparService;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static rikardholm.insurance.common.test.ApplicationContextMatchers.hasExactlyOneBeanOfType;
+import static rikardholm.insurance.common.test.hamcrest.ApplicationContextMatchers.hasExactlyOneBeanOfType;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:META-INF/insurance/spring/in-memory-application-context.xml")

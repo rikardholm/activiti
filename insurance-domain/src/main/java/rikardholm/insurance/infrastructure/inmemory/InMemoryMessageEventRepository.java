@@ -17,7 +17,7 @@ public class InMemoryMessageEventRepository implements MessageEventRepository {
 
     @Override
     public void delete(MessageEvent instance) {
-           throw new UnsupportedOperationException();
+           events.remove(instance);
     }
 
     @Override

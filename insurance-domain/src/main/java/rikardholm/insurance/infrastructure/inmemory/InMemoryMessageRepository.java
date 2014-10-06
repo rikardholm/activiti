@@ -1,5 +1,7 @@
 package rikardholm.insurance.infrastructure.inmemory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageRepository;
 
@@ -7,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryMessageRepository<M extends Message> implements MessageRepository<M> {
+    private static final Logger log = LoggerFactory.getLogger(InMemoryMessageRepository.class);
     private List<M> store = new ArrayList<M>();
 
     @Override
@@ -27,11 +30,12 @@ public class InMemoryMessageRepository<M extends Message> implements MessageRepo
 
     @Override
     public void save(M instance) {
+        log.info("Saving {}", instance);
         store.add(instance);
     }
 
     @Override
     public void delete(M instance) {
-        throw new UnsupportedOperationException();
+        store.remove(instance);
     }
 }

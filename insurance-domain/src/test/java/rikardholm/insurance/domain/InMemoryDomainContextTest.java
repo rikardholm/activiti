@@ -7,15 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import rikardholm.insurance.common.test.ApplicationContextMatchers;
+import rikardholm.insurance.common.test.database.InMemoryDatabaseTestExecutionListener;
 import rikardholm.insurance.domain.customer.CustomerRepository;
 import rikardholm.insurance.domain.insurance.InsuranceRepository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static rikardholm.insurance.common.test.ApplicationContextMatchers.hasExactlyOneBeanOfType;
+import static rikardholm.insurance.common.test.hamcrest.ApplicationContextMatchers.hasExactlyOneBeanOfType;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath*:META-INF/insurance/spring/domain-context.xml", "classpath*:META-INF/insurance/spring/in-memory-repository-context.xml"})
+@ContextConfiguration({
+        "classpath*:META-INF/insurance/spring/domain-context.xml",
+        "classpath:META-INF/insurance/spring/repository-context.xml",
+        InMemoryDatabaseTestExecutionListener.APPLICATION_CONTEXT_PATH})
 public class InMemoryDomainContextTest {
     @Autowired
     private ApplicationContext applicationContext;
