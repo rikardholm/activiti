@@ -19,7 +19,7 @@ public class MessageBuilder {
         return new MessageBuilder();
     }
 
-    public MessageBuilder withId(UUID id) {
+    public MessageBuilder withUUID(UUID id) {
         this.id = id;
         return this;
     }

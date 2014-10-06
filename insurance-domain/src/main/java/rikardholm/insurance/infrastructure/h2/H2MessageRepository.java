@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class H2MessageRepository implements MessageRepository2 {
 
@@ -51,7 +52,10 @@ public class H2MessageRepository implements MessageRepository2 {
         @Override
         public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
             return MessageBuilder.aMessage()
+                    .withUUID(UUID.fromString(rs.getString("uuid")))
                     .receivedAt(Instant.now())
+                    .payload("blabla")
+                    .type("fake")
                     .build();
         }
     }
