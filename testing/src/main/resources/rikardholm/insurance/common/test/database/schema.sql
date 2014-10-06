@@ -1,0 +1,23 @@
+SET MODE Oracle;
+CREATE TABLE customers
+(
+  id NUMBER PRIMARY KEY,
+  personal_identifier VARCHAR(11) UNIQUE
+);
+CREATE TABLE insurances
+(
+  id NUMBER PRIMARY KEY,
+  customer_id REFERENCES customers (id) NOT NULL
+);
+ALTER TABLE insurances ADD insurance_number NUMBER UNIQUE NOT NULL;
+CREATE SEQUENCE customers_seq
+  MINVALUE 1
+  START WITH 1
+  INCREMENT BY 1
+  NOCACHE;
+CREATE SEQUENCE insurances_seq
+  MINVALUE 1
+  START WITH 1
+  INCREMENT BY 1
+  NOCACHE;
+ALTER TABLE customers ADD address VARCHAR(255) NOT NULL;

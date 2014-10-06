@@ -1,0 +1,4 @@
+CREATE TABLE test (
+  id NUMBER PRIMARY KEY,
+  name VARCHAR(255)
+);
