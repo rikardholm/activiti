@@ -1,1 +1,0 @@
-ALTER TABLE insurances ADD insurance_number NUMBER UNIQUE NOT NULL;

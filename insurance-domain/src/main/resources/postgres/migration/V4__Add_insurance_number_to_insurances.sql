@@ -1,1 +1,0 @@
-ALTER TABLE insurances ADD COLUMN insurance_number bigint NOT NULL UNIQUE;

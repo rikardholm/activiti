@@ -1,1 +1,0 @@
-ALTER TABLE customers ADD address VARCHAR(255) NOT NULL;

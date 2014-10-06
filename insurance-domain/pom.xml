@@ -11,113 +11,6 @@
 
     <artifactId>insurance-domain</artifactId>
 
-    <profiles>
-        <profile>
-            <id>inmemory</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.17</version>
-                        <configuration>
-                            <excludedGroups>rikardholm.insurance.infrastructure.OracleCategory,rikardholm.insurance.infrastructure.PostgresCategory</excludedGroups>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>postgres</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.flywaydb</groupId>
-                        <artifactId>flyway-maven-plugin</artifactId>
-                        <version>3.0</version>
-                        <configuration>
-                            <url>jdbc:postgresql://localhost:5432/test</url>
-                            <user>test</user>
-                            <password>test</password>
-                            <locations>
-                                <location>postgres/migration</location>
-                            </locations>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.postgresql</groupId>
-                                <artifactId>postgresql</artifactId>
-                                <version>9.3-1101-jdbc41</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.17</version>
-                        <configuration>
-                            <excludedGroups>rikardholm.insurance.infrastructure.OracleCategory</excludedGroups>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.postgresql</groupId>
-                    <artifactId>postgresql</artifactId>
-                    <scope>test</scope>
-                    <version>9.3-1101-jdbc41</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>oracle</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.flywaydb</groupId>
-                        <artifactId>flyway-maven-plugin</artifactId>
-                        <version>3.0</version>
-                        <configuration>
-                            <url>jdbc:oracle:thin:@//localhost:1521/xe</url>
-                            <user>test</user>
-                            <password>test</password>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.oracle</groupId>
-                                <artifactId>ojdbc6</artifactId>
-                                <version>11.2.0.4</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.17</version>
-                        <configuration>
-                            <excludedGroups>rikardholm.insurance.infrastructure.PostgresCategory</excludedGroups>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <!-- Must be added to nexus or locally -->
-                    <!-- mvn install:install-file -Dfile={Path/to/your/ojdbc.jar} -DgroupId=com.oracle
-                         -DartifactId=ojdbc6 -Dversion=11.2.0 -Dpackaging=jar -->
-                    <groupId>com.oracle</groupId>
-                    <artifactId>ojdbc6</artifactId>
-                    <scope>test</scope>
-                    <version>11.2.0.4</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -151,7 +44,6 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.13</version>
         </dependency>
-
 
         <!-- Test -->
         <dependency>
