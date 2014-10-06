@@ -16,9 +16,11 @@ import rikardholm.insurance.infrastructure.inmemory.InMemoryInboxRepository;
 import rikardholm.insurance.application.messaging.IncomingMessage;
 import rikardholm.insurance.infrastructure.inmemory.InMemoryMessageEventRepository;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -121,6 +123,26 @@ public class ProcessDispatcherTest {
         @Override
         public int hashCode() {
             return id;
+        }
+
+        @Override
+        public UUID getUuid() {
+            return null;
+        }
+
+        @Override
+        public Instant getReceivedAt() {
+            return null;
+        }
+
+        @Override
+        public String getType() {
+            return null;
+        }
+
+        @Override
+        public String getPayload() {
+            return null;
         }
     }
 }
