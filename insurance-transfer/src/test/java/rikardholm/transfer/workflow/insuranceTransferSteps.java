@@ -41,7 +41,7 @@ import static rikardholm.insurance.common.test.OptionalMatchers.isPresent;
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")
-public class InsuranceTransferSteps {
+public class insuranceTransferSteps {
     @Autowired
     private RuntimeService runtimeService;
 
