@@ -12,8 +12,8 @@ import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
-import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
-import static rikardholm.insurance.common.test.OptionalMatchers.isAbsent;
+import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.hasValue;
+import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsent;
 
 public class FakeSparServiceTest {
 

@@ -6,8 +6,8 @@ import rikardholm.insurance.infrastructure.inmemory.InMemoryCustomerRepository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static rikardholm.insurance.common.test.OptionalMatchers.isAbsent;
-import static rikardholm.insurance.common.test.OptionalMatchers.isPresent;
+import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsent;
+import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isPresent;
 import static rikardholm.insurance.domain.matchers.CustomerMatchers.hasAddress;
 import static rikardholm.insurance.domain.matchers.CustomerMatchers.hasPersonalIdentifier;
 

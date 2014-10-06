@@ -4,15 +4,10 @@ import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import rikardholm.insurance.domain.AbstractContractTest;
-import rikardholm.insurance.domain.customer.CustomerBuilder;
-import rikardholm.insurance.domain.customer.Address;
-import rikardholm.insurance.domain.customer.Customer;
-import rikardholm.insurance.domain.customer.CustomerRepository;
-import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
-import static rikardholm.insurance.common.test.OptionalMatchers.isAbsent;
+import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.hasValue;
+import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsent;
 
 public abstract class AbstractCustomerRepositoryTest extends AbstractContractTest<CustomerRepository> {
 

@@ -4,7 +4,9 @@ import org.junit.Test;
 import rikardholm.insurance.application.messaging.event.MessageHandledEvent;
 import rikardholm.insurance.domain.AbstractContractTest;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -31,5 +33,24 @@ public abstract class AbstractMessageEventRepositoryTest extends AbstractContrac
     }
 
     private static class TestMessage implements Message {
+        @Override
+        public UUID getUuid() {
+            return null;
+        }
+
+        @Override
+        public Instant getReceivedAt() {
+            return null;
+        }
+
+        @Override
+        public String getType() {
+            return null;
+        }
+
+        @Override
+        public String getPayload() {
+            return null;
+        }
     }
 }

@@ -1,7 +1,7 @@
 package rikardholm.insurance.domain.matchers;
 
 import org.hamcrest.Matcher;
-import rikardholm.insurance.common.test.AbstractPropertyMatcher;
+import rikardholm.insurance.common.test.hamcrest.AbstractPropertyMatcher;
 import rikardholm.insurance.domain.customer.Address;
 import rikardholm.insurance.domain.customer.PersonalIdentifier;
 import rikardholm.insurance.domain.customer.Customer;

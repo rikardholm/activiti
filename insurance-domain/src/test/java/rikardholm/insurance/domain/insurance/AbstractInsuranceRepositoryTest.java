@@ -13,8 +13,8 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
-import static rikardholm.insurance.common.test.OptionalMatchers.isAbsent;
+import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.hasValue;
+import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsent;
 
 public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTest<InsuranceRepository> {
 
@@ -30,7 +30,7 @@ public abstract class AbstractInsuranceRepositoryTest extends AbstractContractTe
             .belongsTo(CUSTOMER)
             .build();
 
-    @Rule
+    //@Rule
     public InsuranceRule insuranceRule = new InsuranceRule();
 
     private InsuranceRepository insuranceRepository;
