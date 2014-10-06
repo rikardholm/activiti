@@ -12,7 +12,7 @@ import rikardholm.insurance.infrastructure.OracleCategory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath*:META-INF/insurance/spring/mybatis-context-oracle.xml",
-        "classpath*:test/spring/datasource-oracle.xml"})
+        "classpath*:test/spring/in-memory-dataSource.xml"})
 @Category(OracleCategory.class)
 public class OracleCustomerRepositoryTest extends AbstractCustomerRepositoryTest {
 	@Autowired

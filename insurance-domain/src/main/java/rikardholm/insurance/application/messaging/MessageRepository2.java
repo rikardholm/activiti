@@ -1,4 +1,10 @@
 package rikardholm.insurance.application.messaging;
 
-public class MessageRepository2 {
+import java.time.Instant;
+import java.util.List;
+import java.util.SortedSet;
+
+public interface MessageRepository2 {
+    void append(Message message);
+    List<Message> receivedAfter(Instant instant);
 }

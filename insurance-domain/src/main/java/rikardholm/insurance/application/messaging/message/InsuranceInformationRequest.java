@@ -3,6 +3,9 @@ package rikardholm.insurance.application.messaging.message;
 import rikardholm.insurance.application.messaging.IncomingMessage;
 import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
+import java.time.Instant;
+import java.util.UUID;
+
 import static java.util.Objects.requireNonNull;
 
 public class InsuranceInformationRequest implements IncomingMessage {
@@ -27,5 +30,25 @@ public class InsuranceInformationRequest implements IncomingMessage {
     @Override
     public int hashCode() {
         return personalIdentifier.hashCode();
+    }
+
+    @Override
+    public UUID getUuid() {
+        return null;
+    }
+
+    @Override
+    public Instant getReceivedAt() {
+        return null;
+    }
+
+    @Override
+    public String getType() {
+        return null;
+    }
+
+    @Override
+    public String getPayload() {
+        return null;
     }
 }

@@ -1,5 +1,7 @@
 package rikardholm.transfer.workflow;
 
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.sv.Givet;
 import cucumber.api.java.sv.När;
 import cucumber.api.java.sv.Och;
@@ -15,6 +17,7 @@ import rikardholm.insurance.application.messaging.OutboxRepository;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationRequest;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
+import rikardholm.insurance.common.test.database.InMemoryDatabaseManager;
 import rikardholm.insurance.domain.customer.CustomerBuilder;
 import rikardholm.insurance.domain.customer.Address;
 import rikardholm.insurance.domain.customer.Customer;
@@ -24,6 +27,7 @@ import rikardholm.insurance.domain.insurance.Insurance;
 import rikardholm.insurance.domain.insurance.InsuranceBuilder;
 import rikardholm.insurance.domain.insurance.InsuranceNumber;
 import rikardholm.insurance.domain.insurance.InsuranceRepository;
+import rikardholm.insurance.transfer.ProcessDispatcher;
 
 import java.util.List;
 
@@ -32,7 +36,6 @@ import static org.hamcrest.Matchers.*;
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")
-@DirtiesContext
 public class InsuranceInformationSteps {
     @Autowired
     private CustomerRepository customerRepository;
@@ -46,6 +49,11 @@ public class InsuranceInformationSteps {
     @Autowired
     private OutboxRepository outboxRepository;
 
+    @Autowired
+    private ProcessDispatcher processDispatcher;
+
+    private InMemoryDatabaseManager inMemoryDatabaseManager = new InMemoryDatabaseManager();
+
     public static final PersonalIdentifier PERSONAL_IDENTIFIER = PersonalIdentifier.of("670913-4506");
     public static final Customer CUSTOMER = CustomerBuilder
             .aCustomer()
@@ -53,6 +61,16 @@ public class InsuranceInformationSteps {
             .withAddress(Address.of("Testgatan 130, 134 56 Stockholm"))
             .build();
     public static final InsuranceNumber INSURANCE_NUMBER = InsuranceNumber.of(35968L);
+
+    @Before
+    public void migrateDatabase() {
+        inMemoryDatabaseManager.migrate();
+    }
+
+    @After
+    public void shutdownDatabase() {
+        inMemoryDatabaseManager.shutdownDatabase();
+    }
 
 
     @Givet("^en person som har en försäkring på företaget$")
@@ -80,13 +98,7 @@ public class InsuranceInformationSteps {
     public void vi_tar_emot_en_förfrågan_om_personen() throws Throwable {
         InsuranceInformationRequest message = new InsuranceInformationRequest(PERSONAL_IDENTIFIER);
         inboxRepository.save(message);
-    }
-
-    @Och("^ger systemet (\\d+) sekunder att behandla meddelandet$")
-    public void ger_systemet_X_sekunder_att_behandla_meddelandet(int seconds) throws InterruptedException {
-        Duration duration = Seconds.seconds(seconds).toStandardDuration();
-
-        Thread.sleep(duration.getMillis());
+        processDispatcher.pollInbox();
     }
 
     @Så("^svarar vi med information om försäkringen$")

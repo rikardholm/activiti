@@ -2,7 +2,9 @@ package rikardholm.insurance.application.messaging.message;
 
 import rikardholm.insurance.application.messaging.OutgoingMessage;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 public class InsuranceInformationResponse implements OutgoingMessage {
     public final String personalIdentificationNumber;
@@ -15,4 +17,23 @@ public class InsuranceInformationResponse implements OutgoingMessage {
     }
 
 
+    @Override
+    public UUID getUuid() {
+        return null;
+    }
+
+    @Override
+    public Instant getReceivedAt() {
+        return null;
+    }
+
+    @Override
+    public String getType() {
+        return null;
+    }
+
+    @Override
+    public String getPayload() {
+        return null;
+    }
 }

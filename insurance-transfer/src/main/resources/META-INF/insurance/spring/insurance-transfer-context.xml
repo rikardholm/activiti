@@ -7,9 +7,9 @@
 
     <task:scheduler id="processDispatcherScheduler" pool-size="1"/>
 
-    <task:scheduled-tasks>
+    <!-- <task:scheduled-tasks>
         <task:scheduled ref="processDispatcher" method="pollInbox" fixed-delay="100"/>
-    </task:scheduled-tasks>
+    </task:scheduled-tasks> -->
 
     <bean id="processDispatcher" class="rikardholm.insurance.transfer.ProcessDispatcher">
         <constructor-arg>

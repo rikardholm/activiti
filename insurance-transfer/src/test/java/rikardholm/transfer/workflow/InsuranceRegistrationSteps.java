@@ -24,8 +24,8 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static rikardholm.insurance.common.test.OptionalMatchers.hasValue;
-import static rikardholm.insurance.common.test.OptionalMatchers.*;
+import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.hasValue;
+import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.*;
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")

@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <collaboration id="Collaboration">
-    <participant id="company" name="Försäkringsbolag" processRef="insurance-information"></participant>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1412235930763" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <collaboration id="Collaboration" isClosed="false">
+    <participant id="company" name="Försäkringsbolag" processRef="insurance-information">
+      <participantMultiplicity maximum="1" minimum="0"/>
+    </participant>
   </collaboration>
-  <process id="insurance-information" name="process_pool2" isExecutable="true">
+  <process id="insurance-information" isClosed="false" isExecutable="true" name="process_pool2" processType="None">
     <laneSet id="laneSet_insurance-information">
       <lane id="lane2">
         <flowNodeRef>exclusivegateway1</flowNodeRef>
         <flowNodeRef>insurance-information-start</flowNodeRef>
         <flowNodeRef>insurance-information-end</flowNodeRef>
-        <flowNodeRef>insurance-information-end</flowNodeRef>
-        <flowNodeRef>insurance-information-start</flowNodeRef>
         <flowNodeRef>endevent1</flowNodeRef>
         <flowNodeRef>scripttask1</flowNodeRef>
         <flowNodeRef>scripttask2</flowNodeRef>
@@ -18,97 +18,148 @@
         <flowNodeRef>servicetask2</flowNodeRef>
       </lane>
     </laneSet>
-    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
-    <sequenceFlow id="flow2" sourceRef="scripttask2" targetRef="exclusivegateway1"></sequenceFlow>
-    <sequenceFlow id="flow3" sourceRef="scripttask1" targetRef="scripttask2"></sequenceFlow>
+    <exclusiveGateway gatewayDirection="Unspecified" id="exclusivegateway1" name="Exclusive Gateway"/>
+    <sequenceFlow id="flow2" sourceRef="scripttask2" targetRef="exclusivegateway1"/>
+    <sequenceFlow id="flow3" sourceRef="scripttask1" targetRef="scripttask2"/>
     <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="servicetask1">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${insuranceCount > 0}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow5" sourceRef="exclusivegateway1" targetRef="servicetask2">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${insuranceCount == 0}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow6" sourceRef="servicetask1" targetRef="insurance-information-end"></sequenceFlow>
-    <endEvent id="insurance-information-end" name="End"></endEvent>
-    <startEvent id="insurance-information-start" name="Start"></startEvent>
-    <sequenceFlow id="flow1" sourceRef="insurance-information-start" targetRef="scripttask1"></sequenceFlow>
-    <endEvent id="endevent1" name="End"></endEvent>
-    <sequenceFlow id="flow8" sourceRef="servicetask2" targetRef="endevent1"></sequenceFlow>
-    <scriptTask id="scripttask1" name="Skapa beställning från meddelande" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>println('Skapar beställning…');
+    <sequenceFlow id="flow6" sourceRef="servicetask1" targetRef="insurance-information-end"/>
+    <endEvent id="insurance-information-end" name="End"/>
+    <startEvent id="insurance-information-start" name="Start"/>
+    <sequenceFlow id="flow1" sourceRef="insurance-information-start" targetRef="scripttask1"/>
+    <endEvent id="endevent1" name="End"/>
+    <sequenceFlow id="flow8" sourceRef="servicetask2" targetRef="endevent1"/>
+    <scriptTask activiti:autoStoreVariables="false" activiti:exclusive="true" id="scripttask1" name="Skapa beställning från meddelande" scriptFormat="javascript">
+      <script><![CDATA[//println('Skapar beställning…');
 var personnummer = execution.getVariable('incomingMessage').personalIdentifier;
-execution.setVariable('personnummer',personnummer);</script>
+execution.setVariable('personnummer',personnummer);]]></script>
     </scriptTask>
-    <scriptTask id="scripttask2" name="Sök efter försäkringar på personnummer" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>var personnummer = execution.getVariable('personnummer');
-println('Letar efter '  + personnummer);
+    <scriptTask activiti:autoStoreVariables="false" activiti:exclusive="true" id="scripttask2" name="Sök efter försäkringar på personnummer" scriptFormat="javascript">
+      <script><![CDATA[var personnummer = execution.getVariable('personnummer');
+//println('Letar efter '  + personnummer);
 var insurances = insuranceFinder.findByPersonnummer(personnummer);
-println('Antal försäkringar funna: ' + insurances.size());
-execution.setVariable('insuranceCount',insurances.size());</script>
+//println('Antal försäkringar funna: ' + insurances.size());
+execution.setVariable('insuranceCount',insurances.size());]]></script>
     </scriptTask>
-    <serviceTask id="servicetask1" name="Skicka information om försäkringar" activiti:expression="${messageSender.sendInsuranceInformationResponse(execution)}"></serviceTask>
-    <serviceTask id="servicetask2" name="Meddela att det inte finns några försäkringar" activiti:expression="${messageSender.sendNoInsurancesResponse(personnummer)}"></serviceTask>
+    <serviceTask activiti:exclusive="true" activiti:expression="${messageSender.sendInsuranceInformationResponse(execution)}" id="servicetask1" name="Skicka information om försäkringar"/>
+    <serviceTask activiti:exclusive="true" activiti:expression="${messageSender.sendNoInsurancesResponse(personnummer)}" id="servicetask2" name="Meddela att det inte finns några försäkringar"/>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_Collaboration">
-    <bpmndi:BPMNPlane bpmnElement="Collaboration" id="BPMNPlane_Collaboration">
-      <bpmndi:BPMNShape bpmnElement="company" id="BPMNShape_company">
-        <omgdc:Bounds height="256.0" width="731.0" x="10.0" y="20.0"></omgdc:Bounds>
+  <bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration">
+      <bpmndi:BPMNShape bpmnElement="company" id="Shape-company" isExpanded="true" isHorizontal="true">
+        <omgdc:Bounds height="256.0" width="731.0" x="10.0" y="20.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="256.0" width="731.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="lane2" id="BPMNShape_lane2">
-        <omgdc:Bounds height="256.0" width="711.0" x="30.0" y="20.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="lane2" id="Shape-lane2" isExpanded="true" isHorizontal="true">
+        <omgdc:Bounds height="256.0" width="706.0" x="36.0" y="20.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="256.0" width="706.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
-        <omgdc:Bounds height="40.0" width="40.0" x="410.0" y="93.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="Shape-exclusivegateway1" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="416.0" y="93.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="insurance-information-end" id="BPMNShape_insurance-information-end">
-        <omgdc:Bounds height="35.0" width="35.0" x="660.0" y="38.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="insurance-information-end" id="Shape-insurance-information-end">
+        <omgdc:Bounds height="32.0" width="32.0" x="666.0" y="38.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="insurance-information-start" id="BPMNShape_insurance-information-start">
-        <omgdc:Bounds height="35.0" width="35.0" x="40.0" y="96.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="insurance-information-start" id="Shape-insurance-information-start">
+        <omgdc:Bounds height="32.0" width="32.0" x="46.0" y="96.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="660.0" y="183.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="Shape-endevent1">
+        <omgdc:Bounds height="32.0" width="32.0" x="666.0" y="183.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
-        <omgdc:Bounds height="63.0" width="105.0" x="110.0" y="82.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="scripttask1" id="Shape-scripttask1">
+        <omgdc:Bounds height="63.0" width="105.0" x="116.0" y="82.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="63.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="scripttask2" id="BPMNShape_scripttask2">
-        <omgdc:Bounds height="70.0" width="105.0" x="260.0" y="79.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="scripttask2" id="Shape-scripttask2">
+        <omgdc:Bounds height="70.0" width="105.0" x="266.0" y="79.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="70.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
-        <omgdc:Bounds height="63.0" width="105.0" x="500.0" y="24.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="servicetask1" id="Shape-servicetask1">
+        <omgdc:Bounds height="63.0" width="105.0" x="506.0" y="24.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="63.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
-        <omgdc:Bounds height="71.0" width="105.0" x="500.0" y="165.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="servicetask2" id="Shape-servicetask2">
+        <omgdc:Bounds height="71.0" width="105.0" x="506.0" y="165.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="71.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
-        <omgdi:waypoint x="365.0" y="114.0"></omgdi:waypoint>
-        <omgdi:waypoint x="410.0" y="113.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3" sourceElement="scripttask1" targetElement="scripttask2">
+        <omgdi:waypoint x="221.0" y="113.5"/>
+        <omgdi:waypoint x="266.0" y="114.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
-        <omgdi:waypoint x="215.0" y="113.0"></omgdi:waypoint>
-        <omgdi:waypoint x="260.0" y="114.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2" sourceElement="scripttask2" targetElement="exclusivegateway1">
+        <omgdi:waypoint x="371.0" y="114.0"/>
+        <omgdi:waypoint x="416.0" y="109.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="430.0" y="93.0"></omgdi:waypoint>
-        <omgdi:waypoint x="430.0" y="55.0"></omgdi:waypoint>
-        <omgdi:waypoint x="500.0" y="55.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5" sourceElement="exclusivegateway1" targetElement="servicetask2">
+        <omgdi:waypoint x="436.0" y="121.0"/>
+        <omgdi:waypoint x="436.0" y="200.0"/>
+        <omgdi:waypoint x="506.0" y="200.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
-        <omgdi:waypoint x="430.0" y="133.0"></omgdi:waypoint>
-        <omgdi:waypoint x="430.0" y="200.0"></omgdi:waypoint>
-        <omgdi:waypoint x="500.0" y="200.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4" sourceElement="exclusivegateway1" targetElement="servicetask1">
+        <omgdi:waypoint x="436.0" y="97.0"/>
+        <omgdi:waypoint x="436.0" y="55.0"/>
+        <omgdi:waypoint x="506.0" y="55.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
-        <omgdi:waypoint x="605.0" y="55.0"></omgdi:waypoint>
-        <omgdi:waypoint x="660.0" y="55.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1" sourceElement="insurance-information-start" targetElement="scripttask1">
+        <omgdi:waypoint x="78.0" y="112.0"/>
+        <omgdi:waypoint x="116.0" y="113.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
-        <omgdi:waypoint x="75.0" y="113.0"></omgdi:waypoint>
-        <omgdi:waypoint x="110.0" y="113.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6" sourceElement="servicetask1" targetElement="insurance-information-end">
+        <omgdi:waypoint x="611.0" y="55.5"/>
+        <omgdi:waypoint x="666.0" y="54.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
-        <omgdi:waypoint x="605.0" y="200.0"></omgdi:waypoint>
-        <omgdi:waypoint x="660.0" y="200.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8" sourceElement="servicetask2" targetElement="endevent1">
+        <omgdi:waypoint x="611.0" y="200.5"/>
+        <omgdi:waypoint x="666.0" y="199.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -1,135 +1,188 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <message id="BGC" name="BGC"></message>
-  <message id="create-insurance" name="create-insurance"></message>
-  <message id="bgc" name="bgc"></message>
-  <process id="insurance-transfer" name="Insurance Transfer" isExecutable="true">
-    <callActivity id="callactivity1" name="Skapa försäkring" calledElement="register-insurance">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1412182398118" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <message id="BGC" name="BGC"/>
+  <message id="create-insurance" name="create-insurance"/>
+  <message id="bgc" name="bgc"/>
+  <process id="insurance-transfer" isClosed="false" isExecutable="true" name="Insurance Transfer" processType="None">
+    <callActivity activiti:exclusive="true" calledElement="register-insurance" id="callactivity1" name="Skapa försäkring">
       <extensionElements>
-        <activiti:in source="personalIdentifier" target="personalIdentifier"></activiti:in>
-        <activiti:in source="address" target="address"></activiti:in>
-        <activiti:out source="insuranceNumber" target="insuranceNumber"></activiti:out>
+        <activiti:in source="personalIdentifier" target="personalIdentifier"/>
+        <activiti:in source="address" target="address"/>
+        <activiti:out source="insuranceNumber" target="insuranceNumber"/>
       </extensionElements>
     </callActivity>
-    <scriptTask id="insurance-created-reply" name="Skicka 8z &quot;Försäkring Skapad&quot;" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>importPackage(Packages.rikardholm.insurance.application.messaging.message);
-
-println('OCR: ' + ocr);
-println('Insurance: ' + insuranceNumber);
-
-var message = new InsuranceCreatedResponse(ocr, personalIdentifier, insuranceNumber);
-
-outboxRepository.save(message);</script>
+    <scriptTask activiti:autoStoreVariables="false" activiti:exclusive="true" id="insurance-created-reply" name="Skicka 8z &quot;Försäkring Skapad&quot;" scriptFormat="javascript">
+      <script><![CDATA[//importPackage(Packages.rikardholm.insurance.application.messaging.message);  //println('OCR: ' + ocr); //println('Insurance: ' + insuranceNumber);
+var InsuranceCreatedResponse = Java.type('rikardholm.insurance.application.messaging.message.InsuranceCreatedResponse');
+var message =  new InsuranceCreatedResponse(ocr, personalIdentifier, insuranceNumber);  outboxRepository.save(message);]]></script>
     </scriptTask>
-    <sequenceFlow id="flow3" sourceRef="callactivity1" targetRef="insurance-created-reply"></sequenceFlow>
-    <endEvent id="endevent1" name="End"></endEvent>
-    <sequenceFlow id="flow4" sourceRef="insurance-created-reply" targetRef="messageintermediatecatchevent1"></sequenceFlow>
-    <boundaryEvent id="boundaryerror2" name="Error" attachedToRef="callactivity1">
-      <errorEventDefinition></errorEventDefinition>
+    <sequenceFlow id="flow3" sourceRef="callactivity1" targetRef="insurance-created-reply"/>
+    <endEvent id="endevent1" name="End"/>
+    <sequenceFlow id="flow4" sourceRef="insurance-created-reply" targetRef="messageintermediatecatchevent1"/>
+    <boundaryEvent attachedToRef="callactivity1" cancelActivity="true" id="boundaryerror2" name="Error">
+      <errorEventDefinition id="boundaryerror2_ED_1"/>
     </boundaryEvent>
-    <scriptTask id="respond-with-error" name="Skicka 6b &quot;Försäkring kan inte skapas&quot;" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>importPackage(Packages.rikardholm.insurance.application.messaging.message);
+    <scriptTask activiti:autoStoreVariables="false" activiti:exclusive="true" id="respond-with-error" name="Skicka 6b &quot;Försäkring kan inte skapas&quot;" scriptFormat="javascript">
+      <script><![CDATA[//importPackage(Packages.rikardholm.insurance.application.messaging.message);
 
-println('OCR: ' + ocr);
-println('Could not create insurance for ' + personalIdentifier);
+//println('OCR: ' + ocr);
+//println('Could not create insurance for ' + personalIdentifier);
 
+var PersonDoesNotExistResponse = Java.type('rikardholm.insurance.application.messaging.message.PersonDoesNotExistResponse');
 var message = new PersonDoesNotExistResponse(personalIdentifier, ocr);
-outboxRepository.save(message);</script>
+outboxRepository.save(message);]]></script>
     </scriptTask>
-    <sequenceFlow id="flow5" sourceRef="respond-with-error" targetRef="endevent1"></sequenceFlow>
-    <sequenceFlow id="flow6" sourceRef="boundaryerror2" targetRef="respond-with-error"></sequenceFlow>
-    <sequenceFlow id="flow8" sourceRef="messageintermediatecatchevent1" targetRef="add-money"></sequenceFlow>
-    <scriptTask id="add-money" name="Sätt in pengar" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>println('Sätter in pengar från ' + ocr + ' på försäkring ' + insuranceNumber + '. Summa: ' + amount);</script>
+    <sequenceFlow id="flow5" sourceRef="respond-with-error" targetRef="endevent1"/>
+    <sequenceFlow id="flow6" sourceRef="boundaryerror2" targetRef="respond-with-error"/>
+    <sequenceFlow id="flow8" sourceRef="messageintermediatecatchevent1" targetRef="add-money"/>
+    <scriptTask activiti:autoStoreVariables="false" activiti:exclusive="true" id="add-money" name="Sätt in pengar" scriptFormat="javascript">
+      <script><![CDATA[//println('Sätter in pengar från ' + ocr + ' på försäkring ' + insuranceNumber + '. Summa: ' + amount);]]></script>
     </scriptTask>
-    <sequenceFlow id="flow9" sourceRef="add-money" targetRef="endevent1"></sequenceFlow>
-    <sequenceFlow id="flow10" sourceRef="messagestartevent1" targetRef="timerintermediatecatchevent1"></sequenceFlow>
+    <sequenceFlow id="flow9" sourceRef="add-money" targetRef="endevent1"/>
+    <sequenceFlow id="flow10" sourceRef="messagestartevent1" targetRef="timerintermediatecatchevent1"/>
     <intermediateCatchEvent id="messageintermediatecatchevent1" name="MessageCatchEvent">
-      <messageEventDefinition messageRef="bgc"></messageEventDefinition>
+      <messageEventDefinition id="messageintermediatecatchevent1_ED_1" messageRef="bgc"/>
     </intermediateCatchEvent>
     <startEvent id="messagestartevent1" name="Message start">
-      <messageEventDefinition messageRef="create-insurance"></messageEventDefinition>
+      <messageEventDefinition id="messagestartevent1_ED_1" messageRef="create-insurance"/>
     </startEvent>
     <intermediateCatchEvent id="timerintermediatecatchevent1" name="TimerCatchEvent">
-      <timerEventDefinition>
-        <timeDuration>P10D</timeDuration>
+      <timerEventDefinition id="timerintermediatecatchevent1_ED_1">
+        <timeDuration><![CDATA[P10D]]></timeDuration>
       </timerEventDefinition>
     </intermediateCatchEvent>
-    <sequenceFlow id="flow11" sourceRef="timerintermediatecatchevent1" targetRef="callactivity1"></sequenceFlow>
-    <textAnnotation id="textannotation1">
+    <sequenceFlow id="flow11" sourceRef="timerintermediatecatchevent1" targetRef="callactivity1"/>
+    <textAnnotation id="textannotation1" textFormat="text/plain">
       <text>Vänta på Bankgiro överföring</text>
     </textAnnotation>
-    <association id="association1" sourceRef="textannotation1" targetRef="messageintermediatecatchevent1"></association>
+    <association associationDirection="None" id="association1" sourceRef="textannotation1" targetRef="messageintermediatecatchevent1"/>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_insurance-transfer">
-    <bpmndi:BPMNPlane bpmnElement="insurance-transfer" id="BPMNPlane_insurance-transfer">
-      <bpmndi:BPMNShape bpmnElement="callactivity1" id="BPMNShape_callactivity1">
-        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="170.0"></omgdc:Bounds>
+  <bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
+    <bpmndi:BPMNPlane bpmnElement="insurance-transfer">
+      <bpmndi:BPMNShape bpmnElement="callactivity1" id="Shape-callactivity1" isExpanded="false">
+        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="170.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="boundaryerror2" id="BPMNShape_boundaryerror2">
-        <omgdc:Bounds height="30.0" width="30.0" x="370.0" y="220.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="insurance-created-reply" id="Shape-insurance-created-reply">
+        <omgdc:Bounds height="61.0" width="105.0" x="480.0" y="167.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="61.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="insurance-created-reply" id="BPMNShape_insurance-created-reply">
-        <omgdc:Bounds height="61.0" width="105.0" x="480.0" y="167.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="Shape-endevent1">
+        <omgdc:Bounds height="32.0" width="32.0" x="920.0" y="180.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="920.0" y="180.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="respond-with-error" id="Shape-respond-with-error">
+        <omgdc:Bounds height="71.0" width="105.0" x="510.0" y="270.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="71.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="respond-with-error" id="BPMNShape_respond-with-error">
-        <omgdc:Bounds height="71.0" width="105.0" x="510.0" y="270.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="add-money" id="Shape-add-money">
+        <omgdc:Bounds height="55.0" width="105.0" x="750.0" y="170.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="add-money" id="BPMNShape_add-money">
-        <omgdc:Bounds height="55.0" width="105.0" x="750.0" y="170.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="messageintermediatecatchevent1" id="Shape-messageintermediatecatchevent1">
+        <omgdc:Bounds height="32.0" width="32.0" x="645.0" y="180.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="messageintermediatecatchevent1" id="BPMNShape_messageintermediatecatchevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="645.0" y="180.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="messagestartevent1" id="Shape-messagestartevent1">
+        <omgdc:Bounds height="32.0" width="32.0" x="110.0" y="180.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="messagestartevent1" id="BPMNShape_messagestartevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="110.0" y="180.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="timerintermediatecatchevent1" id="Shape-timerintermediatecatchevent1">
+        <omgdc:Bounds height="32.0" width="32.0" x="220.0" y="180.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="timerintermediatecatchevent1" id="BPMNShape_timerintermediatecatchevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="220.0" y="180.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="textannotation1" id="Shape-textannotation1">
+        <omgdc:Bounds height="50.0" width="100.0" x="679.0" y="90.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="50.0" width="100.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
-        <omgdc:Bounds height="50.0" width="100.0" x="679.0" y="90.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="boundaryerror2" id="Shape-boundaryerror2">
+        <omgdc:Bounds height="32.0" width="32.0" x="370.0" y="220.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="50.0" y="50.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
-        <omgdi:waypoint x="425.0" y="197.0"></omgdi:waypoint>
-        <omgdi:waypoint x="480.0" y="197.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11" sourceElement="timerintermediatecatchevent1" targetElement="callactivity1">
+        <omgdi:waypoint x="252.0" y="196.0"/>
+        <omgdi:waypoint x="320.0" y="197.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="585.0" y="197.0"></omgdi:waypoint>
-        <omgdi:waypoint x="645.0" y="197.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10" sourceElement="messagestartevent1" targetElement="timerintermediatecatchevent1">
+        <omgdi:waypoint x="142.0" y="196.0"/>
+        <omgdi:waypoint x="220.0" y="196.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
-        <omgdi:waypoint x="615.0" y="305.0"></omgdi:waypoint>
-        <omgdi:waypoint x="937.0" y="305.0"></omgdi:waypoint>
-        <omgdi:waypoint x="937.0" y="215.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3" sourceElement="callactivity1" targetElement="insurance-created-reply">
+        <omgdi:waypoint x="425.0" y="197.5"/>
+        <omgdi:waypoint x="480.0" y="197.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
-        <omgdi:waypoint x="385.0" y="250.0"></omgdi:waypoint>
-        <omgdi:waypoint x="384.0" y="305.0"></omgdi:waypoint>
-        <omgdi:waypoint x="510.0" y="305.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5" sourceElement="respond-with-error" targetElement="endevent1">
+        <omgdi:waypoint x="615.0" y="305.0"/>
+        <omgdi:waypoint x="937.0" y="305.0"/>
+        <omgdi:waypoint x="937.0" y="211.9687194226713"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
-        <omgdi:waypoint x="680.0" y="197.0"></omgdi:waypoint>
-        <omgdi:waypoint x="750.0" y="197.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4" sourceElement="insurance-created-reply" targetElement="messageintermediatecatchevent1">
+        <omgdi:waypoint x="585.0" y="197.5"/>
+        <omgdi:waypoint x="645.0" y="196.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
-        <omgdi:waypoint x="855.0" y="197.0"></omgdi:waypoint>
-        <omgdi:waypoint x="920.0" y="197.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6" sourceElement="boundaryerror2" targetElement="respond-with-error">
+        <omgdi:waypoint x="384.0" y="251.87450786638755"/>
+        <omgdi:waypoint x="384.0" y="305.0"/>
+        <omgdi:waypoint x="510.0" y="305.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
-        <omgdi:waypoint x="145.0" y="197.0"></omgdi:waypoint>
-        <omgdi:waypoint x="220.0" y="197.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9" sourceElement="add-money" targetElement="endevent1">
+        <omgdi:waypoint x="855.0" y="197.5"/>
+        <omgdi:waypoint x="920.0" y="196.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
-        <omgdi:waypoint x="255.0" y="197.0"></omgdi:waypoint>
-        <omgdi:waypoint x="320.0" y="197.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8" sourceElement="messageintermediatecatchevent1" targetElement="add-money">
+        <omgdi:waypoint x="677.0" y="196.0"/>
+        <omgdi:waypoint x="750.0" y="197.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="association1" id="BPMNEdge_association1">
-        <omgdi:waypoint x="729.0" y="140.0"></omgdi:waypoint>
-        <omgdi:waypoint x="662.0" y="180.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="association1" id="BPMNEdge_association1" sourceElement="textannotation1" targetElement="messageintermediatecatchevent1">
+        <omgdi:waypoint x="708.0123456790122" y="140.0"/>
+        <omgdi:waypoint x="671.2875249415603" y="183.74574234902366"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
