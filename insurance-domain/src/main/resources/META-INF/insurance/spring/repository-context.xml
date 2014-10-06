@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="constructor">
-    <bean id="customerRepository" class="rikardholm.insurance.infrastructure.h2.h2CustomerRepository"/>
+    <bean id="customerRepository" class="rikardholm.insurance.infrastructure.h2.H2CustomerRepository"/>
     <bean id="insuranceRepository" class="rikardholm.insurance.infrastructure.h2.H2InsuranceRepository"/>
 
     <bean id="customerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">

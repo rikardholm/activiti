@@ -7,11 +7,11 @@ import rikardholm.insurance.domain.customer.Customer;
 import rikardholm.insurance.domain.customer.CustomerRepository;
 import rikardholm.insurance.domain.customer.PersonalIdentifier;
 
-public class h2CustomerRepository implements CustomerRepository {
-    private static final Logger log = LoggerFactory.getLogger(h2CustomerRepository.class);
+public class H2CustomerRepository implements CustomerRepository {
+    private static final Logger log = LoggerFactory.getLogger(H2CustomerRepository.class);
     private final CustomerMapper customerMapper;
 
-    public h2CustomerRepository(CustomerMapper customerMapper) {
+    public H2CustomerRepository(CustomerMapper customerMapper) {
         this.customerMapper = customerMapper;
     }
 

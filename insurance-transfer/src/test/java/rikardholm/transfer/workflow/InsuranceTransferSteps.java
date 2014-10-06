@@ -41,7 +41,7 @@ import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isPrese
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")
-public class insuranceTransferSteps {
+public class InsuranceTransferSteps {
     @Autowired
     private RuntimeService runtimeService;
 
