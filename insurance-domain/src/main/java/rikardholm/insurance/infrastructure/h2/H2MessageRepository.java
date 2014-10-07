@@ -12,33 +12,41 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class H2MessageRepository implements MessageRepository2 {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public H2MessageRepository(DataSource dataSource) {
+    private final String sequenceSql;
+    private final String insertSql;
+    private final String selectSql;
+
+    public H2MessageRepository(DataSource dataSource, String tableName) {
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        sequenceSql = "SELECT " + tableName + "_seq.nextval FROM DUAL";
+        insertSql = "INSERT INTO " + tableName + " (id, uuid, received_at, payload) VALUES (:id, :uuid, :receivedAt, :payload)";
+        selectSql = "SELECT * FROM " + tableName + " WHERE received_at >= :receivedAt ORDER BY received_at";
     }
 
     @Override
     public void append(Message message) {
-        Long id = namedParameterJdbcTemplate.getJdbcOperations().queryForObject("SELECT messages_seq.nextval FROM DUAL", Long.class);
+        Long id = namedParameterJdbcTemplate.getJdbcOperations().queryForObject(sequenceSql, Long.class);
 
-        HashMap<String, Object> paramMap = new HashMap<>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("id", id);
         paramMap.put("uuid", message.getUuid());
         paramMap.put("receivedAt", message.getReceivedAt().toString());
         paramMap.put("payload", message.getPayload());
-        namedParameterJdbcTemplate.update("INSERT INTO messages (id, uuid, received_at, payload) VALUES (:id, :uuid, :receivedAt, :payload)", paramMap);
+        namedParameterJdbcTemplate.update(insertSql, paramMap);
     }
 
     @Override
     public List<Message> receivedAfter(Instant instant) {
-        HashMap<String, Object> paramMap = new HashMap<>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("receivedAt", instant.toString());
-        List<Message> result = namedParameterJdbcTemplate.query("SELECT * FROM messages WHERE received_at >= :receivedAt ORDER BY received_at", paramMap, new MessageRowMapper());
+        List<Message> result = namedParameterJdbcTemplate.query(selectSql, paramMap, new MessageRowMapper());
         return result;
     }
 

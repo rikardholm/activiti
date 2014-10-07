@@ -24,7 +24,7 @@ public class H2MessageRepositoryTest {
 
     @Rule
     public InMemoryDatabaseRule database = new InMemoryDatabaseRule();
-    private MessageRepository2 messageRepository = new H2MessageRepository(database.dataSource);
+    private MessageRepository2 messageRepository = new H2MessageRepository(database.dataSource, "inbox");
 
     @Test
     public void should_store_values_of_message() throws Exception {
