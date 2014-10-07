@@ -6,3 +6,6 @@ CREATE TABLE insurances
   FOREIGN KEY (customer_id)
   REFERENCES customers(id)
 );
+CREATE SEQUENCE insurances_seq
+START WITH 1
+INCREMENT BY 1;
