@@ -1,9 +1,7 @@
 package rikardholm.insurance.infrastructure.h2;
 
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageBuilder;
 import rikardholm.insurance.application.messaging.MessageRepository2;
@@ -26,8 +24,6 @@ public class H2MessageRepository implements MessageRepository2 {
 
     @Override
     public void append(Message message) {
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(message);
-
         Long id = namedParameterJdbcTemplate.getJdbcOperations().queryForObject("SELECT messages_seq.nextval FROM DUAL", Long.class);
 
         HashMap<String, Object> paramMap = new HashMap<>();
@@ -53,9 +49,9 @@ public class H2MessageRepository implements MessageRepository2 {
         public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
             return MessageBuilder.aMessage()
                     .withUUID(UUID.fromString(rs.getString("uuid")))
-                    .receivedAt(Instant.now())
-                    .payload("blabla")
-                    .type("fake")
+                    .receivedAt(rs.getTimestamp("received_at").toInstant())
+                    .payload(rs.getString("payload"))
+                    .type(rs.getString("type"))
                     .build();
         }
     }
