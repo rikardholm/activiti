@@ -6,6 +6,7 @@ import rikardholm.insurance.application.messaging.MessageEventRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class InMemoryMessageEventRepository implements MessageEventRepository {
     private List<MessageEvent> events = new ArrayList<>();
@@ -18,6 +19,16 @@ public class InMemoryMessageEventRepository implements MessageEventRepository {
     @Override
     public void delete(MessageEvent instance) {
            events.remove(instance);
+    }
+
+    @Override
+    public void append(MessageEvent messageEvent) {
+
+    }
+
+    @Override
+    public List<MessageEvent> findByUUID(UUID uuid) {
+        return null;
     }
 
     @Override

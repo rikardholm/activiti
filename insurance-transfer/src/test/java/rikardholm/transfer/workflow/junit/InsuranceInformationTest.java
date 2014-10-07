@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import rikardholm.insurance.application.messaging.*;
+import rikardholm.insurance.application.messaging.impl.MessageImpl;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationRequest;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
@@ -19,8 +20,10 @@ import rikardholm.insurance.domain.insurance.InsuranceNumber;
 import rikardholm.insurance.domain.insurance.InsuranceRepository;
 import rikardholm.insurance.transfer.ProcessDispatcher;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -33,6 +36,7 @@ import static org.hamcrest.Matchers.is;
         "classpath:/META-INF/insurance/spring/activiti.spring.cfg.xml",
         "classpath:/META-INF/insurance/spring/in-memory-application-context.xml",
         "classpath:/META-INF/insurance/spring/domain-context.xml",
+        "classpath:/META-INF/insurance/spring/messaging-context.xml",
         "classpath:/test/spring/activiti-datasource-inmemory.cfg.xml",
         InMemoryDatabaseTestExecutionListener.IN_MEMORY_DATASOURCE})
 @InMemoryDatabase
@@ -50,35 +54,13 @@ public class InsuranceInformationTest {
     private InsuranceRepository insuranceRepository;
 
     @Autowired
-    private InboxRepository inboxRepository;
+    private MessageRepository messageRepository;
 
     @Autowired
     private OutboxRepository outboxRepository;
 
     @Autowired
     private ProcessDispatcher processDispatcher;
-
-    @Autowired
-    private MessageEventRepository messageEventRepository;
-
-    private List<IncomingMessage> messagesToClean = new ArrayList<>();
-
-    @After
-    public void tearDown() throws Exception {
-        for (IncomingMessage incomingMessage : messagesToClean) {
-            inboxRepository.delete(incomingMessage);
-            List<MessageEvent> messageEvents = messageEventRepository.findBy(incomingMessage);
-            List<MessageEvent> concurrentModificationFix = new ArrayList<>();
-            for (MessageEvent messageEvent : messageEvents) {
-                concurrentModificationFix.add(messageEvent);
-            }
-            for (MessageEvent messageEvent : concurrentModificationFix) {
-                messageEventRepository.delete(messageEvent);
-            }
-        }
-
-
-    }
 
     @Test
     public void should_reply_with_insurance_if_customer_exists() throws Exception {
@@ -108,11 +90,15 @@ public class InsuranceInformationTest {
     }
 
     private void when_processing_a_message_for(PersonalIdentifier personalIdentifier) {
-        InsuranceInformationRequest message = new InsuranceInformationRequest(personalIdentifier);
-        messagesToClean.add(message);
-        inboxRepository.save(message);
+        Message message = MessageBuilder.aMessage()
+                .withUUID(UUID.randomUUID())
+                .receivedAt(Instant.now())
+                .payload("{\"personalIdentifier\":\"" + personalIdentifier.getValue() + "\"}")
+                .build();
 
-        processDispatcher.pollInbox();
+        messageRepository.append(message);
+
+        processDispatcher.poll();
 
     }
 

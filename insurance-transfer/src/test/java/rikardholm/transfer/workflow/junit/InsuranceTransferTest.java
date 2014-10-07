@@ -43,6 +43,7 @@ import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsen
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:META-INF/insurance/spring/domain-context.xml",
+        "classpath:META-INF/insurance/spring/messaging-context.xml",
         "classpath:META-INF/insurance/spring/insurance-transfer-context.xml",
         "classpath:/META-INF/insurance/spring/activiti.spring.cfg.xml",
         "classpath:/META-INF/insurance/spring/in-memory-application-context.xml",
@@ -69,7 +70,7 @@ public class InsuranceTransferTest {
     @Autowired
     private OutboxRepository outboxRepository;
     public static final PersonalIdentifier EXISTING_PERSONAL_IDENTIFIER = PersonalIdentifier.of("670914-5687");
-
+public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdentifier.of("940525-3142");
     @Test
     public void person_missing_in_SPAR() throws Exception {
         Optional<SparResult> existing = fakeSparService.findBy(MISSING_PERSONAL_IDENTIFIER);
@@ -121,8 +122,10 @@ public class InsuranceTransferTest {
 
     @Test
     public void BGC_transfer() throws Exception {
+        fakeSparService.add(OTHER_PERSONAL_IDENTIFIER, ADDRESS);
+
         Map<String, Object> properties = new HashMap<>();
-        properties.put("personalIdentifier", EXISTING_PERSONAL_IDENTIFIER);
+        properties.put("personalIdentifier", OTHER_PERSONAL_IDENTIFIER);
         String ocr = "5450897";
         properties.put("ocr", ocr);
 

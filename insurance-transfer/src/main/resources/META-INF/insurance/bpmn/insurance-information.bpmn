@@ -34,15 +34,16 @@
     <endEvent id="endevent1" name="End"/>
     <sequenceFlow id="flow8" sourceRef="servicetask2" targetRef="endevent1"/>
     <scriptTask activiti:autoStoreVariables="false" activiti:exclusive="true" id="scripttask1" name="Skapa beställning från meddelande" scriptFormat="javascript">
-      <script><![CDATA[//println('Skapar beställning…');
-var personnummer = execution.getVariable('incomingMessage').personalIdentifier;
-execution.setVariable('personnummer',personnummer);]]></script>
+      <script><![CDATA[print('Skapar beställning…');
+var PersonalIdentifier = Java.type('rikardholm.insurance.domain.customer.PersonalIdentifier');
+var personnummer = execution.getVariable('messagePayload').personalIdentifier;
+execution.setVariable('personnummer',PersonalIdentifier.of(personnummer));]]></script>
     </scriptTask>
     <scriptTask activiti:autoStoreVariables="false" activiti:exclusive="true" id="scripttask2" name="Sök efter försäkringar på personnummer" scriptFormat="javascript">
       <script><![CDATA[var personnummer = execution.getVariable('personnummer');
-//println('Letar efter '  + personnummer);
+print('Letar efter '  + personnummer);
 var insurances = insuranceFinder.findByPersonnummer(personnummer);
-//println('Antal försäkringar funna: ' + insurances.size());
+print('Antal försäkringar funna: ' + insurances.size());
 execution.setVariable('insuranceCount',insurances.size());]]></script>
     </scriptTask>
     <serviceTask activiti:exclusive="true" activiti:expression="${messageSender.sendInsuranceInformationResponse(execution)}" id="servicetask1" name="Skicka information om försäkringar"/>

@@ -4,7 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageBuilder;
-import rikardholm.insurance.application.messaging.MessageRepository2;
+import rikardholm.insurance.application.messaging.MessageRepository;
 import rikardholm.insurance.common.test.database.InMemoryDatabaseRule;
 
 import java.time.Instant;
@@ -24,7 +24,7 @@ public class H2MessageRepositoryTest {
 
     @Rule
     public InMemoryDatabaseRule database = new InMemoryDatabaseRule();
-    private MessageRepository2 messageRepository = new H2MessageRepository(database.dataSource, "inbox");
+    private MessageRepository messageRepository = new H2MessageRepository(database.dataSource, "inbox");
 
     @Test
     public void should_store_values_of_message() throws Exception {

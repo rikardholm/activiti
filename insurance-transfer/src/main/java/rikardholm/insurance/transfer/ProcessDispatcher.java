@@ -1,57 +1,73 @@
 package rikardholm.insurance.transfer;
 
 import org.activiti.engine.RuntimeService;
-import rikardholm.insurance.application.messaging.InboxRepository;
-import rikardholm.insurance.application.messaging.IncomingMessage;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageEvent;
 import rikardholm.insurance.application.messaging.MessageEventRepository;
+import rikardholm.insurance.application.messaging.MessageRepository;
 import rikardholm.insurance.application.messaging.event.MessageHandledEvent;
 
+import java.io.IOException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.any;
-
 public class ProcessDispatcher {
+    public static final Logger log = LoggerFactory.getLogger(ProcessDispatcher.class);
 
-    public static final String INCOMING_MESSAGE_PROPERTY = "incomingMessage";
+    private static final String MESSAGE = "message";
+    private static final String MESSAGE_PAYLOAD = "messagePayload";
     private RuntimeService runtimeService;
-    private InboxRepository inboxRepository;
+    private MessageRepository messageRepository;
     private MessageEventRepository messageEventRepository;
-    private final Map<Class<? extends IncomingMessage>, String> processMap;
+    private final Map<Class<Message>, String> processMap;
 
-    public ProcessDispatcher(RuntimeService runtimeService, InboxRepository inboxRepository, MessageEventRepository messageEventRepository, Map<Class<? extends IncomingMessage>, String> processMap) {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public ProcessDispatcher(RuntimeService runtimeService, MessageRepository messageRepository, MessageEventRepository messageEventRepository, Map<Class<Message>, String> processMap) {
         this.runtimeService = runtimeService;
-        this.inboxRepository = inboxRepository;
+        this.messageRepository = messageRepository;
         this.messageEventRepository = messageEventRepository;
         this.processMap = processMap;
     }
 
-    public void pollInbox() {
-        List<IncomingMessage> incomingMessages = inboxRepository.find(IncomingMessage.class);
-        for (IncomingMessage incomingMessage : incomingMessages) {
-            if (alreadyHandled(incomingMessage)) {
+    public void poll() {
+        List<Message> messages = messageRepository.receivedAfter(Instant.parse("2014-01-01T13:00:00Z"));
+        for (Message message : messages) {
+            if (alreadyHandled(message)) {
                 continue;
             }
-            startProcess(incomingMessage);
-            messageEventRepository.save(new MessageHandledEvent(incomingMessage));
+            startProcess(message);
+            messageEventRepository.save(new MessageHandledEvent(message));
         }
     }
 
-    private boolean alreadyHandled(IncomingMessage incomingMessage) {
-        List<MessageEvent> messageEvents = messageEventRepository.findBy(incomingMessage);
+    private boolean alreadyHandled(Message message) {
+        List<MessageEvent> messageEvents = messageEventRepository.findByUUID(message.getUuid());
 
-        return any(messageEvents, instanceOf(MessageHandledEvent.class));
+        return !messageEvents.isEmpty();
     }
 
-    private void startProcess(IncomingMessage incomingMessage) {
-        String processKey = processMap.get(incomingMessage.getClass());
+    private void startProcess(Message message) {
+        String processKey = "";
+
+        for (Map.Entry<Class<Message>, String> entry : processMap.entrySet()) {
+            if (entry.getKey().isAssignableFrom(message.getClass())) {
+                processKey = entry.getValue();
+            }
+        }
 
         Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put(
-                INCOMING_MESSAGE_PROPERTY, incomingMessage);
+        properties.put(MESSAGE, message);
+        try {
+            properties.put(MESSAGE_PAYLOAD, objectMapper.readValue(message.getPayload(), Map.class));
+        } catch (IOException e) {
+            log.warn("Could not read json from payload for message " + message.getUuid(), e);
+        }
 
         runtimeService.startProcessInstanceByKey(processKey, properties);
     }

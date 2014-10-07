@@ -1,0 +1,9 @@
+CREATE TABLE message_events
+(
+  id BIGINT PRIMARY KEY,
+  uuid UUID NOT NULL,
+  event VARCHAR(255) NOT NULL
+);
+CREATE SEQUENCE message_events_seq
+START WITH 1
+INCREMENT BY 1;

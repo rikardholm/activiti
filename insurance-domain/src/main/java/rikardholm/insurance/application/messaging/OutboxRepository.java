@@ -1,4 +1,4 @@
 package rikardholm.insurance.application.messaging;
 
-public interface OutboxRepository extends MessageRepository<OutgoingMessage> {
+public interface OutboxRepository extends MessageRepository3<OutgoingMessage> {
 }

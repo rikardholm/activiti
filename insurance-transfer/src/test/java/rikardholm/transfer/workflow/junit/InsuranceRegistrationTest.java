@@ -32,6 +32,7 @@ import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.hasValu
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({
         "classpath:META-INF/insurance/spring/domain-context.xml",
+        "classpath:META-INF/insurance/spring/messaging-context.xml",
         "classpath:META-INF/insurance/spring/insurance-transfer-context.xml",
         "classpath:/META-INF/insurance/spring/activiti.spring.cfg.xml",
         "classpath:/META-INF/insurance/spring/in-memory-application-context.xml",

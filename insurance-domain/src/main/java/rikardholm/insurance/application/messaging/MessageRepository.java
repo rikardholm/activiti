@@ -1,10 +1,10 @@
 package rikardholm.insurance.application.messaging;
 
-import rikardholm.insurance.domain.common.Repository;
-
+import java.time.Instant;
 import java.util.List;
+import java.util.SortedSet;
 
-public interface MessageRepository<M extends Message> extends Repository<M> {
-
-    <T extends M> List<T> find(Class<T> type);
+public interface MessageRepository {
+    void append(Message message);
+    List<Message> receivedAfter(Instant instant);
 }

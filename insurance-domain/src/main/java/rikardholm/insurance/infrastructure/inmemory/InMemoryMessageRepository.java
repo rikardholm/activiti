@@ -3,12 +3,12 @@ package rikardholm.insurance.infrastructure.inmemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rikardholm.insurance.application.messaging.Message;
-import rikardholm.insurance.application.messaging.MessageRepository;
+import rikardholm.insurance.application.messaging.MessageRepository3;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryMessageRepository<M extends Message> implements MessageRepository<M> {
+public class InMemoryMessageRepository<M extends Message> implements MessageRepository3<M> {
     private static final Logger log = LoggerFactory.getLogger(InMemoryMessageRepository.class);
     private List<M> store = new ArrayList<M>();
 

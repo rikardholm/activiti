@@ -4,16 +4,11 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.sv.Givet;
 import cucumber.api.java.sv.När;
-import cucumber.api.java.sv.Och;
 import cucumber.api.java.sv.Så;
-import org.joda.time.Duration;
-import org.joda.time.Seconds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import rikardholm.insurance.application.messaging.InboxRepository;
-import rikardholm.insurance.application.messaging.OutboxRepository;
+import rikardholm.insurance.application.messaging.*;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationRequest;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
@@ -29,7 +24,9 @@ import rikardholm.insurance.domain.insurance.InsuranceNumber;
 import rikardholm.insurance.domain.insurance.InsuranceRepository;
 import rikardholm.insurance.transfer.ProcessDispatcher;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -44,10 +41,10 @@ public class InsuranceInformationSteps {
     private InsuranceRepository insuranceRepository;
 
     @Autowired
-    private InboxRepository inboxRepository;
+    private OutboxRepository outboxRepository;
 
     @Autowired
-    private OutboxRepository outboxRepository;
+    private MessageRepository messageRepository;
 
     @Autowired
     private ProcessDispatcher processDispatcher;
@@ -96,9 +93,14 @@ public class InsuranceInformationSteps {
 
     @När("^vi tar emot en förfrågan om personen$")
     public void vi_tar_emot_en_förfrågan_om_personen() throws Throwable {
-        InsuranceInformationRequest message = new InsuranceInformationRequest(PERSONAL_IDENTIFIER);
-        inboxRepository.save(message);
-        processDispatcher.pollInbox();
+        Message message = MessageBuilder.aMessage()
+                .withUUID(UUID.randomUUID())
+                .receivedAt(Instant.now())
+                .payload("{\"personalIdentifier\":\"" + PERSONAL_IDENTIFIER.getValue() + "\"}")
+                .build();
+
+        messageRepository.append(message);
+        processDispatcher.poll();
     }
 
     @Så("^svarar vi med information om försäkringen$")

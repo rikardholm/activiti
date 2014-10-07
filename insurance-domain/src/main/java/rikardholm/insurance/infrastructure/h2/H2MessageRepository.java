@@ -4,7 +4,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageBuilder;
-import rikardholm.insurance.application.messaging.MessageRepository2;
+import rikardholm.insurance.application.messaging.MessageRepository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class H2MessageRepository implements MessageRepository2 {
+public class H2MessageRepository implements MessageRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 

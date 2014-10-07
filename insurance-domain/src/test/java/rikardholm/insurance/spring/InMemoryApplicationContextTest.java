@@ -21,18 +21,8 @@ public class InMemoryApplicationContextTest {
     private ApplicationContext applicationContext;
 
     @Test
-    public void wires_an_InboxRepository() throws Exception {
-        assertThat(applicationContext, hasExactlyOneBeanOfType(InboxRepository.class));
-    }
-
-    @Test
     public void wires_an_OutboxRepository() throws Exception {
         assertThat(applicationContext, hasExactlyOneBeanOfType(OutboxRepository.class));
-    }
-
-    @Test
-    public void wires_a_MessageEventRepository() throws Exception {
-        assertThat(applicationContext, hasExactlyOneBeanOfType(MessageEventRepository.class));
     }
 
     @Test

@@ -8,13 +8,13 @@
     <task:scheduler id="processDispatcherScheduler" pool-size="1"/>
 
     <!-- <task:scheduled-tasks>
-        <task:scheduled ref="processDispatcher" method="pollInbox" fixed-delay="100"/>
+        <task:scheduled ref="processDispatcher" method="poll" fixed-delay="100"/>
     </task:scheduled-tasks> -->
 
     <bean id="processDispatcher" class="rikardholm.insurance.transfer.ProcessDispatcher">
         <constructor-arg>
             <util:map>
-                <entry key="rikardholm.insurance.application.messaging.message.InsuranceInformationRequest"
+                <entry key="rikardholm.insurance.application.messaging.Message"
                        value="insurance-information"/>
             </util:map>
         </constructor-arg>
