@@ -17,7 +17,6 @@ import static rikardholm.insurance.common.test.hamcrest.ApplicationContextMatche
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({
         "classpath*:META-INF/insurance/spring/domain-context.xml",
-        "classpath:META-INF/insurance/spring/repository-context.xml",
         InMemoryDatabaseTestExecutionListener.APPLICATION_CONTEXT_PATH})
 public class InMemoryDomainContextTest {
     @Autowired

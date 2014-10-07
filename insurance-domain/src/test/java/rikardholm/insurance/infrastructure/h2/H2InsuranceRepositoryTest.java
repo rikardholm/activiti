@@ -12,7 +12,7 @@ import rikardholm.insurance.domain.insurance.InsuranceRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({
-        "classpath:META-INF/insurance/spring/repository-context.xml",
+        "classpath:META-INF/insurance/spring/domain-context.xml",
         InMemoryDatabaseTestExecutionListener.APPLICATION_CONTEXT_PATH})
 @InMemoryDatabase
 public class H2InsuranceRepositoryTest extends AbstractInsuranceRepositoryTest {

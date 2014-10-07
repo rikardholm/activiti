@@ -18,7 +18,7 @@ import static rikardholm.insurance.common.test.hamcrest.ApplicationContextMatche
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath*:META-INF/insurance/spring/insurance-transfer-context.xml",
         "classpath*:META-INF/insurance/spring/in-memory-application-context.xml",
-        "classpath*:META-INF/insurance/spring/repository-context.xml",
+        "classpath*:META-INF/insurance/spring/domain-context.xml",
         "classpath*:META-INF/insurance/spring/activiti.spring.cfg.xml",
         "classpath*:test/spring/activiti-datasource-inmemory.cfg.xml",
         InMemoryDatabaseTestExecutionListener.APPLICATION_CONTEXT_PATH})

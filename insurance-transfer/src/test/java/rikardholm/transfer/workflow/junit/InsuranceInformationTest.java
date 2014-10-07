@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.is;
         "classpath:META-INF/insurance/spring/insurance-transfer-context.xml",
         "classpath:/META-INF/insurance/spring/activiti.spring.cfg.xml",
         "classpath:/META-INF/insurance/spring/in-memory-application-context.xml",
-        "classpath:/META-INF/insurance/spring/repository-context.xml",
+        "classpath:/META-INF/insurance/spring/domain-context.xml",
         "classpath:/test/spring/activiti-datasource-inmemory.cfg.xml",
         InMemoryDatabaseTestExecutionListener.APPLICATION_CONTEXT_PATH})
 @InMemoryDatabase
