@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 public class InMemoryDatabaseTestExecutionListener extends AbstractTestExecutionListener {
 
-    public static final String APPLICATION_CONTEXT_PATH = "classpath:rikardholm/insurance/common/test/database/inmemory-datasource-context.xml";
+    public static final String IN_MEMORY_DATASOURCE = "classpath:rikardholm/insurance/common/test/database/inmemory-datasource-context.xml";
     private InMemoryDatabaseManager inMemoryDatabaseManager = new InMemoryDatabaseManager();
 
     @Override

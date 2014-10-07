@@ -21,7 +21,7 @@ import static rikardholm.insurance.common.test.hamcrest.ApplicationContextMatche
         "classpath*:META-INF/insurance/spring/domain-context.xml",
         "classpath*:META-INF/insurance/spring/activiti.spring.cfg.xml",
         "classpath*:test/spring/activiti-datasource-inmemory.cfg.xml",
-        InMemoryDatabaseTestExecutionListener.APPLICATION_CONTEXT_PATH})
+        InMemoryDatabaseTestExecutionListener.IN_MEMORY_DATASOURCE})
 public class SpringContextLoadTest {
 
     @Autowired

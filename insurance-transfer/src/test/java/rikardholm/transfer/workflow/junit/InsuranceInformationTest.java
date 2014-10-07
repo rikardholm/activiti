@@ -34,7 +34,7 @@ import static org.hamcrest.Matchers.is;
         "classpath:/META-INF/insurance/spring/in-memory-application-context.xml",
         "classpath:/META-INF/insurance/spring/domain-context.xml",
         "classpath:/test/spring/activiti-datasource-inmemory.cfg.xml",
-        InMemoryDatabaseTestExecutionListener.APPLICATION_CONTEXT_PATH})
+        InMemoryDatabaseTestExecutionListener.IN_MEMORY_DATASOURCE})
 @InMemoryDatabase
 public class InsuranceInformationTest {
 

@@ -35,7 +35,7 @@ import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.hasValu
         "classpath:META-INF/insurance/spring/insurance-transfer-context.xml",
         "classpath:/META-INF/insurance/spring/activiti.spring.cfg.xml",
         "classpath:/META-INF/insurance/spring/in-memory-application-context.xml",
-        InMemoryDatabaseTestExecutionListener.APPLICATION_CONTEXT_PATH,
+        InMemoryDatabaseTestExecutionListener.IN_MEMORY_DATASOURCE,
         "classpath:/test/spring/activiti-datasource-inmemory.cfg.xml"})
 @InMemoryDatabase
 public class InsuranceRegistrationTest {

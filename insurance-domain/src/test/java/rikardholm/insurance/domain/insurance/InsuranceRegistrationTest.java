@@ -1,13 +1,14 @@
 package rikardholm.insurance.domain.insurance;
 
+import org.junit.Before;
 import org.junit.Test;
-import rikardholm.insurance.domain.customer.Address;
-import rikardholm.insurance.domain.customer.Customer;
-import rikardholm.insurance.domain.customer.CustomerBuilder;
-import rikardholm.insurance.domain.customer.PersonalIdentifier;
-import rikardholm.insurance.domain.internal.InsuranceNumberGenerator;
-import rikardholm.insurance.domain.internal.InsuranceRegistrationImpl;
-import rikardholm.insurance.infrastructure.inmemory.InMemoryInsuranceRepository;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import rikardholm.insurance.common.test.database.InMemoryDatabase;
+import rikardholm.insurance.common.test.database.InMemoryDatabaseTestExecutionListener;
+import rikardholm.insurance.domain.customer.*;
 
 import java.util.List;
 
@@ -15,15 +16,31 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static rikardholm.insurance.domain.matchers.InsuranceMatchers.hasCustomer;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration({
+        "classpath:/META-INF/insurance/spring/domain-context.xml",
+        InMemoryDatabaseTestExecutionListener.IN_MEMORY_DATASOURCE})
+@InMemoryDatabase
 public class InsuranceRegistrationTest {
 
     public static final Customer CUSTOMER = CustomerBuilder.aCustomer()
             .withPersonalIdentifier(PersonalIdentifier.of("23434"))
             .withAddress(Address.of("edsdfsfd"))
             .build();
-    private final InsuranceRepository insuranceRepository = new InMemoryInsuranceRepository();
-    private final InsuranceRegistration insuranceRegistration = new InsuranceRegistrationImpl(insuranceRepository, new InsuranceNumberGenerator());
+
+    @Autowired
+    private InsuranceRegistration insuranceRegistration;
+    @Autowired
+    private InsuranceRepository insuranceRepository;
+    @Autowired
+    private CustomerRegistration customerRegistration;
+
     private Insurance insurance;
+
+    @Before
+    public void setUp() throws Exception {
+        customerRegistration.register(CUSTOMER.getPersonalIdentifier(),CUSTOMER.getAddress());
+    }
 
     @Test
     public void should_return_a_created_Insurance() throws Exception {

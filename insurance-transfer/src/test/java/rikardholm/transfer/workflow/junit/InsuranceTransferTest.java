@@ -47,7 +47,7 @@ import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsen
         "classpath:/META-INF/insurance/spring/activiti.spring.cfg.xml",
         "classpath:/META-INF/insurance/spring/in-memory-application-context.xml",
         "classpath:/test/spring/activiti-datasource-inmemory.cfg.xml",
-        InMemoryDatabaseTestExecutionListener.APPLICATION_CONTEXT_PATH})
+        InMemoryDatabaseTestExecutionListener.IN_MEMORY_DATASOURCE})
 @InMemoryDatabase
 public class InsuranceTransferTest {
     public static final PersonalIdentifier MISSING_PERSONAL_IDENTIFIER = PersonalIdentifier.of("450918-5968");
