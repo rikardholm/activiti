@@ -30,9 +30,8 @@ public class H2MessageRepository implements MessageRepository2 {
         paramMap.put("id", id);
         paramMap.put("uuid", message.getUuid());
         paramMap.put("receivedAt", message.getReceivedAt().toString());
-        paramMap.put("type", message.getType());
         paramMap.put("payload", message.getPayload());
-        namedParameterJdbcTemplate.update("INSERT INTO messages (id, uuid, received_at, type, payload) VALUES (:id, :uuid, :receivedAt, :type, :payload)", paramMap);
+        namedParameterJdbcTemplate.update("INSERT INTO messages (id, uuid, received_at, payload) VALUES (:id, :uuid, :receivedAt, :payload)", paramMap);
     }
 
     @Override
@@ -51,7 +50,6 @@ public class H2MessageRepository implements MessageRepository2 {
                     .withUUID(UUID.fromString(rs.getString("uuid")))
                     .receivedAt(rs.getTimestamp("received_at").toInstant())
                     .payload(rs.getString("payload"))
-                    .type(rs.getString("type"))
                     .build();
         }
     }

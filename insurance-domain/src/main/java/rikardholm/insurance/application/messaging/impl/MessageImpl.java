@@ -10,13 +10,11 @@ import static java.util.Objects.requireNonNull;
 public class MessageImpl implements Message {
     private final UUID uuid;
     private final Instant receivedAt;
-    private final String type;
     private final String payLoad;
 
-    public MessageImpl(UUID uuid, Instant receivedAt, String type, String payLoad) {
+    public MessageImpl(UUID uuid, Instant receivedAt, String payLoad) {
         this.uuid = requireNonNull(uuid);
         this.receivedAt = requireNonNull(receivedAt);
-        this.type = requireNonNull(type);
         this.payLoad = requireNonNull(payLoad);
     }
 
@@ -28,11 +26,6 @@ public class MessageImpl implements Message {
     @Override
     public Instant getReceivedAt() {
         return receivedAt;
-    }
-
-    @Override
-    public String getType() {
-        return type;
     }
 
     @Override
@@ -59,7 +52,6 @@ public class MessageImpl implements Message {
     public String toString() {
         return "MessageImpl{" +
                 uuid +
-                ", " + type +
                 ", " + receivedAt +
                 '}';
     }

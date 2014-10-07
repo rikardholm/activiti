@@ -44,11 +44,6 @@ public abstract class AbstractMessageEventRepositoryTest extends AbstractContrac
         }
 
         @Override
-        public String getType() {
-            return null;
-        }
-
-        @Override
         public String getPayload() {
             return null;
         }

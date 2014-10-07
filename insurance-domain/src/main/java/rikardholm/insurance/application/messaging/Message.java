@@ -6,6 +6,6 @@ import java.util.UUID;
 public interface Message {
     UUID getUuid();
     Instant getReceivedAt();
-    String getType();
+
     String getPayload();
 }

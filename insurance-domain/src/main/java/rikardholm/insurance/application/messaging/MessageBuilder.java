@@ -9,7 +9,6 @@ public class MessageBuilder {
 
     private UUID id = UUID.randomUUID();
     private Instant receivedAt;
-    private String type;
     private String payload;
 
     private MessageBuilder() {
@@ -29,17 +28,12 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder type(String type) {
-        this.type = type;
-        return this;
-    }
-
     public MessageBuilder payload(String payload) {
         this.payload = payload;
         return this;
     }
 
     public Message build() {
-        return new MessageImpl(id,receivedAt,type,payload);
+        return new MessageImpl(id,receivedAt, payload);
     }
 }

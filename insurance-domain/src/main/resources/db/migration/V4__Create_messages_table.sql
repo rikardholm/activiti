@@ -1,10 +1,9 @@
 CREATE TABLE messages
 (
   id BIGINT PRIMARY KEY,
-  uuid UUID,
-  received_at DATETIME,
-  type VARCHAR(255),
-  payload CLOB
+  uuid UUID NOT NULL,
+  received_at DATETIME NOT NULL,
+  payload CLOB NOT NULL
 );
 CREATE SEQUENCE messages_seq
 START WITH 1

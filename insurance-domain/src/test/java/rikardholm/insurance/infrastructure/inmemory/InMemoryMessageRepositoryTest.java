@@ -44,11 +44,6 @@ public class InMemoryMessageRepositoryTest {
         }
 
         @Override
-        public String getType() {
-            return null;
-        }
-
-        @Override
         public String getPayload() {
             return null;
         }

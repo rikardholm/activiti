@@ -43,11 +43,6 @@ public class InsuranceInformationRequest implements IncomingMessage {
     }
 
     @Override
-    public String getType() {
-        return null;
-    }
-
-    @Override
     public String getPayload() {
         return null;
     }

@@ -29,11 +29,6 @@ public class InsuranceCreatedResponse implements OutgoingMessage {
     }
 
     @Override
-    public String getType() {
-        return null;
-    }
-
-    @Override
     public String getPayload() {
         return null;
     }

@@ -20,7 +20,6 @@ public class H2MessageRepositoryTest {
 
     public static final UUID aUUID = UUID.fromString("1ba943c0-4db3-11e4-916c-0800200c9a66");
     public static final Instant INSTANT = Instant.parse("2014-10-04T23:00:00Z");
-    public static final String TYPE = "some type";
     public static final String PAYLOAD = "{\"test\": 123}";
 
     @Rule
@@ -32,7 +31,6 @@ public class H2MessageRepositoryTest {
         Message message = MessageBuilder.aMessage()
                 .withUUID(aUUID)
                 .receivedAt(INSTANT)
-                .type(TYPE)
                 .payload(PAYLOAD)
                 .build();
 
@@ -42,7 +40,6 @@ public class H2MessageRepositoryTest {
 
         assertEquals(message.getUuid(), storedMessage.getUuid());
         assertEquals(message.getReceivedAt(), storedMessage.getReceivedAt());
-        assertEquals(message.getType(), storedMessage.getType());
         assertEquals(message.getPayload(), storedMessage.getPayload());
     }
 
@@ -51,21 +48,18 @@ public class H2MessageRepositoryTest {
         Message a = MessageBuilder
                 .aMessage()
                 .receivedAt(Instant.parse("2014-10-03T23:00:00Z"))
-                .type("a")
                 .payload("blabal")
                 .build();
 
         Message b = MessageBuilder
                 .aMessage()
                 .receivedAt(Instant.parse("2014-10-04T23:00:00Z"))
-                .type("b")
                 .payload("asdf")
                 .build();
 
         Message c = MessageBuilder
                 .aMessage()
                 .receivedAt(Instant.parse("2014-10-04T23:00:01Z"))
-                .type("c")
                 .payload("dfgfg")
                 .build();
 
@@ -83,21 +77,18 @@ public class H2MessageRepositoryTest {
         Message a = MessageBuilder
                 .aMessage()
                 .receivedAt(INSTANT)
-                .type("a")
                 .payload("blabal")
                 .build();
 
         Message b = MessageBuilder
                 .aMessage()
                 .receivedAt(INSTANT)
-                .type("b")
                 .payload("asdf")
                 .build();
 
         Message c = MessageBuilder
                 .aMessage()
                 .receivedAt(INSTANT)
-                .type("c")
                 .payload("dfgfg")
                 .build();
 
