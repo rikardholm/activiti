@@ -1,0 +1,10 @@
+CREATE TABLE outbox
+(
+  id BIGINT PRIMARY KEY,
+  uuid UUID NOT NULL,
+  received_at DATETIME NOT NULL,
+  payload CLOB NOT NULL
+);
+CREATE SEQUENCE outbox_seq
+START WITH 1
+INCREMENT BY 1;

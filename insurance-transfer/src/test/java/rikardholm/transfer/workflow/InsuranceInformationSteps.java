@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import rikardholm.insurance.application.messaging.*;
-import rikardholm.insurance.application.messaging.message.InsuranceInformationRequest;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
 import rikardholm.insurance.common.test.database.InMemoryDatabaseManager;
@@ -30,6 +29,7 @@ import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.fail;
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")
@@ -41,10 +41,10 @@ public class InsuranceInformationSteps {
     private InsuranceRepository insuranceRepository;
 
     @Autowired
-    private OutboxRepository outboxRepository;
+    private MessageRepository outbox;
 
     @Autowired
-    private MessageRepository messageRepository;
+    private MessageRepository inbox;
 
     @Autowired
     private ProcessDispatcher processDispatcher;
@@ -99,24 +99,26 @@ public class InsuranceInformationSteps {
                 .payload("{\"personalIdentifier\":\"" + PERSONAL_IDENTIFIER.getValue() + "\"}")
                 .build();
 
-        messageRepository.append(message);
+        inbox.append(message);
         processDispatcher.poll();
     }
 
     @Så("^svarar vi med information om försäkringen$")
     public void svarar_vi_med_information_om_försäkringen() throws Throwable {
-        List<InsuranceInformationResponse> insuranceInformationResponses = outboxRepository.find(InsuranceInformationResponse.class);
+        List<Message> insuranceInformationResponses = outbox.receivedAfter(Instant.now().minusSeconds(50));
         assertThat(insuranceInformationResponses, hasSize(1));
-        InsuranceInformationResponse insuranceInformationResponse = insuranceInformationResponses.get(0);
-        assertThat(insuranceInformationResponse.personalIdentificationNumber, equalTo(PERSONAL_IDENTIFIER.getValue()));
-        assertThat(insuranceInformationResponse.insuranceNumbers, hasSize(1));
-        assertThat(insuranceInformationResponse.insuranceNumbers.get(0), equalTo(INSURANCE_NUMBER.getValue()));
+        fail();
+        //InsuranceInformationResponse insuranceInformationResponse = insuranceInformationResponses.get(0);
+        //assertThat(insuranceInformationResponse.personalIdentificationNumber, equalTo(PERSONAL_IDENTIFIER.getValue()));
+        //assertThat(insuranceInformationResponse.insuranceNumbers, hasSize(1));
+        //assertThat(insuranceInformationResponse.insuranceNumbers.get(0), equalTo(INSURANCE_NUMBER.getValue()));
     }
 
     @Så("^svarar vi att personen inte har några försäkringar hos oss$")
     public void svarar_vi_att_personen_inte_har_några_försäkringar_hos_oss() {
-        List<NoInsurancesResponse> noInsurancesResponses = outboxRepository.find(NoInsurancesResponse.class);
+        List<Message> noInsurancesResponses = outbox.receivedAfter(Instant.now().minusSeconds(50));
         assertThat(noInsurancesResponses, hasSize(1));
-        assertThat(noInsurancesResponses.get(0).personalIdentificationNumber, is(equalTo(PERSONAL_IDENTIFIER.getValue())));
+        fail();
+        //assertThat(noInsurancesResponses.get(0).personalIdentificationNumber, is(equalTo(PERSONAL_IDENTIFIER.getValue())));
     }
 }

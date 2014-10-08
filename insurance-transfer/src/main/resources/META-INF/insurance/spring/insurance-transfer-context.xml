@@ -12,6 +12,7 @@
     </task:scheduled-tasks> -->
 
     <bean id="processDispatcher" class="rikardholm.insurance.transfer.ProcessDispatcher">
+        <constructor-arg ref="inbox"/>
         <constructor-arg>
             <util:map>
                 <entry key="rikardholm.insurance.application.messaging.Message"
@@ -21,7 +22,9 @@
     </bean>
 
     <bean id="insuranceFinder" class="rikardholm.insurance.transfer.InsuranceFinder"/>
-    <bean id="messageSender" class="rikardholm.insurance.transfer.MessageSender"/>
+    <bean id="messageSender" class="rikardholm.insurance.transfer.MessageSender">
+        <constructor-arg ref="outbox"/>
+    </bean>
     <bean id="sparDelegate" class="rikardholm.insurance.transfer.task.SparDelegate">
         <constructor-arg ref="sparService"/>
     </bean>

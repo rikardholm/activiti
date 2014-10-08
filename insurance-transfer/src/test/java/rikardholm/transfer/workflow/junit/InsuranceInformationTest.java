@@ -1,14 +1,11 @@
 package rikardholm.transfer.workflow.junit;
 
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import rikardholm.insurance.application.messaging.*;
-import rikardholm.insurance.application.messaging.impl.MessageImpl;
-import rikardholm.insurance.application.messaging.message.InsuranceInformationRequest;
 import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
 import rikardholm.insurance.common.test.database.InMemoryDatabase;
@@ -21,7 +18,6 @@ import rikardholm.insurance.domain.insurance.InsuranceRepository;
 import rikardholm.insurance.transfer.ProcessDispatcher;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({
@@ -54,10 +51,10 @@ public class InsuranceInformationTest {
     private InsuranceRepository insuranceRepository;
 
     @Autowired
-    private MessageRepository messageRepository;
+    private MessageRepository inbox;
 
     @Autowired
-    private OutboxRepository outboxRepository;
+    private MessageRepository outbox;
 
     @Autowired
     private ProcessDispatcher processDispatcher;
@@ -74,12 +71,15 @@ public class InsuranceInformationTest {
 
         when_processing_a_message_for(PERSONAL_IDENTIFIER);
 
-        List<InsuranceInformationResponse> insuranceInformationResponses = outboxRepository.find(InsuranceInformationResponse.class);
+        fail();
+        /*
+        List<InsuranceInformationResponse> insuranceInformationResponses = outbox.find(InsuranceInformationResponse.class);
         assertThat(insuranceInformationResponses, hasSize(1));
         InsuranceInformationResponse insuranceInformationResponse = insuranceInformationResponses.get(0);
         assertThat(insuranceInformationResponse.personalIdentificationNumber, equalTo(PERSONAL_IDENTIFIER.getValue()));
         assertThat(insuranceInformationResponse.insuranceNumbers, hasSize(1));
         assertThat(insuranceInformationResponse.insuranceNumbers.get(0), equalTo(INSURANCE_NUMBER.getValue()));
+        */
     }
 
     @Test
@@ -96,15 +96,18 @@ public class InsuranceInformationTest {
                 .payload("{\"personalIdentifier\":\"" + personalIdentifier.getValue() + "\"}")
                 .build();
 
-        messageRepository.append(message);
+        inbox.append(message);
 
         processDispatcher.poll();
 
     }
 
     private void then_we_reply_with_a_message_of_type_and_with_personalidentifier(Class<NoInsurancesResponse> type, PersonalIdentifier personalIdentifier) {
+        fail();
+        /*
         List<NoInsurancesResponse> noInsurancesResponses = outboxRepository.find(type);
         assertThat(noInsurancesResponses, hasSize(1));
         assertThat(noInsurancesResponses.get(0).personalIdentificationNumber, is(equalTo(personalIdentifier.getValue())));
+        */
     }
 }

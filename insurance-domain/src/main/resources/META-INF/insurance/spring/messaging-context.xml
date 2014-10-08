@@ -8,4 +8,8 @@
         <constructor-arg ref="dataSource"/>
         <constructor-arg value="inbox"/>
     </bean>
+    <bean id="outbox" class="rikardholm.insurance.infrastructure.h2.H2MessageRepository">
+        <constructor-arg ref="dataSource"/>
+        <constructor-arg value="outbox"/>
+    </bean>
 </beans>

@@ -8,21 +8,20 @@ import org.activiti.engine.test.Deployment;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import rikardholm.insurance.application.messaging.*;
-import rikardholm.insurance.application.messaging.event.MessageHandledEvent;
+import rikardholm.insurance.application.messaging.Message;
+import rikardholm.insurance.application.messaging.MessageBuilder;
+import rikardholm.insurance.application.messaging.MessageEventRepository;
+import rikardholm.insurance.application.messaging.MessageRepository;
 import rikardholm.insurance.application.messaging.impl.MessageEventImpl;
 import rikardholm.insurance.common.test.database.InMemoryDatabaseRule;
 import rikardholm.insurance.infrastructure.h2.H2MessageEventRepository;
 import rikardholm.insurance.infrastructure.h2.H2MessageRepository;
-import rikardholm.insurance.infrastructure.inmemory.InMemoryMessageEventRepository;
 
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static java.util.Objects.requireNonNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 

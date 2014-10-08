@@ -17,8 +17,7 @@ import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
-import rikardholm.insurance.application.messaging.OutboxRepository;
-import rikardholm.insurance.application.messaging.message.InsuranceCreatedResponse;
+import rikardholm.insurance.application.messaging.MessageRepository;
 import rikardholm.insurance.application.messaging.message.PersonDoesNotExistResponse;
 import rikardholm.insurance.application.spar.SparResult;
 import rikardholm.insurance.domain.customer.Customer;
@@ -35,7 +34,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.fail;
 import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsent;
 import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isPresent;
 
@@ -52,7 +53,7 @@ public class InsuranceTransferSteps {
     @Autowired
     private FakeSparService fakeSparService;
     @Autowired
-    private OutboxRepository outboxRepository;
+    private MessageRepository outbox;
     @Autowired
     private ManagementService managementService;
 
@@ -76,10 +77,13 @@ public class InsuranceTransferSteps {
     public void skickar_vi_ett_6b_meddelande_för_personnummer_och_flyttId(String personnummer, String flyttId) throws Throwable {
         PersonalIdentifier personalIdentifier = PersonalIdentifier.of(personnummer);
 
-        List<PersonDoesNotExistResponse> responses = outboxRepository.find(PersonDoesNotExistResponse.class);
+        fail();
+        /*
+        List<PersonDoesNotExistResponse> responses = outbox.find(PersonDoesNotExistResponse.class);
 
         assertThat(responses, hasSize(1));
         assertThat(responses, hasItem(allOf(personalIdentifier(personalIdentifier), flyttId(flyttId))));
+        */
     }
 
     @Och("^det skickas ett 8z meddelande med flyttId (\\d+), personnummer (\\d{6}-\\d{4}) och det nya försäkringsnummret$")
@@ -91,12 +95,15 @@ public class InsuranceTransferSteps {
         assertThat(insurances, hasSize(1));
         InsuranceNumber insuranceNumber = insurances.get(0).getInsuranceNumber();
 
-        List<InsuranceCreatedResponse> insuranceCreatedResponses = outboxRepository.find(InsuranceCreatedResponse.class);
+        fail();
+        /*
+        List<InsuranceCreatedResponse> insuranceCreatedResponses = outbox.find(InsuranceCreatedResponse.class);
         assertThat(insuranceCreatedResponses, hasSize(1));
         InsuranceCreatedResponse response = insuranceCreatedResponses.get(0);
         assertThat(response.ocr, equalTo(flyttId));
         assertThat(response.insuranceNumber, equalTo(insuranceNumber));
         assertThat(response.personalIdentifier, equalTo(personalIdentifier));
+        */
     }
 
     @När("^vi får ett meddelande från bankgirocentralen med ocr (\\d+) och (\\d+)kr$")

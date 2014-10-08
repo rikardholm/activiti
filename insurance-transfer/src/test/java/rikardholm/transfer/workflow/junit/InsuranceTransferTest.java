@@ -15,8 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import rikardholm.insurance.application.messaging.OutboxRepository;
-import rikardholm.insurance.application.messaging.message.InsuranceCreatedResponse;
+import rikardholm.insurance.application.messaging.MessageRepository;
 import rikardholm.insurance.application.messaging.message.PersonDoesNotExistResponse;
 import rikardholm.insurance.application.spar.SparResult;
 import rikardholm.insurance.common.test.database.InMemoryDatabase;
@@ -36,7 +35,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.fail;
 import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.hasValue;
 import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsent;
 
@@ -68,7 +69,7 @@ public class InsuranceTransferTest {
     @Autowired
     private FakeSparService fakeSparService;
     @Autowired
-    private OutboxRepository outboxRepository;
+    private MessageRepository outbox;
     public static final PersonalIdentifier EXISTING_PERSONAL_IDENTIFIER = PersonalIdentifier.of("670914-5687");
 public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdentifier.of("940525-3142");
     @Test
@@ -84,10 +85,13 @@ public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdent
 
         when_all_jobs_within_X_days_are_executed(10);
 
+        fail();
+        /*
         List<PersonDoesNotExistResponse> responses = outboxRepository.find(PersonDoesNotExistResponse.class);
 
         assertThat(responses, hasSize(1));
         assertThat(responses, hasItem(allOf(personalIdentifier(MISSING_PERSONAL_IDENTIFIER), ocr(OCR))));
+        */
     }
 
     @Test
@@ -112,12 +116,14 @@ public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdent
 
         InsuranceNumber insuranceNumber = insurances.get(0).getInsuranceNumber();
 
+        fail();
+         /*
         List<InsuranceCreatedResponse> insuranceCreatedResponses = outboxRepository.find(InsuranceCreatedResponse.class);
         assertThat(insuranceCreatedResponses, hasSize(1));
         InsuranceCreatedResponse response = insuranceCreatedResponses.get(0);
         assertThat(response.ocr, equalTo(OCR));
         assertThat(response.insuranceNumber, equalTo(insuranceNumber));
-        assertThat(response.personalIdentifier, equalTo(EXISTING_PERSONAL_IDENTIFIER));
+        assertThat(response.personalIdentifier, equalTo(EXISTING_PERSONAL_IDENTIFIER));*/
     }
 
     @Test
