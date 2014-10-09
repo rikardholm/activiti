@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageRepository;
 import rikardholm.insurance.application.messaging.message.PersonDoesNotExistResponse;
 import rikardholm.insurance.application.spar.SparResult;
@@ -29,6 +30,9 @@ import rikardholm.insurance.domain.insurance.InsuranceNumber;
 import rikardholm.insurance.domain.insurance.InsuranceRepository;
 import rikardholm.insurance.infrastructure.fake.FakeSparService;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.TemporalAmount;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +89,11 @@ public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdent
 
         when_all_jobs_within_X_days_are_executed(10);
 
-        fail();
+        List<Message> messages = outbox.receivedAfter(Instant.now().minus(Duration.ofHours(1)));
+
+        assertThat(messages, hasSize(1));
+        //TODO: Test properly
+        //PersonDoesNotExistMessage
         /*
         List<PersonDoesNotExistResponse> responses = outboxRepository.find(PersonDoesNotExistResponse.class);
 
@@ -116,7 +124,10 @@ public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdent
 
         InsuranceNumber insuranceNumber = insurances.get(0).getInsuranceNumber();
 
-        fail();
+        List<Message> messages = outbox.receivedAfter(Instant.now().minus(Duration.ofHours(1)));
+
+        assertThat(messages, hasSize(1));
+        //TODO: Test properly
          /*
         List<InsuranceCreatedResponse> insuranceCreatedResponses = outboxRepository.find(InsuranceCreatedResponse.class);
         assertThat(insuranceCreatedResponses, hasSize(1));

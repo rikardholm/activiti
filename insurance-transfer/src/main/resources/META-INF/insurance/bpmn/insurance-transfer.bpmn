@@ -12,12 +12,13 @@
       </extensionElements>
     </callActivity>
     <scriptTask id="insurance-created-reply" name="Skicka 8z &quot;Försäkring Skapad&quot;" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>//importPackage(Packages.rikardholm.insurance.application.messaging.message);  //println('OCR: ' + ocr); //println('Insurance: ' + insuranceNumber);
+      <script>
+          print('OCR: ' + ocr);
+          print('Insurance: ' + insuranceNumber);
 var MessageBuilder = Java.type('rikardholm.insurance.application.messaging.MessageBuilder');
 var Instant = Java.type('java.time.Instant');
 
-var message =  MessageBuilder.aMessage().receivedAt(Instant.now()).build();
-// new Message(ocr, personalIdentifier, insuranceNumber); 
+          var message =  MessageBuilder.aMessage().receivedAt(Instant.now()).payload('{asdf}').build();
 outbox.append(message);</script>
     </scriptTask>
     <sequenceFlow id="flow3" sourceRef="callactivity1" targetRef="insurance-created-reply"></sequenceFlow>
@@ -27,20 +28,14 @@ outbox.append(message);</script>
       <errorEventDefinition></errorEventDefinition>
     </boundaryEvent>
     <scriptTask id="respond-with-error" name="Skicka 6b &quot;Försäkring kan inte skapas&quot;" scriptFormat="javascript" activiti:autoStoreVariables="false">
-      <script>//importPackage(Packages.rikardholm.insurance.application.messaging.message);
-
-//println('OCR: ' + ocr);
-//println('Could not create insurance for ' + personalIdentifier);
-
-//var PersonDoesNotExistResponse = Java.type('rikardholm.insurance.application.messaging.message.PersonDoesNotExistResponse');
-//var message = new PersonDoesNotExistResponse(personalIdentifier, ocr);
-//outbox.append(message);
+      <script>
+print('OCR: ' + ocr);
+print('Could not create insurance for ' + personalIdentifier);
 
 var MessageBuilder = Java.type('rikardholm.insurance.application.messaging.MessageBuilder');
 var Instant = Java.type('java.time.Instant');
 
-var message =  MessageBuilder.aMessage().receivedAt(Instant.now()).build();
-// new Message(ocr, personalIdentifier, insuranceNumber); 
+var message =  MessageBuilder.aMessage().receivedAt(Instant.now()).payload('{asdf}').build();
 outbox.append(message);</script>
     </scriptTask>
     <sequenceFlow id="flow5" sourceRef="respond-with-error" targetRef="endevent1"></sequenceFlow>
