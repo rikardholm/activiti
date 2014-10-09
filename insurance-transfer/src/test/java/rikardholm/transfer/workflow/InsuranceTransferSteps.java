@@ -39,7 +39,6 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.fail;
 import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsent;
 import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isPresent;
 
