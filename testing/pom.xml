@@ -64,5 +64,12 @@
             <optional>true</optional>
             <version>4.1.0.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <scope>compile</scope>
+            <optional>true</optional>
+            <version>1.9.13</version>
+        </dependency>
     </dependencies>
 </project>
