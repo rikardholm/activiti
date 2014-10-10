@@ -2,13 +2,15 @@ package rikardholm.insurance.transfer;
 
 import com.google.common.base.Optional;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageBuilder;
 import rikardholm.insurance.application.messaging.MessageRepository;
 import rikardholm.insurance.application.messaging.OutgoingMessage;
-import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
 import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
 import rikardholm.insurance.domain.customer.Customer;
 import rikardholm.insurance.domain.customer.CustomerRepository;
@@ -16,6 +18,7 @@ import rikardholm.insurance.domain.customer.PersonalIdentifier;
 import rikardholm.insurance.domain.insurance.Insurance;
 import rikardholm.insurance.domain.insurance.InsuranceRepository;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -53,11 +56,24 @@ public class MessageSender {
 
         List<Long> insuranceNumbers = transform(insurances, input -> input.getInsuranceNumber().getValue());
 
-        OutgoingMessage outgoingMessage = new InsuranceInformationResponse(personalIdentifier.getValue(), insuranceNumbers);
+        log.info("Sending insurance information for {} with {} insurances.", personalIdentifier, insuranceNumbers.size());
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        log.info("Sending insurance information for {} with {} insurances.",personalIdentifier,insuranceNumbers.size());
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("personalIdentifier", personalIdentifier.getValue());
+        ArrayNode arrayNode = root.putArray("insuranceNumbers");
+        for (Long insuranceNumber : insuranceNumbers) {
+            arrayNode.add(insuranceNumber);
+        }
 
-        Message message = MessageBuilder.aMessage().receivedAt(Instant.now()).withUUID(UUID.randomUUID()).payload("{}").build();
+        String payload;
+        try {
+            payload = objectMapper.writeValueAsString(root);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Message message = MessageBuilder.aMessage().receivedAt(Instant.now()).withUUID(UUID.randomUUID()).payload(payload).build();
         messageRepository.append(message);
     }
 
