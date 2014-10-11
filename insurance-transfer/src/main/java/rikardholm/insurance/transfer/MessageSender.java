@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageBuilder;
 import rikardholm.insurance.application.messaging.MessageRepository;
-import rikardholm.insurance.application.messaging.OutgoingMessage;
-import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
 import rikardholm.insurance.domain.customer.Customer;
 import rikardholm.insurance.domain.customer.CustomerRepository;
 import rikardholm.insurance.domain.customer.PersonalIdentifier;
@@ -39,11 +37,21 @@ public class MessageSender {
     }
 
     public void sendNoInsurancesResponse(PersonalIdentifier personalIdentifier) {
-        OutgoingMessage outgoingMessage = new NoInsurancesResponse(personalIdentifier.getValue());
-
         log.info("Sending 'No Insurance Information' message for {}", personalIdentifier);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        Message message = MessageBuilder.aMessage().receivedAt(Instant.now()).withUUID(UUID.randomUUID()).payload("{}").build();
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("messageType", "no-insurances");
+        root.put("personalIdentifier", personalIdentifier.getValue());
+
+        String payload;
+        try {
+            payload = objectMapper.writeValueAsString(root);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Message message = MessageBuilder.aMessage().receivedAt(Instant.now()).withUUID(UUID.randomUUID()).payload(payload).build();
         messageRepository.append(message);
     }
 
@@ -60,6 +68,7 @@ public class MessageSender {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ObjectNode root = objectMapper.createObjectNode();
+        root.put("messageType", "insurance-information");
         root.put("personalIdentifier", personalIdentifier.getValue());
         ArrayNode arrayNode = root.putArray("insuranceNumbers");
         for (Long insuranceNumber : insuranceNumbers) {

@@ -76,6 +76,7 @@ public class InsuranceInformationTest {
         List<Message> messages = outbox.receivedAfter(Instant.now().minus(Duration.ofHours(1)));
 
         assertThat(messages, hasSize(1));
+        assertThat(messages.get(0).getPayload(), isJson(withProperty("messageType", JsonMatcher.equalTo("\"insurance-information\""))));
         assertThat(messages.get(0).getPayload(), isJson(withProperty("personalIdentifier", JsonMatcher.equalTo("\"" + PERSONAL_IDENTIFIER.getValue() + "\""))));
         assertThat(messages.get(0).getPayload(), isJson(withProperty("insuranceNumbers", JsonMatcher.equalTo("[" + INSURANCE_NUMBER.getValue() + "]"))));
     }
@@ -84,7 +85,7 @@ public class InsuranceInformationTest {
     public void should_reply_no_insurance_if_customer_has_no_insurance() throws Exception {
         when_processing_a_message_for(NOT_A_CUSTOMER);
 
-        then_we_reply_with_a_message_of_type_and_with_personalidentifier(NoInsurancesResponse.class, NOT_A_CUSTOMER);
+        then_we_reply_with_a_no_insurances_message_with_personalidentifier(NoInsurancesResponse.class, NOT_A_CUSTOMER);
     }
 
     private void when_processing_a_message_for(PersonalIdentifier personalIdentifier) {
@@ -100,15 +101,12 @@ public class InsuranceInformationTest {
 
     }
 
-    private void then_we_reply_with_a_message_of_type_and_with_personalidentifier(Class<NoInsurancesResponse> type, PersonalIdentifier personalIdentifier) {
+    private void then_we_reply_with_a_no_insurances_message_with_personalidentifier(Class<NoInsurancesResponse> type, PersonalIdentifier personalIdentifier) {
         List<Message> messages = outbox.receivedAfter(Instant.now().minus(Duration.ofHours(1)));
 
         assertThat(messages, hasSize(1));
-        //TODO: Test properly
-        /*
-        List<NoInsurancesResponse> noInsurancesResponses = outboxRepository.find(type);
-        assertThat(noInsurancesResponses, hasSize(1));
-        assertThat(noInsurancesResponses.get(0).personalIdentificationNumber, is(equalTo(personalIdentifier.getValue())));
-        */
+
+        assertThat(messages.get(0).getPayload(), isJson(withProperty("messageType", JsonMatcher.equalTo("\"no-insurances\""))));
+        assertThat(messages.get(0).getPayload(), isJson(withProperty("personalIdentifier", JsonMatcher.equalTo("\"" + personalIdentifier.getValue() + "\""))));
     }
 }
