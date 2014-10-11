@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageBuilder;
 import rikardholm.insurance.application.messaging.MessageRepository;
-import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
 import rikardholm.insurance.common.test.database.InMemoryDatabase;
 import rikardholm.insurance.common.test.database.InMemoryDatabaseTestExecutionListener;
 import rikardholm.insurance.common.test.hamcrest.JsonMatcher;
@@ -85,7 +84,7 @@ public class InsuranceInformationTest {
     public void should_reply_no_insurance_if_customer_has_no_insurance() throws Exception {
         when_processing_a_message_for(NOT_A_CUSTOMER);
 
-        then_we_reply_with_a_no_insurances_message_with_personalidentifier(NoInsurancesResponse.class, NOT_A_CUSTOMER);
+        then_we_reply_with_a_no_insurances_message_with_personalidentifier(NOT_A_CUSTOMER);
     }
 
     private void when_processing_a_message_for(PersonalIdentifier personalIdentifier) {
@@ -101,7 +100,7 @@ public class InsuranceInformationTest {
 
     }
 
-    private void then_we_reply_with_a_no_insurances_message_with_personalidentifier(Class<NoInsurancesResponse> type, PersonalIdentifier personalIdentifier) {
+    private void then_we_reply_with_a_no_insurances_message_with_personalidentifier(PersonalIdentifier personalIdentifier) {
         List<Message> messages = outbox.receivedAfter(Instant.now().minus(Duration.ofHours(1)));
 
         assertThat(messages, hasSize(1));

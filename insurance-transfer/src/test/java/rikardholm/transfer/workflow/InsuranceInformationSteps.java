@@ -8,15 +8,11 @@ import cucumber.api.java.sv.Så;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
-import rikardholm.insurance.application.messaging.*;
-import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
-import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
+import rikardholm.insurance.application.messaging.Message;
+import rikardholm.insurance.application.messaging.MessageBuilder;
+import rikardholm.insurance.application.messaging.MessageRepository;
 import rikardholm.insurance.common.test.database.InMemoryDatabaseManager;
-import rikardholm.insurance.domain.customer.CustomerBuilder;
-import rikardholm.insurance.domain.customer.Address;
-import rikardholm.insurance.domain.customer.Customer;
-import rikardholm.insurance.domain.customer.CustomerRepository;
-import rikardholm.insurance.domain.customer.PersonalIdentifier;
+import rikardholm.insurance.domain.customer.*;
 import rikardholm.insurance.domain.insurance.Insurance;
 import rikardholm.insurance.domain.insurance.InsuranceBuilder;
 import rikardholm.insurance.domain.insurance.InsuranceNumber;
@@ -28,8 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.hasSize;
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")
