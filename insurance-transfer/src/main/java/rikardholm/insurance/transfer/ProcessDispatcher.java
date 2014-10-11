@@ -8,7 +8,7 @@ import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageEvent;
 import rikardholm.insurance.application.messaging.MessageEventRepository;
 import rikardholm.insurance.application.messaging.MessageRepository;
-import rikardholm.insurance.application.messaging.event.MessageHandledEvent;
+import rikardholm.insurance.application.messaging.impl.MessageEventImpl;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -42,7 +42,7 @@ public class ProcessDispatcher {
                 continue;
             }
             startProcess(message);
-            messageEventRepository.save(new MessageHandledEvent(message));
+            messageEventRepository.save(new MessageEventImpl(message.getUuid(), "handled"));
         }
     }
 
