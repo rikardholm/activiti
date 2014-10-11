@@ -8,6 +8,6 @@ public class InsuranceNumberGenerator {
 
     public InsuranceNumber generate() {
         Random random = new Random();
-        return InsuranceNumber.of(random.nextLong());
+        return InsuranceNumber.of((long) random.nextInt(999999));
     }
 }
