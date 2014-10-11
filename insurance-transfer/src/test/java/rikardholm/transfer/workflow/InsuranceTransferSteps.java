@@ -9,9 +9,6 @@ import org.activiti.engine.ManagementService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.Job;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageRepository;
-import rikardholm.insurance.application.messaging.message.PersonDoesNotExistResponse;
 import rikardholm.insurance.application.spar.SparResult;
 import rikardholm.insurance.domain.customer.Customer;
 import rikardholm.insurance.domain.customer.CustomerRepository;
@@ -39,6 +35,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
+import static rikardholm.insurance.common.test.hamcrest.JsonMatcher.*;
 import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsent;
 import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isPresent;
 
@@ -72,7 +69,7 @@ public class InsuranceTransferSteps {
         properties.put("personalIdentifier", PersonalIdentifier.of(personnummer));
         properties.put("ocr", flyttId);
 
-        runtimeService.startProcessInstanceByMessage("create-insurance",flyttId,properties);
+        runtimeService.startProcessInstanceByMessage("create-insurance", flyttId, properties);
     }
 
     @Så("^skickar vi ett 6b meddelande för personnummer (\\d{6}-\\d{4}) och flyttId (\\d+)$")
@@ -83,11 +80,10 @@ public class InsuranceTransferSteps {
         List<Message> messages = outbox.receivedAfter(Instant.now().minus(Duration.ofHours(1)));
 
         assertThat(messages, hasSize(1));
-
-        //TODO: Test properly
-        /*
-        assertThat(responses, hasItem(allOf(personalIdentifier(personalIdentifier), flyttId(flyttId))));
-        */
+        String payload = messages.get(0).getPayload();
+        assertThat(payload, isJson(withProperty("messageType", equalTo("\"person-does-not-exist\""))));
+        assertThat(payload, isJson(withProperty("personalIdentifier", equalTo("\"" + personnummer + "\""))));
+        assertThat(payload, isJson(withProperty("ocr", equalTo("\"" + flyttId + "\""))));
     }
 
     @Och("^det skickas ett 8z meddelande med flyttId (\\d+), personnummer (\\d{6}-\\d{4}) och det nya försäkringsnummret$")
@@ -102,14 +98,11 @@ public class InsuranceTransferSteps {
         List<Message> messages = outbox.receivedAfter(Instant.now().minus(Duration.ofHours(1)));
 
         assertThat(messages, hasSize(1));
-        /*
-        List<InsuranceCreatedResponse> insuranceCreatedResponses = outbox.find(InsuranceCreatedResponse.class);
-        assertThat(insuranceCreatedResponses, hasSize(1));
-        InsuranceCreatedResponse response = insuranceCreatedResponses.get(0);
-        assertThat(response.ocr, equalTo(flyttId));
-        assertThat(response.insuranceNumber, equalTo(insuranceNumber));
-        assertThat(response.personalIdentifier, equalTo(personalIdentifier));
-        */
+        String payload = messages.get(0).getPayload();
+        assertThat(payload, isJson(withProperty("messageType", equalTo("\"insurance-created\""))));
+        assertThat(payload, isJson(withProperty("personalIdentifier", equalTo("\"" + personnummer + "\""))));
+        assertThat(payload, isJson(withProperty("ocr", equalTo("\"" + flyttId + "\""))));
+        assertThat(payload, isJson(withProperty("insuranceNumber", equalTo(insuranceNumber.getValue().toString()))));
     }
 
     @När("^vi får ett meddelande från bankgirocentralen med ocr (\\d+) och (\\d+)kr$")
@@ -124,35 +117,6 @@ public class InsuranceTransferSteps {
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put("amount",amount);
         runtimeService.messageEventReceived("bgc", execution.getId(), properties);
-    }
-
-    private Matcher<? super PersonDoesNotExistResponse> flyttId(final String flyttId) {
-        return new TypeSafeMatcher<PersonDoesNotExistResponse>() {
-            @Override
-            protected boolean matchesSafely(PersonDoesNotExistResponse item) {
-                return flyttId.equals(item.ocr);
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("FlyttId=").appendValue(flyttId);
-            }
-        };
-    }
-
-    private Matcher<? super PersonDoesNotExistResponse> personalIdentifier(final PersonalIdentifier personalIdentifier) {
-        return new TypeSafeMatcher<PersonDoesNotExistResponse>() {
-
-            @Override
-            protected boolean matchesSafely(PersonDoesNotExistResponse item) {
-                return personalIdentifier.equals(item.personalIdentifier);
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("PersonalIdentifier=").appendValue(personalIdentifier);
-            }
-        };
     }
 
     @Och("^väntar (\\d+) dagar$")

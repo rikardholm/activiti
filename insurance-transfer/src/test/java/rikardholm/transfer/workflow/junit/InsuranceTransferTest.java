@@ -17,7 +17,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import rikardholm.insurance.application.messaging.Message;
 import rikardholm.insurance.application.messaging.MessageRepository;
-import rikardholm.insurance.application.messaging.message.PersonDoesNotExistResponse;
 import rikardholm.insurance.application.spar.SparResult;
 import rikardholm.insurance.common.test.database.InMemoryDatabase;
 import rikardholm.insurance.common.test.database.InMemoryDatabaseTestExecutionListener;
@@ -32,7 +31,6 @@ import rikardholm.insurance.infrastructure.fake.FakeSparService;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.TemporalAmount;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +39,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.fail;
+import static rikardholm.insurance.common.test.hamcrest.JsonMatcher.*;
 import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.hasValue;
 import static rikardholm.insurance.common.test.hamcrest.OptionalMatchers.isAbsent;
 
@@ -75,7 +73,8 @@ public class InsuranceTransferTest {
     @Autowired
     private MessageRepository outbox;
     public static final PersonalIdentifier EXISTING_PERSONAL_IDENTIFIER = PersonalIdentifier.of("670914-5687");
-public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdentifier.of("940525-3142");
+    public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdentifier.of("940525-3142");
+
     @Test
     public void person_missing_in_SPAR() throws Exception {
         Optional<SparResult> existing = fakeSparService.findBy(MISSING_PERSONAL_IDENTIFIER);
@@ -92,14 +91,10 @@ public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdent
         List<Message> messages = outbox.receivedAfter(Instant.now().minus(Duration.ofHours(1)));
 
         assertThat(messages, hasSize(1));
-        //TODO: Test properly
-        //PersonDoesNotExistMessage
-        /*
-        List<PersonDoesNotExistResponse> responses = outboxRepository.find(PersonDoesNotExistResponse.class);
-
-        assertThat(responses, hasSize(1));
-        assertThat(responses, hasItem(allOf(personalIdentifier(MISSING_PERSONAL_IDENTIFIER), ocr(OCR))));
-        */
+        String payload = messages.get(0).getPayload();
+        assertThat(payload, isJson(withProperty("messageType", equalTo("\"person-does-not-exist\""))));
+        assertThat(payload, isJson(withProperty("personalIdentifier", equalTo("\"" + MISSING_PERSONAL_IDENTIFIER.getValue() + "\""))));
+        assertThat(payload, isJson(withProperty("ocr", equalTo("\"" + OCR + "\""))));
     }
 
     @Test
@@ -127,14 +122,11 @@ public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdent
         List<Message> messages = outbox.receivedAfter(Instant.now().minus(Duration.ofHours(1)));
 
         assertThat(messages, hasSize(1));
-        //TODO: Test properly
-         /*
-        List<InsuranceCreatedResponse> insuranceCreatedResponses = outboxRepository.find(InsuranceCreatedResponse.class);
-        assertThat(insuranceCreatedResponses, hasSize(1));
-        InsuranceCreatedResponse response = insuranceCreatedResponses.get(0);
-        assertThat(response.ocr, equalTo(OCR));
-        assertThat(response.insuranceNumber, equalTo(insuranceNumber));
-        assertThat(response.personalIdentifier, equalTo(EXISTING_PERSONAL_IDENTIFIER));*/
+        String payload = messages.get(0).getPayload();
+        assertThat(payload, isJson(withProperty("messageType", equalTo("\"insurance-created\""))));
+        assertThat(payload, isJson(withProperty("personalIdentifier", equalTo("\"" + EXISTING_PERSONAL_IDENTIFIER.getValue() + "\""))));
+        assertThat(payload, isJson(withProperty("ocr", equalTo("\"" + OCR + "\""))));
+        assertThat(payload, isJson(withProperty("insuranceNumber", equalTo(insuranceNumber.getValue().toString()))));
     }
 
     @Test
@@ -170,36 +162,6 @@ public static final PersonalIdentifier OTHER_PERSONAL_IDENTIFIER = PersonalIdent
 
         assertThat(job, notNullValue());
         managementService.executeJob(job.getId());
-    }
-
-
-    private Matcher<? super PersonDoesNotExistResponse> ocr(final String flyttId) {
-        return new TypeSafeMatcher<PersonDoesNotExistResponse>() {
-            @Override
-            protected boolean matchesSafely(PersonDoesNotExistResponse item) {
-                return flyttId.equals(item.ocr);
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("FlyttId=").appendValue(flyttId);
-            }
-        };
-    }
-
-    private Matcher<? super PersonDoesNotExistResponse> personalIdentifier(final PersonalIdentifier personalIdentifier) {
-        return new TypeSafeMatcher<PersonDoesNotExistResponse>() {
-
-            @Override
-            protected boolean matchesSafely(PersonDoesNotExistResponse item) {
-                return personalIdentifier.equals(item.personalIdentifier);
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("PersonalIdentifier=").appendValue(personalIdentifier);
-            }
-        };
     }
 
     private Matcher<Customer> hasAddress(final Address address) {
