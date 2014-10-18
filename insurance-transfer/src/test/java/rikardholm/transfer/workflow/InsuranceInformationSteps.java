@@ -8,15 +8,12 @@ import cucumber.api.java.sv.Så;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
-import rikardholm.insurance.application.messaging.*;
-import rikardholm.insurance.application.messaging.message.InsuranceInformationResponse;
-import rikardholm.insurance.application.messaging.message.NoInsurancesResponse;
+import rikardholm.insurance.application.messaging.Message;
+import rikardholm.insurance.application.messaging.MessageBuilder;
+import rikardholm.insurance.application.messaging.MessageRepository;
 import rikardholm.insurance.common.test.database.InMemoryDatabaseManager;
-import rikardholm.insurance.domain.customer.CustomerBuilder;
-import rikardholm.insurance.domain.customer.Address;
-import rikardholm.insurance.domain.customer.Customer;
-import rikardholm.insurance.domain.customer.CustomerRepository;
-import rikardholm.insurance.domain.customer.PersonalIdentifier;
+import rikardholm.insurance.common.test.hamcrest.JsonMatcher;
+import rikardholm.insurance.domain.customer.*;
 import rikardholm.insurance.domain.insurance.Insurance;
 import rikardholm.insurance.domain.insurance.InsuranceBuilder;
 import rikardholm.insurance.domain.insurance.InsuranceNumber;
@@ -28,8 +25,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.hasSize;
+import static rikardholm.insurance.common.test.hamcrest.JsonMatcher.isJson;
+import static rikardholm.insurance.common.test.hamcrest.JsonMatcher.withProperty;
 
 @Component
 @ContextConfiguration("classpath*:test/cucumber.xml")
@@ -105,20 +103,18 @@ public class InsuranceInformationSteps {
 
     @Så("^svarar vi med information om försäkringen$")
     public void svarar_vi_med_information_om_försäkringen() throws Throwable {
-        List<Message> insuranceInformationResponses = outbox.receivedAfter(Instant.now().minusSeconds(50));
-        assertThat(insuranceInformationResponses, hasSize(1));
-        //TODO: Test properly
-        //InsuranceInformationResponse insuranceInformationResponse = insuranceInformationResponses.get(0);
-        //assertThat(insuranceInformationResponse.personalIdentificationNumber, equalTo(PERSONAL_IDENTIFIER.getValue()));
-        //assertThat(insuranceInformationResponse.insuranceNumbers, hasSize(1));
-        //assertThat(insuranceInformationResponse.insuranceNumbers.get(0), equalTo(INSURANCE_NUMBER.getValue()));
+        List<Message> messages = outbox.receivedAfter(Instant.now().minusSeconds(50));
+        assertThat(messages, hasSize(1));
+        assertThat(messages.get(0).getPayload(), isJson(withProperty("messageType", JsonMatcher.equalTo("\"insurance-information\""))));
+        assertThat(messages.get(0).getPayload(), isJson(withProperty("personalIdentifier", JsonMatcher.equalTo("\"" + PERSONAL_IDENTIFIER.getValue() + "\""))));
+        assertThat(messages.get(0).getPayload(), isJson(withProperty("insuranceNumbers", JsonMatcher.equalTo("[" + INSURANCE_NUMBER.getValue() + "]"))));
     }
 
     @Så("^svarar vi att personen inte har några försäkringar hos oss$")
     public void svarar_vi_att_personen_inte_har_några_försäkringar_hos_oss() {
-        List<Message> noInsurancesResponses = outbox.receivedAfter(Instant.now().minusSeconds(50));
-        assertThat(noInsurancesResponses, hasSize(1));
-        //TODO: Test properly
-        //assertThat(noInsurancesResponses.get(0).personalIdentificationNumber, is(equalTo(PERSONAL_IDENTIFIER.getValue())));
+        List<Message> messages = outbox.receivedAfter(Instant.now().minusSeconds(50));
+        assertThat(messages, hasSize(1));
+        assertThat(messages.get(0).getPayload(), isJson(withProperty("messageType", JsonMatcher.equalTo("\"no-insurances\""))));
+        assertThat(messages.get(0).getPayload(), isJson(withProperty("personalIdentifier", JsonMatcher.equalTo("\"" + PERSONAL_IDENTIFIER.getValue() + "\""))));
     }
 }
