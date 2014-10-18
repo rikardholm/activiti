@@ -14,6 +14,7 @@
         <module>insurance-transfer</module>
         <module>insurance-domain</module>
         <module>testing</module>
+        <module>insurance-indexing</module>
     </modules>
 
     <properties>
