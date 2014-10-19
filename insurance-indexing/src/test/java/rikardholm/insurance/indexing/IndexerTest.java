@@ -29,7 +29,9 @@ public class IndexerTest {
 
     @Before
     public void setUp() throws Exception {
-        Settings settings = ImmutableSettings.settingsBuilder().put("index.store.type", "memory").build();
+        Settings settings = ImmutableSettings.settingsBuilder()
+                .put("index.store.type", "memory")
+                .build();
         node = NodeBuilder.nodeBuilder()
                 .local(true)
                 .settings(settings)
@@ -55,13 +57,11 @@ public class IndexerTest {
                 .belongsTo(customer)
                 .build();
 
-        System.out.println("call");
         indexer.index(customer);
         indexer.index(insurance);
 
         Client client = node.client();
         client.admin().indices().prepareRefresh().execute().actionGet();
-        System.out.println("search");
         SearchResponse searchResponse = client.prepareSearch("insurances")
                 .setQuery(QueryBuilders.queryString("*4545*"))
                 .execute()
