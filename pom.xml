@@ -15,6 +15,7 @@
         <module>insurance-domain</module>
         <module>testing</module>
         <module>insurance-indexing</module>
+        <module>insurance-admin</module>
     </modules>
 
     <properties>
