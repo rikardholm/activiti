@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      lang="en">
+      lang="en" ng-app="">
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css"/>
     <title></title>
+    <script src="/js/angular.min.js"></script>
 </head>
 <body>
 
@@ -52,6 +53,11 @@
             mostly barebones HTML document.</p>
     </div>
 
+</div>
+
+<div class="container">
+    <p>Nothing here {{'yet' + '!'}}</p>
+    <p>1 + 2 = {{ 1 + 2 }}</p>
 </div>
 <!-- /.container -->
 
