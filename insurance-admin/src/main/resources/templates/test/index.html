@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      lang="en" ng-app="">
+      lang="en" ng-app="activitiApp">
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css"/>
     <title></title>
     <script src="/js/angular.min.js"></script>
+    <script src="/js/controllers.js"></script>
 </head>
 <body>
 
@@ -60,6 +61,16 @@
     <p>1 + 2 = {{ 1 + 2 }}</p>
 </div>
 <!-- /.container -->
+
+<div class="container"  ng-controller="TaskController">
+<ul>
+    <li ng-repeat="task in tasks">
+        <span>{{task.title}}</span>
+        <p>{{task.description}}</p>
+    </li>
+    <li>test</li>
+</ul>
+</div>
 
 </body>
 </html>
