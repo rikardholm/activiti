@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <import resource="classpath:META-INF/insurance/spring/insurance-transfer-context.xml"/>
+    <import resource="classpath:META-INF/insurance/spring/activiti.spring.cfg.xml"/>
+    <import resource="classpath:META-INF/insurance/spring/domain-context.xml"/>
+    <import resource="classpath:META-INF/insurance/spring/in-memory-application-context.xml"/>
+    <import resource="classpath:META-INF/insurance/spring/messaging-context.xml"/>
+    <import resource="classpath:rikardholm/insurance/common/test/database/inmemory-datasource-context.xml"/>
+
+    <bean id="activitiDataSource"
+          class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy">
+        <property name="targetDataSource">
+            <bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+                <property name="driverClass" value="org.h2.Driver"/>
+                <property name="url" value="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=-1"/>
+                <property name="username" value="sa"/>
+                <property name="password" value=""/>
+            </bean>
+        </property>
+    </bean>
+</beans>
