@@ -7,6 +7,7 @@
     <bean id="formService" factory-bean="processEngine" factory-method="getFormService"/>
     <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService"/>
     <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService"/>
+    <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService"/>
 
     <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
         <property name="processEngineConfiguration" ref="processEngineConfiguration"/>
