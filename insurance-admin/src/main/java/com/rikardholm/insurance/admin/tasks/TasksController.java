@@ -1,17 +1,17 @@
 package com.rikardholm.insurance.admin.tasks;
 
+import com.google.common.collect.FluentIterable;
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import rikardholm.insurance.infrastructure.fake.FakeSparService;
 
 import java.util.HashMap;
@@ -22,7 +22,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-@Controller
+@RestController
 @RequestMapping("/tasks")
 public class TasksController {
 
@@ -60,20 +60,51 @@ public class TasksController {
     }
 
     @RequestMapping(method = GET)
-    public void tasks(Model model) {
+    public List<MyTask> tasks() {
         List<Task> tasks = taskService.createTaskQuery()
                 .list();
 
-        model.addAttribute("tasks", tasks);
+        return FluentIterable.from(tasks)
+                .transform(input -> new MyTask(input.getName(), input.getDescription()))
+                .toList();
+    }
 
-        List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery()
+    @RequestMapping(value = "/group/{group}", method = GET)
+    public List<MyTask> groupTasks(@PathVariable String group) {
+        List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup(group)
                 .list();
 
-        model.addAttribute("processes", processDefinitions);
+        return FluentIterable.from(tasks)
+                .transform(input -> new MyTask(input.getName(), input.getDescription()))
+                .toList();
+    }
 
-        List<HistoricTaskInstance> historicTasks = historyService.createHistoricTaskInstanceQuery().list();
+    @RequestMapping(value = "/process/{process}", method = GET)
+    public List<MyTask> processTasks(@PathVariable String process) {
+        List<Task> tasks = taskService.createTaskQuery().processDefinitionKey(process)
+                .list();
 
-        model.addAttribute("historicTasks", historicTasks);
+        return FluentIterable.from(tasks)
+                .transform(input -> new MyTask(input.getName(), input.getDescription()))
+                .toList();
+    }
+
+    public static class MyTask {
+        private String name;
+        private String description;
+
+        public MyTask(String name, String description) {
+            this.name = name;
+            this.description = description;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
     }
 
 }
