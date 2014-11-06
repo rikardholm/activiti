@@ -5,14 +5,21 @@
     <title></title>
 </head>
 <body>
-    <h1>root tasks</h1>
+<h1>Översikt</h1>
 
+<h2>Aktiva tasks</h2>
 <ul th:each="task : ${tasks}">
-   <li th:text="${task.name}"></li>
+    <li th:text="${task.name}"></li>
 </ul>
 
-    <ul th:each="process : ${processes}">
-        <li th:text="${process.name}"></li>
-    </ul>
+<h2>Historiska tasks</h2>
+<ul th:each="task : ${historicTasks}">
+    <li th:text="${task.name}"></li>
+</ul>
+
+<h2>Processer</h2>
+<ul th:each="process : ${processes}">
+    <li th:text="${process.name}"></li>
+</ul>
 </body>
 </html>
