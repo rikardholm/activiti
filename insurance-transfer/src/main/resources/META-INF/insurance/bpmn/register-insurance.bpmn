@@ -42,7 +42,8 @@ execution.setVariable('insuranceNumber', insuranceNumber);]]></script>
     <sequenceFlow id="flow12" sourceRef="exclusivegateway2" targetRef="errorendevent1">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${lookupSuccessful && !foundPerson}]]></conditionExpression>
     </sequenceFlow>
-    <userTask activiti:candidateGroups="Middle Office" activiti:exclusive="true" id="MOUserTaskLookupAddress" name="MO fixar biffen">
+    <userTask activiti:candidateGroups="Middle Office" activiti:exclusive="true" id="MOUserTaskLookupAddress" name="Slå upp folkbokföringsadress">
+      <documentation id="MOUserTaskLookupAddress_D_1"><![CDATA[Folkbokföringsadress för personnummer ${personalIdentifier} behöver slås upp.]]></documentation>
       <extensionElements>
         <activiti:formProperty id="personalIdentifier" name="Personnummer" type="personalidentifier" variable="personalIdentifier" writable="false"/>
         <activiti:formProperty id="address" name="Adress" required="true" type="address"/>
