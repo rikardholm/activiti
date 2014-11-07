@@ -38,7 +38,7 @@ public class TasksController {
     @Autowired
     private FakeSparService fakeSparService;
 
-    @RequestMapping(value = "/register",method = POST)
+    @RequestMapping(value = "/register", method = POST)
     public void register(@RequestParam String personalIdentifier, @RequestParam(required = false) String address) {
         fakeSparService.makeUnavailable();
 
@@ -65,7 +65,7 @@ public class TasksController {
                 .list();
 
         return FluentIterable.from(tasks)
-                .transform(input -> new MyTask(input.getName(), input.getDescription()))
+                .transform(MyTask::convertedFrom)
                 .toList();
     }
 
@@ -75,7 +75,7 @@ public class TasksController {
                 .list();
 
         return FluentIterable.from(tasks)
-                .transform(input -> new MyTask(input.getName(), input.getDescription()))
+                .transform(MyTask::convertedFrom)
                 .toList();
     }
 
@@ -85,7 +85,18 @@ public class TasksController {
                 .list();
 
         return FluentIterable.from(tasks)
-                .transform(input -> new MyTask(input.getName(), input.getDescription()))
+                .transform(MyTask::convertedFrom)
+                .toList();
+    }
+
+    @RequestMapping(value = "/key/{key}", method = GET)
+    public List<MyTask> tasksByKey(@PathVariable String key) {
+        List<Task> tasks = taskService.createTaskQuery()
+                .taskDefinitionKey(key)
+                .list();
+
+        return FluentIterable.from(tasks)
+                .transform(MyTask::convertedFrom)
                 .toList();
     }
 
@@ -105,6 +116,9 @@ public class TasksController {
         public String getDescription() {
             return description;
         }
-    }
 
+        public static MyTask convertedFrom(Task task) {
+            return new MyTask(task.getName(), task.getDescription());
+        }
+    }
 }
