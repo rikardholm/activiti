@@ -1,6 +1,5 @@
 package rikardholm.insurance.transfer;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import rikardholm.insurance.domain.customer.Customer;
@@ -39,15 +38,7 @@ public class InsuranceFinder {
     }
 
     private List<InsuranceNumber> asInsuranceNumbers(List<? extends Insurance> insurances) {
-        return ImmutableList.copyOf(transform(insurances, toInsuranceNumber()));
+        return ImmutableList.copyOf(transform(insurances, Insurance::getInsuranceNumber));
     }
 
-    private Function<? super Insurance, InsuranceNumber> toInsuranceNumber() {
-        return new Function<Insurance, InsuranceNumber>() {
-            @Override
-            public InsuranceNumber apply(Insurance input) {
-                return input.getInsuranceNumber();
-            }
-        };
-    }
 }
