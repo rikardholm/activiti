@@ -39,7 +39,7 @@ public class TasksController {
     private FakeSparService fakeSparService;
 
     @RequestMapping(value = "/register",method = POST)
-    public void register(@RequestParam(required = false) String personalIdentifier, @RequestParam(required = false) String address) {
+    public void register(@RequestParam String personalIdentifier, @RequestParam(required = false) String address) {
         fakeSparService.makeUnavailable();
 
         Map<String, String> properties = new HashMap<>();
