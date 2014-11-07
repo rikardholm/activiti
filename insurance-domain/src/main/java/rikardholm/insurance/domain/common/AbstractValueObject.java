@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class AbstractValueObject<VALUE extends Serializable> implements ValueObject<VALUE> {
+public abstract class    AbstractValueObject<VALUE extends Serializable> implements ValueObject<VALUE> {
     private static final long serialVersionUID = -2848533905709849199L;
 
     public final VALUE value;
@@ -35,6 +35,6 @@ public abstract class AbstractValueObject<VALUE extends Serializable> implements
 
     @Override
     public String toString() {
-        return "{" + value + '}';
+        return  value.toString();
     }
 }
