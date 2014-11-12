@@ -1,10 +1,11 @@
 package com.rikardholm.insurance.admin.tasks;
 
-import com.google.common.collect.FluentIterable;
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.form.FormData;
+import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import rikardholm.insurance.infrastructure.fake.FakeSparService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -64,9 +66,7 @@ public class TasksController {
         List<Task> tasks = taskService.createTaskQuery()
                 .list();
 
-        return FluentIterable.from(tasks)
-                .transform(MyTask::convertedFrom)
-                .toList();
+        return MyTask.convert(tasks);
     }
 
     @RequestMapping(value = "/group/{group}", method = GET)
@@ -74,9 +74,7 @@ public class TasksController {
         List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup(group)
                 .list();
 
-        return FluentIterable.from(tasks)
-                .transform(MyTask::convertedFrom)
-                .toList();
+        return MyTask.convert(tasks);
     }
 
     @RequestMapping(value = "/process/{process}", method = GET)
@@ -84,9 +82,7 @@ public class TasksController {
         List<Task> tasks = taskService.createTaskQuery().processDefinitionKey(process)
                 .list();
 
-        return FluentIterable.from(tasks)
-                .transform(MyTask::convertedFrom)
-                .toList();
+        return MyTask.convert(tasks);
     }
 
     @RequestMapping(value = "/key/{key}", method = GET)
@@ -95,18 +91,29 @@ public class TasksController {
                 .taskDefinitionKey(key)
                 .list();
 
-        return FluentIterable.from(tasks)
-                .transform(MyTask::convertedFrom)
-                .toList();
+        return MyTask.convert(tasks);
+    }
+
+    @RequestMapping(value = "/form/{taskId}", method = GET)
+    public FormData formData(@PathVariable String taskId) {
+        TaskFormData taskFormData = formService.getTaskFormData(taskId);
+
+        return taskFormData;
     }
 
     public static class MyTask {
+        private String id;
         private String name;
         private String description;
 
-        public MyTask(String name, String description) {
+        public MyTask(String id, String name, String description) {
+            this.id = id;
             this.name = name;
             this.description = description;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getName() {
@@ -118,7 +125,19 @@ public class TasksController {
         }
 
         public static MyTask convertedFrom(Task task) {
-            return new MyTask(task.getName(), task.getDescription());
+            return new MyTask(task.getId(), task.getName(), task.getDescription());
+        }
+
+        public static List<MyTask> convert(List<Task> tasks) {
+            return tasks.stream()
+                    .map(MyTask::convertedFrom)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public static class Form {
+        public static Form convert(FormData formData) {
+            return new Form();
         }
     }
 }
