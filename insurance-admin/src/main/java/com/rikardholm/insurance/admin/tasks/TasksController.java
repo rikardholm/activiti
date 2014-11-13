@@ -4,15 +4,11 @@ import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.form.FormData;
 import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rikardholm.insurance.infrastructure.fake.FakeSparService;
 
 import java.util.HashMap;
@@ -21,6 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -41,6 +38,7 @@ public class TasksController {
     private FakeSparService fakeSparService;
 
     @RequestMapping(value = "/register", method = POST)
+    @ResponseStatus(NO_CONTENT)
     public void register(@RequestParam String personalIdentifier, @RequestParam(required = false) String address) {
         fakeSparService.makeUnavailable();
 
@@ -95,11 +93,18 @@ public class TasksController {
     }
 
     @RequestMapping(value = "/form/{taskId}", method = GET)
-    public FormData formData(@PathVariable String taskId) {
+    public Form formData(@PathVariable String taskId) {
         TaskFormData taskFormData = formService.getTaskFormData(taskId);
 
-        return taskFormData;
+        return Form.convert(taskFormData);
     }
+
+    @RequestMapping(value = "/form/{taskId}", method = POST)
+    @ResponseStatus(NO_CONTENT)
+    public void postForm(@PathVariable String taskId, @RequestParam Map<String,String> parameters) {
+        formService.submitTaskFormData(taskId, parameters);
+    }
+
 
     public static class MyTask {
         private String id;
@@ -135,9 +140,4 @@ public class TasksController {
         }
     }
 
-    public static class Form {
-        public static Form convert(FormData formData) {
-            return new Form();
-        }
-    }
 }
