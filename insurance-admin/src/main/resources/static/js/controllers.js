@@ -1,17 +1,12 @@
 angular.module('activitiApp', [])
-    .controller('ProcessController', function ($scope, $http, $compile) {
+    .controller('ProcessController', function ($scope, $http) {
         $http.get('/processes').success(function (data) {
             $scope.processes = data;
         });
 
         $scope.showForm = function (process) {
             console.info(process.key);
-            $http.get('/form/'+process.key).success(
-                function (html) {
-                    $scope.form = $compile(html);
-                    console.log('boink');
-                    console.log($scope.form);
-                });
+            $scope.formUrl='/form/' + process.key;
         }
     }).controller('TaskController', function ($scope) {
         $scope.tasks = [
