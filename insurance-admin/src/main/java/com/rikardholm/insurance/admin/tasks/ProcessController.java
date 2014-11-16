@@ -27,10 +27,10 @@ public class ProcessController {
     private FormService formService;
 
     @RequestMapping(method = GET)
-    public List<String> processes() {
+    public List<Process> processes() {
         return repositoryService.createProcessDefinitionQuery()
                 .list().stream()
-                .map(processDefinition -> processDefinition.getKey())
+                .map(Process::convert)
                 .collect(Collectors.toList());
     }
 
