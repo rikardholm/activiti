@@ -5,7 +5,7 @@
     <startEvent id="start" name="Start">
       <extensionElements>
         <activiti:formProperty id="personalIdentifier" name="Personnummer" type="personalidentifier" required="true"></activiti:formProperty>
-        <activiti:formProperty id="address" name="address" type="address"></activiti:formProperty>
+        <activiti:formProperty id="address" name="Address" type="address"></activiti:formProperty>
       </extensionElements>
     </startEvent>
     <endEvent id="end" name="End"></endEvent>
