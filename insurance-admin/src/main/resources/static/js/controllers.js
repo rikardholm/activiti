@@ -1,13 +1,16 @@
 angular.module('activitiApp', [])
     .controller('ProcessController', function ($scope, $http) {
         $http.get('/processes').success(function (data) {
-            $scope.processes = data;
+            $scope.processes = [];
+            data.forEach(function (processInfo) {
+                $scope.processes.push({ "info": processInfo });
+            });
         });
 
         $scope.showForm = function (process) {
-            $http.get('/processes/' + process.key + '/form')
+            $http.get('/processes/' + process.info.key + '/form')
                 .success(function (data) {
-                    $scope.form = data;
+                    process.form = data;
                 });
         }
     }).controller('TaskController', function ($scope) {

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
       lang="en" ng-app="activitiApp">
 <head>
     <meta charset="UTF-8"/>
@@ -27,13 +26,14 @@
     <div class="starter-template" ng-controller="ProcessController">
         <ul>
             <li ng-repeat="process in processes">
-                <span class="lead">{{process.name}}</span>
-                <p>{{process.description}}</p>
+                <span class="lead">{{process.info.name}}</span>
+                <p>{{process.info.description}}</p>
                 <button ng-click="showForm(process)">Starta denna</button>
+                <ul>
+                    <li ng-repeat="field in process.form.fields" ng-include="field.type + '.html'"/>
+                    <li ng-if="process.form.fields.length>0"><button>Starta</button></li>
+                </ul>
             </li>
-        </ul>
-        <ul>
-            <li ng-repeat="field in form.fields" ng-include="field.type + '.html'"/>
         </ul>
     </div>
 </div>
