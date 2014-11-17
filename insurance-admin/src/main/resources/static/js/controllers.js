@@ -5,8 +5,10 @@ angular.module('activitiApp', [])
         });
 
         $scope.showForm = function (process) {
-            console.info(process.key);
-            $scope.formUrl='/form/' + process.key;
+            $http.get('/processes/' + process.key + '/form')
+                .success(function (data) {
+                    $scope.form = data;
+                });
         }
     }).controller('TaskController', function ($scope) {
         $scope.tasks = [

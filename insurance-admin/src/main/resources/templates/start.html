@@ -11,6 +11,12 @@
     <title></title>
     <script src="/js/angular.min.js"></script>
     <script src="/js/controllers.js"></script>
+    <script type="text/ng-template" id="personalidentifier.html">
+        <label><span>{{field.name}}</span><input name="{{id}}" type="number"/><span ng-if="field.required">*</span></label>
+    </script>
+    <script type="text/ng-template" id="address.html">
+        <label><span>{{field.name}}</span><input name="{{id}}" type="text"/><span ng-if="field.required">*</span></label>
+    </script>
 </head>
 <body class="starter-template">
 <div class="container">
@@ -26,9 +32,9 @@
                 <button ng-click="showForm(process)">Starta denna</button>
             </li>
         </ul>
-        <div class="container" ng-include="formUrl">
-
-        </div>
+        <ul>
+            <li ng-repeat="field in form.fields" ng-include="field.type + '.html'"/>
+        </ul>
     </div>
 </div>
 </body>
