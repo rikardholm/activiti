@@ -9,13 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css"/>
     <title></title>
     <script src="/js/angular.min.js"></script>
-    <script src="/js/controllers.js"></script>
-    <script type="text/ng-template" id="personalidentifier.html">
-        <label><span>{{field.name}}</span><input name="{{id}}" type="number"/><span ng-if="field.required">*</span></label>
-    </script>
-    <script type="text/ng-template" id="address.html">
-        <label><span>{{field.name}}</span><input name="{{id}}" type="text"/><span ng-if="field.required">*</span></label>
-    </script>
+    <script src="/app/controllers.js"></script>
 </head>
 <body class="starter-template">
 <div class="container">
@@ -30,10 +24,16 @@
                 <p>{{process.info.description}}</p>
                 <button ng-click="showForm(process)">Starta denna</button>
                 <ul>
-                    <li ng-repeat="field in process.form.fields" ng-include="field.type + '.html'"/>
+                    <li ng-repeat="field in process.form.fields" ng-include="templateUrlOf(field)"/>
                     <li ng-if="process.form.fields.length>0"><button>Starta</button></li>
                 </ul>
             </li>
+        </ul>
+    </div>
+
+    <div class="starter-template" ng-controller="TaskController">
+        <ul>
+
         </ul>
     </div>
 </div>

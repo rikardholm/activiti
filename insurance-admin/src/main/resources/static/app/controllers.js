@@ -3,8 +3,10 @@ angular.module('activitiApp', [])
         $http.get('/processes').success(function (data) {
             $scope.processes = [];
             data.forEach(function (processInfo) {
-                $scope.processes.push({ "info": processInfo });
+                var process = { "info": processInfo };
+                $scope.processes.push(process);
             });
+
         });
 
         $scope.showForm = function (process) {
@@ -12,13 +14,11 @@ angular.module('activitiApp', [])
                 .success(function (data) {
                     process.form = data;
                 });
-        }
-    }).controller('TaskController', function ($scope) {
-        $scope.tasks = [
-            {"title": "Kolla upp person", "description": "Detta behöver kollas."},
-            {"title": "Sälj av innehav", "description": "Dags att flytta ut."},
-            {"title": "Skicka välkomstbrev", "description": "Glöm inte hämta pappret."}
-        ];
+        };
+
+        $scope.templateUrlOf = function (field) {
+           return 'app/' + field.type + '.html';
+        };
     }).service('ProcessService', function ($http) {
 
     });
